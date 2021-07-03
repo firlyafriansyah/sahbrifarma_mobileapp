@@ -1,9 +1,19 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, TextInput} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  Alert,
+} from 'react-native';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
   const [borderName, setBorderName] = useState('#A4B0BE80');
   const [borderPass, setBorderPass] = useState('#A4B0BE80');
+  const [hide, setHide] = useState(true);
 
   return (
     <View style={style.container}>
@@ -17,11 +27,28 @@ const Login = () => {
         />
         <Text style={style.label}>Kata Sandi</Text>
         <TextInput
-          style={[style.input, style.inputNama, {borderColor: borderPass}]}
+          secureTextEntry={hide}
+          autoCorrect={false}
+          style={[style.input, style.inputPass, {borderColor: borderPass}]}
           onFocus={() => setBorderPass('#2F3542')}
           onBlur={() => setBorderPass('#A4B0BE80')}
         />
+        <View style={style.showPass}>
+          <FontAwesomeIcon
+            icon={hide ? faEye : faEyeSlash}
+            size={22}
+            onPress={() => setHide(!hide)}
+          />
+          <Text style={style.showPassText}>Lihat Kata Sandi</Text>
+        </View>
       </View>
+      <TouchableHighlight
+        onPress={() => Alert.alert('Masuk')}
+        style={style.touchable}>
+        <View style={style.submitBtn}>
+          <Text style={style.submitText}>Masuk</Text>
+        </View>
+      </TouchableHighlight>
     </View>
   );
 };
@@ -39,14 +66,15 @@ const style = StyleSheet.create({
     color: '#2F3542',
     fontFamily: 'Poppins-Bold',
     marginBottom: 35,
+    marginTop: -30,
   },
   loginWrapper: {
-    flex: 0.4,
     borderRadius: 26,
     backgroundColor: '#fff',
     elevation: 12,
     paddingHorizontal: 14,
     paddingVertical: 18,
+    marginBottom: 55,
   },
   label: {
     fontSize: 16,
@@ -64,6 +92,25 @@ const style = StyleSheet.create({
   inputNama: {
     marginBottom: 20,
   },
+  inputPass: {
+    marginBottom: 15,
+  },
+  submitBtn: {
+    paddingVertical: 21,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#5352ED',
+    borderRadius: 26,
+    elevation: 12,
+  },
+  submitText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontFamily: 'Poppins-Bold',
+  },
+  touchable: {borderRadius: 26},
+  showPass: {flexDirection: 'row', alignItems: 'center', marginLeft: 5},
+  showPassText: {marginLeft: 10, fontSize: 15, fontFamily: 'Poppins-Reguler'},
 });
 
 export default Login;
