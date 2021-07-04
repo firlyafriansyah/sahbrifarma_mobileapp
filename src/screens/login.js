@@ -10,7 +10,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [borderName, setBorderName] = useState('#A4B0BE80');
   const [borderPass, setBorderPass] = useState('#A4B0BE80');
   const [hide, setHide] = useState(true);
@@ -26,24 +26,23 @@ const Login = () => {
           onBlur={() => setBorderName('#A4B0BE80')}
         />
         <Text style={style.label}>Kata Sandi</Text>
-        <TextInput
-          secureTextEntry={hide}
-          autoCorrect={false}
-          style={[style.input, style.inputPass, {borderColor: borderPass}]}
-          onFocus={() => setBorderPass('#2F3542')}
-          onBlur={() => setBorderPass('#A4B0BE80')}
-        />
-        <View style={style.showPass}>
+        <View style={[style.inputPassWrapper, {borderColor: borderPass}]}>
+          <TextInput
+            secureTextEntry={hide}
+            autoCorrect={false}
+            style={[style.inputPass, {flex: 1}]}
+            onFocus={() => setBorderPass('#2F3542')}
+            onBlur={() => setBorderPass('#A4B0BE80')}
+          />
           <FontAwesomeIcon
-            icon={hide ? faEye : faEyeSlash}
+            icon={hide ? faEyeSlash : faEye}
             size={22}
             onPress={() => setHide(!hide)}
           />
-          <Text style={style.showPassText}>Lihat Kata Sandi</Text>
         </View>
       </View>
       <TouchableHighlight
-        onPress={() => Alert.alert('Masuk')}
+        onPress={() => navigation.navigate('Home')}
         style={style.touchable}>
         <View style={style.submitBtn}>
           <Text style={style.submitText}>Masuk</Text>
@@ -92,8 +91,20 @@ const style = StyleSheet.create({
   inputNama: {
     marginBottom: 20,
   },
-  inputPass: {
+  inputPassWrapper: {
+    borderWidth: 1,
+    borderRadius: 12,
     marginBottom: 15,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 18,
+  },
+  inputPass: {
+    paddingHorizontal: 18,
+    paddingVertical: 15,
+    fontFamily: 'Poppins-Reguler',
+    fontSize: 16,
   },
   submitBtn: {
     paddingVertical: 21,

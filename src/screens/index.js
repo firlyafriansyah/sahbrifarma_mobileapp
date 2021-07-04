@@ -1,2 +1,3 @@
 import {default as LoginScreen} from './login';
-export {LoginScreen};
+import {default as HomeScreen} from './home';
+export {LoginScreen, HomeScreen};

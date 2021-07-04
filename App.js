@@ -11,7 +11,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {LoginScreen} from './src/screens';
+import {HomeScreen, LoginScreen} from './src/screens';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +27,7 @@ const App = () => {
           initialRouteName="HomeActivity"
           screenOptions={{headerShown: false}}>
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
