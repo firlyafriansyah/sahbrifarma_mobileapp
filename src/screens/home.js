@@ -8,6 +8,7 @@ import {
   Text,
   ImageBackground,
   TouchableWithoutFeedback,
+  TouchableHighlight,
   Alert,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -15,6 +16,7 @@ import {
   faSearch,
   faMapMarkerAlt,
   faQrcode,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 
 const Home = () => {
@@ -49,8 +51,13 @@ const Home = () => {
           style={{color: '#646975', marginTop: 5}}
         />
       </View>
-      <ScrollView>
-        <TouchableWithoutFeedback onPress={() => Alert.alert("testing")}>
+      <TouchableHighlight
+        onPress={() => Alert.alert('add')}
+        style={style.floatingBtn}>
+        <FontAwesomeIcon icon={faPlus} size={25} style={{color: '#FFF'}} />
+      </TouchableHighlight>
+      <ScrollView style={{width: '100%'}} showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={() => Alert.alert('testing')}>
           <View style={style.cardWrapper}>
             <ImageBackground
               source={require('../../assets/images/card_bg.png')}
@@ -109,11 +116,12 @@ const style = StyleSheet.create({
   },
   cardWrapper: {
     flex: 1,
+    width: '100%',
     marginBottom: 30,
   },
   cardBackground: {
     flex: 1,
-    elevation: 5,
+    elevation: 3,
     borderRadius: 15,
     resizeMode: 'cover',
     justifyContent: 'center',
@@ -160,6 +168,20 @@ const style = StyleSheet.create({
   idPasien: {
     marginTop: 10,
     color: '#2F3542',
+  },
+  floatingBtn: {
+    width: 64,
+    height: 64,
+    position: 'absolute',
+    bottom: 25,
+    right: 25,
+    backgroundColor: '#4D42CF',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 64,
+    elevation: 6,
+    zIndex: 5,
   },
 });
 
