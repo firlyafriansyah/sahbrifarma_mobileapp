@@ -1,45 +1,17 @@
-import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  Alert,
-} from 'react-native';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
+import React from 'react';
+import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
+
+import {Input, InputPass} from '../components';
 
 const Login = ({navigation}) => {
-  const [borderName, setBorderName] = useState('#A4B0BE80');
-  const [borderPass, setBorderPass] = useState('#A4B0BE80');
-  const [hide, setHide] = useState(true);
-
   return (
     <View style={style.container}>
       <Text style={style.heading}>Silahkan Masuk</Text>
       <View style={style.loginWrapper}>
         <Text style={style.label}>Nama</Text>
-        <TextInput
-          style={[style.input, style.inputNama, {borderColor: borderName}]}
-          onFocus={() => setBorderName('#2F3542')}
-          onBlur={() => setBorderName('#A4B0BE80')}
-        />
+        <Input mb={20} />
         <Text style={style.label}>Kata Sandi</Text>
-        <View style={[style.inputPassWrapper, {borderColor: borderPass}]}>
-          <TextInput
-            secureTextEntry={hide}
-            autoCorrect={false}
-            style={[style.inputPass, {flex: 1}]}
-            onFocus={() => setBorderPass('#2F3542')}
-            onBlur={() => setBorderPass('#A4B0BE80')}
-          />
-          <FontAwesomeIcon
-            icon={hide ? faEyeSlash : faEye}
-            size={22}
-            onPress={() => setHide(!hide)}
-          />
-        </View>
+        <InputPass mb={15} />
       </View>
       <TouchableHighlight
         onPress={() => navigation.navigate('Home')}
@@ -61,7 +33,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 23,
   },
   heading: {
-    fontSize: 24,
+    fontSize: 28,
     color: '#2F3542',
     fontFamily: 'Poppins-Bold',
     marginBottom: 35,
@@ -80,32 +52,6 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Light',
     marginBottom: 6,
   },
-  input: {
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 18,
-    paddingVertical: 15,
-    fontFamily: 'Poppins-Reguler',
-    fontSize: 16,
-  },
-  inputNama: {
-    marginBottom: 20,
-  },
-  inputPassWrapper: {
-    borderWidth: 1,
-    borderRadius: 12,
-    marginBottom: 15,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingRight: 18,
-  },
-  inputPass: {
-    paddingHorizontal: 18,
-    paddingVertical: 15,
-    fontFamily: 'Poppins-Reguler',
-    fontSize: 16,
-  },
   submitBtn: {
     paddingVertical: 21,
     justifyContent: 'center',
@@ -120,8 +66,6 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
   },
   touchable: {borderRadius: 26},
-  showPass: {flexDirection: 'row', alignItems: 'center', marginLeft: 5},
-  showPassText: {marginLeft: 10, fontSize: 15, fontFamily: 'Poppins-Reguler'},
 });
 
 export default Login;
