@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   TouchableWithoutFeedback,
-  Alert,
   View,
   ImageBackground,
   Text,
@@ -11,9 +10,9 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMapMarkerAlt} from '@fortawesome/free-solid-svg-icons';
 
-const Card = () => {
+const Card = props => {
   return (
-    <TouchableWithoutFeedback onPress={() => Alert.alert('testing')}>
+    <TouchableWithoutFeedback onPress={props.press}>
       <View style={style.cardWrapper}>
         <ImageBackground
           source={require('../../assets/images/card_bg.png')}

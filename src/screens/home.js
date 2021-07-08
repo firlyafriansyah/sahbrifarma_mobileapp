@@ -5,13 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   TouchableHighlight,
-  Alert,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faSearch, faQrcode, faPlus} from '@fortawesome/free-solid-svg-icons';
 import {Card, InputWithLogo} from '../components';
 
-const Home = () => {
+const Home = ({navigation}) => {
   return (
     <View style={style.container}>
       <Image
@@ -30,7 +29,7 @@ const Home = () => {
         <FontAwesomeIcon icon={faQrcode} size={35} style={style.qrCodeStyle} />
       </View>
       <TouchableHighlight
-        onPress={() => Alert.alert('add')}
+        onPress={() => navigation.navigate('Input Pasien Baru')}
         style={style.floatingBtn}>
         <FontAwesomeIcon
           icon={faPlus}
@@ -41,7 +40,7 @@ const Home = () => {
       <ScrollView
         style={style.scrollViewStyle}
         showsVerticalScrollIndicator={false}>
-        <Card />
+        <Card press={() => navigation.navigate('Detail Pasien')} />
         <Card />
         <Card />
       </ScrollView>

@@ -8,6 +8,8 @@ const Input = props => {
       style={[style.style, {borderColor: borderColor, marginBottom: props.mb}]}
       onFocus={() => setBorderColor('#2F3542')}
       onBlur={() => setBorderColor('#A4B0BE80')}
+      placeholder={props.placeholder}
+      keyboardType={props.keyboardType}
     />
   );
 };
