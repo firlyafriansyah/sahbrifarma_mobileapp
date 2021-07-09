@@ -5,10 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   TouchableHighlight,
+  Alert,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faSearch, faQrcode, faPlus} from '@fortawesome/free-solid-svg-icons';
 import {Card, InputWithLogo} from '../components';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const Home = ({navigation}) => {
   return (
@@ -26,7 +28,13 @@ const Home = ({navigation}) => {
           size={15}
           iconColor={'#2F3542'}
         />
-        <FontAwesomeIcon icon={faQrcode} size={35} style={style.qrCodeStyle} />
+        <TouchableWithoutFeedback onPress={() => Alert.alert('QR Scanner')}>
+          <FontAwesomeIcon
+            icon={faQrcode}
+            size={35}
+            style={style.qrCodeStyle}
+          />
+        </TouchableWithoutFeedback>
       </View>
       <TouchableHighlight
         onPress={() => navigation.navigate('Input Pasien Baru')}

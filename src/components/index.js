@@ -5,6 +5,9 @@ import Card from './card';
 import CustomHeader from './header';
 import Category from './category';
 import InputSelect from './inputSelect';
+import InputWithButton from './inputWithButton';
+import CustomButton from './customButton';
+import BubbleTag from './bubbleTag';
 
 export {
   Input,
@@ -14,4 +17,7 @@ export {
   CustomHeader,
   Category,
   InputSelect,
+  InputWithButton,
+  CustomButton,
+  BubbleTag,
 };

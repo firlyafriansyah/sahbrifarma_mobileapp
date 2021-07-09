@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
-
-import {Input, InputPass} from '../components';
+import {View, StyleSheet, Text} from 'react-native';
+import {CustomButton, Input, InputPass} from '../components';
 
 const Login = ({navigation}) => {
   return (
@@ -13,13 +12,10 @@ const Login = ({navigation}) => {
         <Text style={style.label}>Kata Sandi</Text>
         <InputPass mb={15} />
       </View>
-      <TouchableHighlight
-        onPress={() => navigation.navigate('Home')}
-        style={style.touchable}>
-        <View style={style.submitBtn}>
-          <Text style={style.submitText}>Masuk</Text>
-        </View>
-      </TouchableHighlight>
+      <CustomButton
+        title={'Masuk'}
+        navigation={() => navigation.navigate('Home')}
+      />
     </View>
   );
 };

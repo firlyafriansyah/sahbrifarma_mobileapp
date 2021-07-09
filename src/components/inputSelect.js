@@ -12,6 +12,7 @@ const InputSelect = props => {
         onValueChange={(itemValue, itemIndex) => {
           setSelected(itemValue);
           props.value(selected === 'Tidak' ? true : false);
+          props.onChangeLabel();
         }}>
         <Picker.Item label={props.labelA} value={props.labelA} />
         <Picker.Item label={props.labelB} value={props.labelB} />

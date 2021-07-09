@@ -5,15 +5,18 @@ import {Category, CustomHeader} from '../components';
 const DetailPasien = ({navigation}) => {
   return (
     <View style={style.container}>
-      <CustomHeader onPress={() => navigation.goBack()} title={'Edit Profil'} />
+      <CustomHeader
+        onPress={() => navigation.goBack()}
+        title={'Detail Pasien'}
+      />
       <View style={style.categoryWrapper}>
         <Category
           source={require('../../assets/images/profil_icon.png')}
-          title={'Edit Profil'}
+          title={'Identitas Pasien'}
         />
         <Category
           source={require('../../assets/images/alergi_obat.png')}
-          title={'Alegi Obat'}
+          title={'Alergi Obat'}
         />
         <Category
           source={require('../../assets/images/hasil_cek_dokter.png')}
