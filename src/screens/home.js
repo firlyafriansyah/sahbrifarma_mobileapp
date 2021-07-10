@@ -1,15 +1,8 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  StyleSheet,
-  ScrollView,
-  TouchableHighlight,
-  Alert,
-} from 'react-native';
+import {View, Image, StyleSheet, ScrollView, Alert} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faSearch, faQrcode, faPlus} from '@fortawesome/free-solid-svg-icons';
-import {Card, InputWithLogo} from '../components';
+import {faSearch, faQrcode} from '@fortawesome/free-solid-svg-icons';
+import {Card, FloatingButton, InputWithLogo} from '../components';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const Home = ({navigation}) => {
@@ -36,21 +29,16 @@ const Home = ({navigation}) => {
           />
         </TouchableWithoutFeedback>
       </View>
-      <TouchableHighlight
-        onPress={() => navigation.navigate('Input Pasien Baru')}
-        style={style.floatingBtn}>
-        <FontAwesomeIcon
-          icon={faPlus}
-          size={25}
-          style={style.floatingBtnIcon}
-        />
-      </TouchableHighlight>
+      <FloatingButton
+        navigation={() => navigation.navigate('Input Pasien Baru')}
+      />
       <ScrollView
         style={style.scrollViewStyle}
         showsVerticalScrollIndicator={false}>
         <Card press={() => navigation.navigate('Detail Pasien')} />
-        <Card />
-        <Card />
+        <Card press={() => navigation.navigate('Detail Pasien')} />
+        <Card press={() => navigation.navigate('Detail Pasien')} />
+        <Card press={() => navigation.navigate('Detail Pasien')} />
       </ScrollView>
     </View>
   );
@@ -74,23 +62,6 @@ const style = StyleSheet.create({
   qrCodeStyle: {
     color: '#646975',
     marginTop: 5,
-  },
-  floatingBtn: {
-    width: 64,
-    height: 64,
-    position: 'absolute',
-    bottom: 25,
-    right: 25,
-    backgroundColor: '#4D42CF',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 64,
-    elevation: 6,
-    zIndex: 5,
-  },
-  floatingBtnIcon: {
-    color: '#FFF',
   },
   scrollViewStyle: {
     width: '100%',

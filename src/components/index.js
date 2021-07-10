@@ -8,6 +8,8 @@ import InputSelect from './inputSelect';
 import InputWithButton from './inputWithButton';
 import CustomButton from './customButton';
 import BubbleTag from './bubbleTag';
+import ListItem from './listItem';
+import FloatingButton from './floatingButton';
 
 export {
   Input,
@@ -20,4 +22,6 @@ export {
   InputWithButton,
   CustomButton,
   BubbleTag,
+  ListItem,
+  FloatingButton,
 };

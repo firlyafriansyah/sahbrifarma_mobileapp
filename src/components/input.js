@@ -5,11 +5,21 @@ const Input = props => {
   const [borderColor, setBorderColor] = useState('#A4B0BE80');
   return (
     <TextInput
-      style={[style.style, {borderColor: borderColor, marginBottom: props.mb}]}
+      style={[
+        style.style,
+        {
+          borderColor: borderColor,
+          marginBottom: props.mb,
+          backgroundColor: props.bg,
+        },
+      ]}
       onFocus={() => setBorderColor('#2F3542')}
       onBlur={() => setBorderColor('#A4B0BE80')}
       placeholder={props.placeholder}
       keyboardType={props.keyboardType}
+      editable={props.editable}
+      onChangeText={item => props.onChangeText(item)}
+      value={props.value}
     />
   );
 };

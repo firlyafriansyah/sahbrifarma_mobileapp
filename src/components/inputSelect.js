@@ -8,6 +8,7 @@ const InputSelect = props => {
   return (
     <View style={[style.container, {marginBottom: props.mb}]}>
       <Picker
+        enabled={props.editable}
         selectedValue={selected}
         onValueChange={(itemValue, itemIndex) => {
           setSelected(itemValue);
