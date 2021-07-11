@@ -13,7 +13,7 @@ import {default as InputHasilDokterScreen} from './inputHasilDokter';
 import {default as HasilDokterScreen} from './hasilDokter';
 import {default as FotoObatByDateScreen} from './fotoObatByDate';
 import {default as FotoObatScreen} from './fotoObat';
-import {default as AmbilFotoObatScreen} from './ambilFotoObat';
+import {default as InputFotoObatScreen} from './inputFotoObat';
 
 export {
   LoginScreen,
@@ -31,5 +31,5 @@ export {
   HasilDokterScreen,
   FotoObatByDateScreen,
   FotoObatScreen,
-  AmbilFotoObatScreen,
+  InputFotoObatScreen,
 };

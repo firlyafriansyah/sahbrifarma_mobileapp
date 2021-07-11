@@ -26,7 +26,7 @@ import {
   HasilDokterScreen,
   FotoObatByDateScreen,
   FotoObatScreen,
-  AmbilFotoObatScreen,
+  InputFotoObatScreen,
 } from './src/screens';
 
 const Stack = createStackNavigator();
@@ -75,8 +75,8 @@ const App = () => {
           />
           <Stack.Screen name={'Foto Obat'} component={FotoObatScreen} />
           <Stack.Screen
-            name={'Ambil Foto Obat'}
-            component={AmbilFotoObatScreen}
+            name={'Input Foto Obat'}
+            component={InputFotoObatScreen}
           />
         </Stack.Navigator>
       </NavigationContainer>

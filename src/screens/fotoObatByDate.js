@@ -38,7 +38,7 @@ const FotoObatByDate = ({navigation}) => {
         {showKeluhanByDate()}
       </ScrollView>
       <FloatingButton
-        navigation={() => navigation.navigate('Ambil Foto Obat')}
+        navigation={() => navigation.navigate('Input Foto Obat')}
       />
     </View>
   );

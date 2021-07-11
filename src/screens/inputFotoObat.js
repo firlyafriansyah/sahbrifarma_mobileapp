@@ -2,12 +2,15 @@ import React, {useState} from 'react';
 import {ScrollView, View, Image, Text, StyleSheet} from 'react-native';
 import {Camera, CustomButton, CustomHeader} from '../components';
 
-const FotoObat = ({navigation}) => {
+const InputFotoObat = ({navigation}) => {
   const [img, setImg] = useState([]);
 
   return (
     <View style={style.conatiner}>
-      <CustomHeader title={'Foto Obat'} onPress={() => navigation.goBack()} />
+      <CustomHeader
+        title={'Input Foto Obat'}
+        onPress={() => navigation.goBack()}
+      />
       <View style={style.btnCameraWrapper}>
         <Camera uri={uri => setImg(arr => [...arr, `${uri}`])} />
       </View>
@@ -33,7 +36,7 @@ const FotoObat = ({navigation}) => {
           mt={30}
           mb={30}
           title={'Simpan'}
-          navigation={navigation.navigate('Foto Obat By Date')}
+          navigation={() => navigation.navigate('Foto Obat By Date')}
         />
       </ScrollView>
     </View>
@@ -70,4 +73,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default FotoObat;
+export default InputFotoObat;

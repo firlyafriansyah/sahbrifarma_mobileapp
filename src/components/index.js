@@ -10,6 +10,7 @@ import CustomButton from './customButton';
 import BubbleTag from './bubbleTag';
 import ListItem from './listItem';
 import FloatingButton from './floatingButton';
+import Camera from './camera';
 
 export {
   Input,
@@ -24,4 +25,5 @@ export {
   BubbleTag,
   ListItem,
   FloatingButton,
+  Camera,
 };
