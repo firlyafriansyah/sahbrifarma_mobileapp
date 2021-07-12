@@ -33,7 +33,7 @@ const FotoObat = ({navigation}) => {
           mt={30}
           mb={30}
           title={'Simpan'}
-          navigation={navigation.navigate('Foto Obat By Date')}
+          navigation={() => navigation.navigate('Foto Obat By Date')}
         />
       </ScrollView>
     </View>
