@@ -1,12 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, View, Text, ScrollView} from 'react-native';
-import {
-  BubbleTag,
-  CustomButton,
-  CustomHeader,
-  Input,
-  InputWithButton,
-} from '../components';
+import {CustomButton, CustomHeader, Input} from '../components';
 
 const InputHasilDokter = ({navigation}) => {
   return (

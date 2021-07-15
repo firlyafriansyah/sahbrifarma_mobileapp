@@ -1,21 +1,85 @@
-import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {faWalking} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import React, {useState} from 'react';
+import {View, StyleSheet, Text, Modal} from 'react-native';
 import {CustomButton, Input, InputPass} from '../components';
 
 const Login = ({navigation}) => {
+  const [name, setName] = useState('');
+  const [pass, setPass] = useState('');
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const checkInput = () => {
+    if (name === '' || pass === '') {
+      setError(true);
+      setErrorMessage('Nama dan Kata Sandi tidak boleh kosong!');
+      setLoading(false);
+    } else {
+      fetch('http://1a072fde5191.ngrok.io/admin/login', optionsRequest)
+        .then(resJson => resJson.json())
+        .then(res => {
+          console.log(res);
+          if (res.status === 'success') {
+            navigation.navigate('Home');
+            setPass('');
+            setName('');
+            setError(false);
+            setLoading(false);
+          } else {
+            setError(true);
+            setErrorMessage('Nama dan Kata Sandi salah. Periksa Kembali!');
+            setLoading(false);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          console.log('error');
+          setError(true);
+          setErrorMessage('Kesalahan pada sistem. Silahkan coba lagi!');
+          setLoading(false);
+        });
+    }
+  };
+
+  const optionsRequest = {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: name,
+      password: pass,
+    }),
+  };
+
   return (
     <View style={style.container}>
       <Text style={style.heading}>Silahkan Masuk</Text>
+      {error ? <Text style={style.errorText}>{errorMessage}</Text> : null}
       <View style={style.loginWrapper}>
         <Text style={style.label}>Nama</Text>
-        <Input mb={20} />
+        <Input mb={20} onChangeText={item => setName(item)} value={name} />
         <Text style={style.label}>Kata Sandi</Text>
-        <InputPass mb={15} />
+        <InputPass mb={15} onChangeText={item => setPass(item)} value={pass} />
       </View>
       <CustomButton
         title={'Masuk'}
-        navigation={() => navigation.navigate('Home')}
+        navigation={() => {
+          setLoading(true);
+          checkInput();
+        }}
       />
+      <Modal animationType="fade" transparent={true} visible={loading}>
+        <View style={style.modalStyle}>
+          <View style={style.modalWrapper}>
+            <FontAwesomeIcon icon={faWalking} size={25} sty />
+            <Text style={style.textModal}>Mohon Tunggu!</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -32,7 +96,7 @@ const style = StyleSheet.create({
     fontSize: 28,
     color: '#2F3542',
     fontFamily: 'Poppins-Bold',
-    marginBottom: 35,
+    marginBottom: 15,
     marginTop: -30,
   },
   loginWrapper: {
@@ -42,6 +106,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 18,
     marginBottom: 55,
+    marginTop: 30,
   },
   label: {
     fontSize: 16,
@@ -62,6 +127,33 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
   },
   touchable: {borderRadius: 26},
+  errorText: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 14,
+    textAlign: 'center',
+    color: 'red',
+  },
+  modalStyle: {
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    top: '40%',
+    width: '100%',
+  },
+  modalWrapper: {
+    width: '50%',
+    backgroundColor: '#FFF',
+    padding: 30,
+    borderRadius: 10,
+    elevation: 20,
+    alignItems: 'center',
+  },
+  textModal: {
+    marginTop: 20,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    textAlign: 'center',
+  },
 });
 
 export default Login;

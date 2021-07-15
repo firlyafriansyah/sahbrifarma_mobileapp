@@ -5,7 +5,7 @@ import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
 const InputPass = props => {
   const [borderColor, setBorderColor] = useState('#A4B0BE80');
-  const [hide, setHide] = useState(false);
+  const [hide, setHide] = useState(true);
   return (
     <View
       style={[
@@ -18,6 +18,8 @@ const InputPass = props => {
         autoCorrect={false}
         onFocus={() => setBorderColor('#2F3542')}
         onBlur={() => setBorderColor('#A4B0BE80')}
+        onChangeText={item => props.onChangeText(item)}
+        value={props.value}
       />
       <FontAwesomeIcon
         icon={hide ? faEyeSlash : faEye}
