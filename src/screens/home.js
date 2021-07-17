@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Text,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faSearch, faQrcode, faBolt} from '@fortawesome/free-solid-svg-icons';
@@ -16,14 +17,39 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
 const Home = ({navigation}) => {
   const [modal, setModal] = useState(false);
   const [torch, setTorch] = useState(false);
+  const [data, setData] = useState();
 
   const onSuccess = e => {
     Alert.alert(e.data);
     setModal(false);
   };
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => {
+      setRefreshing(false);
+      getData();
+    });
+  }, []);
+
+  const getData = () => {
+    fetch('https://98efa2a485de.ngrok.io/pasien')
+      .then(resJson => resJson.json())
+      .then(res => setData(res.data));
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <View style={style.container}>
@@ -52,12 +78,27 @@ const Home = ({navigation}) => {
         navigation={() => navigation.navigate('Input Pasien Baru')}
       />
       <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         style={style.scrollViewStyle}
         showsVerticalScrollIndicator={false}>
-        <Card press={() => navigation.navigate('Detail Pasien')} />
-        <Card press={() => navigation.navigate('Detail Pasien')} />
-        <Card press={() => navigation.navigate('Detail Pasien')} />
-        <Card press={() => navigation.navigate('Detail Pasien')} />
+        {data !== undefined ? (
+          data.map(e => {
+            return (
+              <Card
+                key={e.id}
+                press={() => navigation.navigate('Detail Pasien')}
+                namaPasien={e.nama_pasien}
+                dateCheck={e.nama_pasien}
+                location={e.alamat_pasien}
+                id={e.id}
+              />
+            );
+          })
+        ) : (
+          <Text style={style.textLoading}>Loading...</Text>
+        )}
       </ScrollView>
 
       <Modal visible={modal}>
@@ -123,6 +164,11 @@ const style = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: '#646975',
     borderRadius: 15,
+  },
+  textLoading: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

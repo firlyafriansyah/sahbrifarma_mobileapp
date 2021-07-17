@@ -17,10 +17,9 @@ const Login = ({navigation}) => {
       setErrorMessage('Nama dan Kata Sandi tidak boleh kosong!');
       setLoading(false);
     } else {
-      fetch('http://1a072fde5191.ngrok.io/admin/login', optionsRequest)
+      fetch('https://98efa2a485de.ngrok.io/admin/login', optionsRequest)
         .then(resJson => resJson.json())
         .then(res => {
-          console.log(res);
           if (res.status === 'success') {
             navigation.navigate('Home');
             setPass('');
@@ -33,9 +32,7 @@ const Login = ({navigation}) => {
             setLoading(false);
           }
         })
-        .catch(err => {
-          console.log(err);
-          console.log('error');
+        .catch(() => {
           setError(true);
           setErrorMessage('Kesalahan pada sistem. Silahkan coba lagi!');
           setLoading(false);

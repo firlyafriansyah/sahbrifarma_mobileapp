@@ -18,19 +18,19 @@ const Card = props => {
           source={require('../../assets/images/card_bg.png')}
           imageStyle={style.imageBgStyle}
           style={style.cardBackground}>
-          <Text style={style.pasienName}>Nama Pasien</Text>
+          <Text style={style.pasienName}>{props.namaPasien}</Text>
           <View style={style.cardDetail}>
             <View>
               <Text style={style.lastCheck}>Berobat Terakhir</Text>
-              <Text style={style.dateCheck}>20 April 2000</Text>
+              <Text style={style.dateCheck}>{props.dateCheck}</Text>
               <View style={style.locationWrapper}>
                 <FontAwesomeIcon icon={faMapMarkerAlt} size={15} />
-                <Text style={style.location}>Location</Text>
+                <Text style={style.location}>{props.location}</Text>
               </View>
             </View>
             <View style={style.qrCodeStyle}>
               <Image source={require('../../assets/images/qr_sample.png')} />
-              <Text style={style.idPasien}>ID : 311910002</Text>
+              <Text style={style.idPasien}>ID : {props.id}</Text>
             </View>
           </View>
         </ImageBackground>
