@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useState} from 'react';
 import {View, StyleSheet, Text, Modal} from 'react-native';
 import {CustomButton, Input, InputPass} from '../components';
+import {HOST} from '../data/constants';
 
 const Login = ({navigation}) => {
   const [name, setName] = useState('');
@@ -17,7 +18,7 @@ const Login = ({navigation}) => {
       setErrorMessage('Nama dan Kata Sandi tidak boleh kosong!');
       setLoading(false);
     } else {
-      fetch('https://98efa2a485de.ngrok.io/admin/login', optionsRequest)
+      fetch(`${HOST}/admin/login`, optionsRequest)
         .then(resJson => resJson.json())
         .then(res => {
           if (res.status === 'success') {

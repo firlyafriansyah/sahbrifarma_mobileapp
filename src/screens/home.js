@@ -7,7 +7,6 @@ import {
   Modal,
   TouchableOpacity,
   Text,
-  Alert,
   RefreshControl,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -16,6 +15,7 @@ import {Card, FloatingButton, InputWithLogo} from '../components';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
+import {HOST} from '../data/constants';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -25,9 +25,10 @@ const Home = ({navigation}) => {
   const [modal, setModal] = useState(false);
   const [torch, setTorch] = useState(false);
   const [data, setData] = useState();
+  const [search, setSearch] = useState();
 
   const onSuccess = e => {
-    Alert.alert(e.data);
+    setSearch(e.data);
     setModal(false);
   };
 
@@ -42,13 +43,14 @@ const Home = ({navigation}) => {
   }, []);
 
   const getData = () => {
-    fetch('https://98efa2a485de.ngrok.io/pasien')
+    fetch(`${HOST}/pasien`)
       .then(resJson => resJson.json())
       .then(res => setData(res.data));
   };
 
   useEffect(() => {
     getData();
+    return getData();
   }, []);
 
   return (
@@ -65,6 +67,9 @@ const Home = ({navigation}) => {
           icon={faSearch}
           size={15}
           iconColor={'#2F3542'}
+          onChangeText={item => {
+            setSearch(item);
+          }}
         />
         <TouchableWithoutFeedback onPress={() => setModal(true)}>
           <FontAwesomeIcon
@@ -84,18 +89,45 @@ const Home = ({navigation}) => {
         style={style.scrollViewStyle}
         showsVerticalScrollIndicator={false}>
         {data !== undefined ? (
-          data.map(e => {
-            return (
-              <Card
-                key={e.id}
-                press={() => navigation.navigate('Detail Pasien')}
-                namaPasien={e.nama_pasien}
-                dateCheck={e.nama_pasien}
-                location={e.alamat_pasien}
-                id={e.id}
-              />
-            );
-          })
+          data
+            .slice(0)
+            .reverse()
+            .map(e => {
+              if (search) {
+                if (
+                  e.nama_pasien.toLowerCase().includes(search.toLowerCase()) ||
+                  e.id_pasien.includes(search)
+                ) {
+                  return (
+                    <Card
+                      key={e.id}
+                      press={() =>
+                        navigation.navigate({
+                          name: 'Detail Pasien',
+                          params: {id_pasien: e.id_pasien},
+                          merge: true,
+                        })
+                      }
+                      namaPasien={e.nama_pasien}
+                      dateCheck={e.tanggal_berobat_terakhir.split('T')[0]}
+                      location={e.alamat_pasien}
+                      id={e.id_pasien}
+                    />
+                  );
+                }
+              } else {
+                return (
+                  <Card
+                    key={e.id}
+                    press={() => navigation.navigate('Detail Pasien')}
+                    namaPasien={e.nama_pasien}
+                    dateCheck={e.tanggal_berobat_terakhir.split('T')[0]}
+                    location={e.alamat_pasien}
+                    id={e.id_pasien}
+                  />
+                );
+              }
+            })
         ) : (
           <Text style={style.textLoading}>Loading...</Text>
         )}

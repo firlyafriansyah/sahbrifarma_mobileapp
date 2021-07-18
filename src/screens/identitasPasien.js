@@ -1,9 +1,13 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Image, Text, ScrollView} from 'react-native';
 import {CustomButton, CustomHeader, Input, InputSelect} from '../components';
 
-const IdentitasPasien = ({navigation}) => {
+const IdentitasPasien = ({navigation, route}) => {
   const [editable, setEditable] = useState(false);
+
+  useEffect(() => {
+    console.log(route.params?.id_pasien);
+  }, [route.params?.id_pasien]);
 
   return (
     <View style={style.container}>

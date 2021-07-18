@@ -1,18 +1,64 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  Alert,
+  TextInput,
+} from 'react-native';
 import {
   BubbleTag,
   CustomButton,
   CustomHeader,
-  Input,
   InputSelect,
   InputWithButton,
+  Input,
 } from '../components';
+import {HOST} from '../data/constants';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+const Month = e => {
+  switch (e) {
+    case 0:
+      return 'Januari';
+    case 1:
+      return 'Februari';
+    case 2:
+      return 'Maret';
+    case 3:
+      return 'April';
+    case 4:
+      return 'Mei';
+    case 5:
+      return 'Juni';
+    case 6:
+      return 'Juli';
+    case 7:
+      return 'Agustus';
+    case 8:
+      return 'September';
+    case 9:
+      return 'Oktober';
+    case 10:
+      return 'November';
+    case 11:
+      return 'Desember';
+    default:
+      break;
+  }
+};
 
 const InputNewPasien = ({navigation}) => {
   const [alergiObat, setAlergiObat] = useState(false);
   const [namaObat, setNamaObat] = useState([]);
   const [keluhan, setKeluhan] = useState([]);
+  const [namaPasien, setNamaPasien] = useState();
+  const [alamatPasien, setAlamatPasien] = useState();
+  const [tanggalLahir, setTanggalLahir] = useState();
+  const [kelaminPasien, setKelaminPasien] = useState('Laki - Laki');
+  const [teleponPasien, setTeleponPasien] = useState();
+  const [showDatePicker, setShowDatePicker] = useState();
 
   const showBubbleTag = (arrayState, setArrayState) => {
     if (arrayState.length) {
@@ -24,6 +70,46 @@ const InputNewPasien = ({navigation}) => {
         />
       ));
     }
+  };
+
+  const arrayToString = array => {
+    let result = '';
+    array.forEach(item => {
+      result += `${item}, `;
+    });
+    return result;
+  };
+
+  const data = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      nama_pasien: namaPasien,
+      alamat_pasien: alamatPasien,
+      nomor_telepon_pasien: teleponPasien,
+      tanggal_lahir_pasien: tanggalLahir,
+      jenis_kelamin_pasien: kelaminPasien,
+      foto: '',
+      nama_obat: namaObat.length <= 0 ? null : arrayToString(namaObat),
+      keluhan: arrayToString(keluhan),
+    }),
+  };
+
+  const savePasien = () => {
+    fetch(`${HOST}/pasien`, data)
+      .then(resJson => resJson.json())
+      .then(res => {
+        if (res.status === 'success') {
+          Alert.alert('Data pasien berhasil disimpan!');
+          navigation.navigate('Home');
+        } else {
+          Alert.alert('Terjadi kesalahan pada saat menyimpan!');
+        }
+      })
+      .catch(() => Alert.alert('Terjadi kesalahan pada sistem!'));
   };
 
   const alergiFunction = () => {
@@ -56,15 +142,49 @@ const InputNewPasien = ({navigation}) => {
         style={style.scrollViewStyle}>
         <View style={style.formWrapper}>
           <Text style={style.label}>Nama</Text>
-          <Input mb={15} placeholder={'Nama Pasien'} />
+          <Input
+            mb={15}
+            placeholder={'Nama Pasien'}
+            onChangeText={item => setNamaPasien(item)}
+          />
           <Text style={style.label}>Alamat</Text>
-          <Input mb={15} placeholder={'Alamat Pasien'} />
+          <Input
+            mb={15}
+            placeholder={'Alamat Pasien'}
+            onChangeText={item => setAlamatPasien(item)}
+          />
+          <Text style={style.label}>Tanggal Lahir</Text>
+          <TextInput
+            style={style.inputStyle}
+            placeholder={'Tanggal Lahir Pasien'}
+            value={tanggalLahir ? tanggalLahir : ''}
+            onFocus={() => setShowDatePicker(true)}
+          />
+          {showDatePicker && (
+            <DateTimePicker
+              value={new Date()}
+              mode={'date'}
+              is24Hour={true}
+              display="default"
+              onChange={e => {
+                const Date = e.nativeEvent.timestamp;
+                if (Date !== undefined) {
+                  setTanggalLahir(
+                    `${Date.getDate()} ${Month(
+                      Date.getMonth(),
+                    )} ${Date.getFullYear()}`,
+                  );
+                  setShowDatePicker(false);
+                }
+              }}
+            />
+          )}
           <Text style={style.label}>Jenis Kelamin</Text>
           <InputSelect
             labelA={'Laki - laki'}
             labelB={'Perempuan'}
             mb={15}
-            value={() => null}
+            value={item => setKelaminPasien(item ? 'Perempuan' : 'Laki - Laki')}
             onChangeLabel={() => null}
           />
           <Text style={style.label}>Telepon</Text>
@@ -72,6 +192,7 @@ const InputNewPasien = ({navigation}) => {
             mb={15}
             keyboardType={'number-pad'}
             placeholder={'Nomor Telepon Pasien'}
+            onChangeText={item => setTeleponPasien(item)}
           />
           <Text style={style.label}>Alergi Obat</Text>
           <InputSelect
@@ -97,7 +218,19 @@ const InputNewPasien = ({navigation}) => {
             title="Simpan"
             mb={30}
             mt={15}
-            navigation={() => navigation.navigate('Home')}
+            navigation={() => {
+              if (
+                namaPasien &&
+                alamatPasien &&
+                teleponPasien &&
+                keluhan &&
+                tanggalLahir
+              ) {
+                savePasien();
+              } else {
+                Alert.alert('Mohon untuk melengkapi data pasien!');
+              }
+            }}
           />
         </View>
       </ScrollView>
@@ -131,6 +264,16 @@ const style = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
+    marginBottom: 15,
+  },
+  inputStyle: {
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: '#A4B0BE80',
+    paddingHorizontal: 18,
+    paddingVertical: 15,
+    fontFamily: 'Poppins-Reguler',
+    fontSize: 16,
     marginBottom: 15,
   },
 });

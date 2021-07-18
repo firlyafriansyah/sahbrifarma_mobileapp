@@ -20,7 +20,7 @@ const Card = props => {
           style={style.cardBackground}>
           <Text style={style.pasienName}>{props.namaPasien}</Text>
           <View style={style.cardDetail}>
-            <View>
+            <View style={{width: '50%'}}>
               <Text style={style.lastCheck}>Berobat Terakhir</Text>
               <Text style={style.dateCheck}>{props.dateCheck}</Text>
               <View style={style.locationWrapper}>
@@ -64,7 +64,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   pasienName: {
-    fontSize: 36,
+    fontSize: 24,
     fontFamily: 'Poppins-Medium',
     marginRight: 50,
     marginBottom: 10,
@@ -78,14 +78,14 @@ const style = StyleSheet.create({
   dateCheck: {
     fontSize: 14,
     fontFamily: 'Poppins-Medium',
-    marginBottom: 50,
+    marginBottom: 20,
     color: '#2F4237',
   },
   locationWrapper: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    paddingRight: 10,
   },
   location: {
     fontSize: 14,

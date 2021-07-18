@@ -1,5 +1,10 @@
 import React, {useState} from 'react';
-import {TextInput, StyleSheet, View} from 'react-native';
+import {
+  TextInput,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const InputWithLogo = props => {
@@ -19,12 +24,15 @@ const InputWithLogo = props => {
         onFocus={() => setBorderColor('#2F3542')}
         onBlur={() => setBorderColor('#A4B0BE80')}
         placeholder={props.placeholder}
+        onChangeText={e => props.onChangeText(e)}
       />
-      <FontAwesomeIcon
-        icon={props.icon}
-        size={props.size}
-        style={{color: props.iconColor}}
-      />
+      <TouchableWithoutFeedback onPress={() => props.onPress()}>
+        <FontAwesomeIcon
+          icon={props.icon}
+          size={props.size}
+          style={{color: props.iconColor}}
+        />
+      </TouchableWithoutFeedback>
     </View>
   );
 };
