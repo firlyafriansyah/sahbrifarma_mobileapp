@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Modal,
   Pressable,
@@ -9,17 +9,25 @@ import {
 } from 'react-native';
 import {CustomHeader, FloatingButton, Input, ListItem} from '../components';
 
-const AlergiObat = ({navigation}) => {
+const AlergiObat = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [namaObat, setNamaObat] = useState([]);
+  const [namaObat, setNamaObat] = useState();
   const [inputObat, setInputObat] = useState('');
+
+  useEffect(() => {
+    const obat = route.params?.data.nama_obat;
+    if (obat) {
+      setNamaObat(obat.slice(0, obat.length - 2).split(', '));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View style={style.container}>
       <CustomHeader title={'Alergi Obat'} onPress={() => navigation.goBack()} />
       <ScrollView style={style.scrollViewStyle}>
         <View>
-          {namaObat.length <= 0 ? (
+          {!namaObat ? (
             <Text style={{textAlign: 'center'}}>Tidak ada Alergi</Text>
           ) : (
             namaObat.map((item, index) => (

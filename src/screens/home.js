@@ -45,12 +45,14 @@ const Home = ({navigation}) => {
   const getData = () => {
     fetch(`${HOST}/pasien`)
       .then(resJson => resJson.json())
-      .then(res => setData(res.data));
+      .then(res => {
+        setData(res.idnPasien);
+      });
   };
 
   useEffect(() => {
     getData();
-    return getData();
+    return;
   }, []);
 
   return (
@@ -119,7 +121,13 @@ const Home = ({navigation}) => {
                 return (
                   <Card
                     key={e.id}
-                    press={() => navigation.navigate('Detail Pasien')}
+                    press={() =>
+                      navigation.navigate({
+                        name: 'Detail Pasien',
+                        params: {id_pasien: e.id_pasien},
+                        merge: true,
+                      })
+                    }
                     namaPasien={e.nama_pasien}
                     dateCheck={e.tanggal_berobat_terakhir.split('T')[0]}
                     location={e.alamat_pasien}

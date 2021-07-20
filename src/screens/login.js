@@ -132,10 +132,11 @@ const style = StyleSheet.create({
     color: 'red',
   },
   modalStyle: {
-    position: 'absolute',
     display: 'flex',
     alignItems: 'center',
-    top: '40%',
+    justifyContent: 'center',
+    backgroundColor: '#00000050',
+    height: '100%',
     width: '100%',
   },
   modalWrapper: {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Modal,
   Pressable,
@@ -9,10 +9,15 @@ import {
 } from 'react-native';
 import {CustomHeader, FloatingButton, Input, ListItem} from '../components';
 
-const KeluhanPasien = ({navigation}) => {
+const KeluhanPasien = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [keluhan, setKeluhan] = useState([]);
   const [inputKeluhan, setInputKeluhan] = useState('');
+
+  useEffect(() => {
+    console.log(route.params?.data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View style={style.container}>

@@ -9,7 +9,7 @@ const InputSelect = props => {
     <View style={[style.container, {marginBottom: props.mb}]}>
       <Picker
         enabled={props.editable}
-        selectedValue={selected}
+        selectedValue={props.default === props.labelB ? props.labelB : selected}
         onValueChange={(itemValue, itemIndex) => {
           setSelected(itemValue);
           props.value(selected === 'Tidak' ? true : false);

@@ -1,14 +1,37 @@
+import {faWalking} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Modal, Text, Alert} from 'react-native';
 import {useState} from 'react/cjs/react.development';
 import {Category, CustomHeader} from '../components';
+import {HOST} from '../data/constants';
 
 const DetailPasien = ({navigation, route}) => {
-  const [idPasien, setIdPasien] = useState();
+  const [idnPasien, setIdnPasien] = useState();
+  const [alergiObat, setAlergiObat] = useState();
+  const [keluhan, setKeluhan] = useState();
+  const [fotoObat, setFotoObat] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const getData = () => {
+    fetch(`${HOST}/detail/pasien/${route.params?.id_pasien}`)
+      .then(resJson => resJson.json())
+      .then(res => {
+        setIdnPasien(res.idnPasien);
+        setAlergiObat(res.alergiObat);
+        setKeluhan(res.keluhan);
+        setFotoObat(res.fotoObat);
+        setLoading(false);
+      })
+      .catch(() => Alert.alert('Terjadi kesalahan pada jaringan!'));
+  };
 
   useEffect(() => {
-    setIdPasien(route.params?.id_pasien);
-  }, [route.params?.id_pasien]);
+    setLoading(true);
+    getData();
+    return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View style={style.container}>
@@ -21,7 +44,7 @@ const DetailPasien = ({navigation, route}) => {
           onPress={() =>
             navigation.navigate({
               name: 'Identitas Pasien',
-              params: {id_pasien: idPasien},
+              params: {data: idnPasien},
               merge: true,
             })
           }
@@ -32,7 +55,7 @@ const DetailPasien = ({navigation, route}) => {
           onPress={() =>
             navigation.navigate({
               name: 'Alergi Obat',
-              params: {id_pasien: idPasien},
+              params: {data: alergiObat},
               merge: true,
             })
           }
@@ -43,7 +66,7 @@ const DetailPasien = ({navigation, route}) => {
           onPress={() =>
             navigation.navigate({
               name: 'Keluhan By Date',
-              params: {id_pasien: idPasien},
+              params: {data: keluhan},
               merge: true,
             })
           }
@@ -54,7 +77,6 @@ const DetailPasien = ({navigation, route}) => {
           onPress={() =>
             navigation.navigate({
               name: 'Hasil Dokter By Date',
-              params: {id_pasien: idPasien},
               merge: true,
             })
           }
@@ -65,7 +87,7 @@ const DetailPasien = ({navigation, route}) => {
           onPress={() =>
             navigation.navigate({
               name: 'Foto Obat By Date',
-              params: {id_pasien: idPasien},
+              params: {data: fotoObat},
               merge: true,
             })
           }
@@ -73,6 +95,14 @@ const DetailPasien = ({navigation, route}) => {
           title={'Foto Obat'}
         />
       </View>
+      <Modal animationType="fade" transparent={true} visible={loading}>
+        <View style={style.modalStyle}>
+          <View style={style.modalWrapper}>
+            <FontAwesomeIcon icon={faWalking} size={25} sty />
+            <Text style={style.textModal}>Mohon Tunggu!</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -87,6 +117,28 @@ const style = StyleSheet.create({
   categoryWrapper: {
     width: '100%',
     marginTop: 60,
+  },
+  modalStyle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00000050',
+    height: '100%',
+    width: '100%',
+  },
+  modalWrapper: {
+    width: '50%',
+    backgroundColor: '#FFF',
+    padding: 30,
+    borderRadius: 10,
+    elevation: 20,
+    alignItems: 'center',
+  },
+  textModal: {
+    marginTop: 20,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 
