@@ -6,9 +6,14 @@ import {
   Text,
   ScrollView,
   TextInput,
+  Alert,
+  Modal,
 } from 'react-native';
 import {CustomButton, CustomHeader, Input, InputSelect} from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {HOST} from '../data/constants';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faWalking} from '@fortawesome/free-solid-svg-icons';
 
 const Month = e => {
   switch (e) {
@@ -50,6 +55,7 @@ const IdentitasPasien = ({navigation, route}) => {
   const [kelaminPasien, setKelaminPasien] = useState();
   const [teleponPasien, setTeleponPasien] = useState();
   const [showDatePicker, setShowDatePicker] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const data = route.params?.data;
@@ -60,7 +66,37 @@ const IdentitasPasien = ({navigation, route}) => {
     setKelaminPasien(data.jenis_kelamin_pasien);
     setTeleponPasien(data.nomor_telepon_pasien);
     return;
-  }, [route.params?.data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const bodyData = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'PUT',
+    body: JSON.stringify({
+      nama_pasien: namaPasien,
+      alamat_pasien: alamatPasien,
+      tanggal_lahir_pasien: tanggalLahir,
+      jenis_kelamin_pasien: kelaminPasien,
+      nomor_telepon_pasien: teleponPasien,
+    }),
+  };
+
+  const updatePasien = () => {
+    fetch(`${HOST}/pasien/${idPasien}`, bodyData)
+      .then(resJson => resJson.json())
+      .then(res => {
+        if (res.status === 'success') {
+          setLoading(false);
+          setEditable(!editable);
+        } else {
+          Alert.alert('Gagal mengupdate data!');
+        }
+      })
+      .catch(() => Alert.alert('Terjadi kesalahan pada sistem!'));
+  };
 
   return (
     <View style={style.container}>
@@ -153,8 +189,23 @@ const IdentitasPasien = ({navigation, route}) => {
             title={editable ? 'Simpan' : 'Ubah'}
             mb={60}
             mt={30}
-            navigation={() => setEditable(!editable)}
+            navigation={() => {
+              if (editable) {
+                updatePasien();
+                setLoading(true);
+              } else {
+                setEditable(true);
+              }
+            }}
           />
+          <Modal animationType="fade" transparent={true} visible={loading}>
+            <View style={style.modalStyle}>
+              <View style={style.modalWrapper}>
+                <FontAwesomeIcon icon={faWalking} size={25} sty />
+                <Text style={style.textModal}>Mohon Tunggu!</Text>
+              </View>
+            </View>
+          </Modal>
         </View>
       </ScrollView>
     </View>
@@ -195,6 +246,28 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Reguler',
     fontSize: 16,
     marginBottom: 15,
+  },
+  modalStyle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00000050',
+    height: '100%',
+    width: '100%',
+  },
+  modalWrapper: {
+    width: '50%',
+    backgroundColor: '#FFF',
+    padding: 30,
+    borderRadius: 10,
+    elevation: 20,
+    alignItems: 'center',
+  },
+  textModal: {
+    marginTop: 20,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

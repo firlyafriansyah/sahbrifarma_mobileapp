@@ -1,5 +1,9 @@
+/* eslint-disable react-native/no-inline-styles */
+import {faWalking} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -7,20 +11,54 @@ import {
   Text,
   View,
 } from 'react-native';
-import {CustomHeader, FloatingButton, Input, ListItem} from '../components';
+import {
+  CustomButton,
+  CustomHeader,
+  FloatingButton,
+  Input,
+  ListItem,
+} from '../components';
+import {HOST} from '../data/constants';
 
 const AlergiObat = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [idPasien, setIdPasien] = useState();
   const [namaObat, setNamaObat] = useState();
   const [inputObat, setInputObat] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const obat = route.params?.data.nama_obat;
+    setIdPasien(route.params?.data.id_pasien);
     if (obat) {
       setNamaObat(obat.slice(0, obat.length - 2).split(', '));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const bodyData = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'PUT',
+    body: JSON.stringify({
+      nama_obat: namaObat ? namaObat.join(', ') + ', ' : null,
+    }),
+  };
+
+  const updateObat = () => {
+    fetch(`${HOST}/alergi-obat/${idPasien}`, bodyData)
+      .then(resJson => resJson.json())
+      .then(res => {
+        if (res.status === 'success') {
+          setLoading(false);
+        } else {
+          Alert.alert('Data gagal diperbarui!');
+        }
+      })
+      .catch(() => Alert.alert('Kesalahan pada sistem!'));
+  };
 
   return (
     <View style={style.container}>
@@ -37,6 +75,17 @@ const AlergiObat = ({navigation, route}) => {
                 onPress={() => setNamaObat(namaObat.filter(it => it !== item))}
               />
             ))
+          )}
+          {!namaObat ? null : (
+            <CustomButton
+              mt={120}
+              mb={30}
+              title="Simpan"
+              navigation={() => {
+                setLoading(true);
+                updateObat();
+              }}
+            />
           )}
         </View>
       </ScrollView>
@@ -67,6 +116,14 @@ const AlergiObat = ({navigation, route}) => {
                 <Text style={style.button}>Simpan</Text>
               </Pressable>
             </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal animationType="fade" transparent={true} visible={loading}>
+        <View style={style.modalStyleLoading}>
+          <View style={style.modalWrapperLoading}>
+            <FontAwesomeIcon icon={faWalking} size={25} sty />
+            <Text style={style.textModal}>Mohon Tunggu!</Text>
           </View>
         </View>
       </Modal>
@@ -115,9 +172,31 @@ const style = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   button: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Poppis-Reguler',
     color: '#2F3542',
+  },
+  modalStyleLoading: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00000050',
+    height: '100%',
+    width: '100%',
+  },
+  modalWrapperLoading: {
+    width: '50%',
+    backgroundColor: '#FFF',
+    padding: 30,
+    borderRadius: 10,
+    elevation: 20,
+    alignItems: 'center',
+  },
+  textModal: {
+    marginTop: 20,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

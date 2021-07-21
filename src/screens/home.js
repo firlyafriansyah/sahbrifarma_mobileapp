@@ -37,7 +37,6 @@ const Home = ({navigation}) => {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => {
-      setRefreshing(false);
       getData();
     });
   }, []);
@@ -46,6 +45,7 @@ const Home = ({navigation}) => {
     fetch(`${HOST}/pasien`)
       .then(resJson => resJson.json())
       .then(res => {
+        setRefreshing(false);
         setData(res.idnPasien);
       });
   };

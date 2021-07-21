@@ -1,5 +1,8 @@
+import {faWalking} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -7,17 +10,55 @@ import {
   Text,
   View,
 } from 'react-native';
-import {CustomHeader, FloatingButton, Input, ListItem} from '../components';
+import {
+  CustomButton,
+  CustomHeader,
+  FloatingButton,
+  Input,
+  ListItem,
+} from '../components';
+import {HOST} from '../data/constants';
 
 const KeluhanPasien = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [idPasien, setIdPasien] = useState();
+  const [date, setDate] = useState();
   const [keluhan, setKeluhan] = useState([]);
   const [inputKeluhan, setInputKeluhan] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log(route.params?.data);
+    const data = route.params?.data;
+    const keluhanData = data.keluhan;
+    setIdPasien(data.id_pasien);
+    setDate(data.tanggal_berobat);
+    setKeluhan(keluhanData.slice(0, keluhanData.length - 2).split(', '));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const bodyData = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'PUT',
+    body: JSON.stringify({
+      keluhan: keluhan ? keluhan.join(', ') + ', ' : null,
+    }),
+  };
+
+  const updateKeluhan = () => {
+    fetch(`${HOST}/keluhan/${date}/${idPasien}`, bodyData)
+      .then(resJson => resJson.json())
+      .then(res => {
+        if (res.status === 'success') {
+          setLoading(false);
+        } else {
+          Alert.alert('Data gagal diperbarui!');
+        }
+      })
+      .catch(() => Alert.alert('Kesalahan pada sistem!'));
+  };
 
   return (
     <View style={style.container}>
@@ -34,6 +75,17 @@ const KeluhanPasien = ({navigation, route}) => {
                 onPress={() => setKeluhan(keluhan.filter(it => it !== item))}
               />
             ))
+          )}
+          {!keluhan ? null : (
+            <CustomButton
+              mt={120}
+              mb={30}
+              title="Simpan"
+              navigation={() => {
+                setLoading(true);
+                updateKeluhan();
+              }}
+            />
           )}
         </View>
       </ScrollView>
@@ -64,6 +116,14 @@ const KeluhanPasien = ({navigation, route}) => {
                 <Text style={style.button}>Simpan</Text>
               </Pressable>
             </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal animationType="fade" transparent={true} visible={loading}>
+        <View style={style.modalStyleLoading}>
+          <View style={style.modalWrapperLoading}>
+            <FontAwesomeIcon icon={faWalking} size={25} sty />
+            <Text style={style.textModal}>Mohon Tunggu!</Text>
           </View>
         </View>
       </Modal>
@@ -115,6 +175,28 @@ const style = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Poppis-Reguler',
     color: '#2F3542',
+  },
+  modalStyleLoading: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00000050',
+    height: '100%',
+    width: '100%',
+  },
+  modalWrapperLoading: {
+    width: '50%',
+    backgroundColor: '#FFF',
+    padding: 30,
+    borderRadius: 10,
+    elevation: 20,
+    alignItems: 'center',
+  },
+  textModal: {
+    marginTop: 20,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

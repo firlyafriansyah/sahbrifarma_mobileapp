@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -11,23 +11,54 @@ import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {useState} from 'react';
 
-const HasilDokterByDate = ({navigation}) => {
-  const [hasilDokter, setHasilDokter] = useState(['20 April 2021']);
+const HasilDokterByDate = ({navigation, route}) => {
+  const [hasilDokterByDate, setHasilDokterByDate] = useState();
+  const [hasilDokter, setHasilDokter] = useState();
 
-  const showKeluhanByDate = () => {
-    if (hasilDokter.length <= 0) {
+  const hasilDokterFunc = (data, date) => {
+    let result = '';
+    data.map(item => {
+      if (item.tanggal_berobat.split('T')[0] === date) {
+        result = item;
+      }
+    });
+    return result;
+  };
+
+  useEffect(() => {
+    const hasilDokterData = route.params?.data;
+    const hasilDokterDate = [];
+    hasilDokterData.forEach(item => {
+      hasilDokterDate.push(item.tanggal_berobat.split('T')[0]);
+    });
+    setHasilDokter(hasilDokterData);
+    setHasilDokterByDate(hasilDokterDate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const showHasilDokterByDate = () => {
+    if (!hasilDokterByDate) {
       return <Text style={style.textNoData}>Tidak ada hasil</Text>;
     } else {
-      return hasilDokter.map((item, index) => (
-        <TouchableWithoutFeedback
-          key={index}
-          onPress={() => navigation.navigate('Hasil Dokter')}>
-          <View style={style.wrapper}>
-            <Text style={style.textStyle}>{item}</Text>
-            <FontAwesomeIcon icon={faChevronRight} size={20} />
-          </View>
-        </TouchableWithoutFeedback>
-      ));
+      return hasilDokterByDate
+        .slice(0)
+        .reverse()
+        .map((item, index) => (
+          <TouchableWithoutFeedback
+            key={index}
+            onPress={() => {
+              navigation.navigate({
+                name: 'Hasil Dokter',
+                params: {data: hasilDokterFunc(hasilDokter, item)},
+                merge: true,
+              });
+            }}>
+            <View style={style.wrapper}>
+              <Text style={style.textStyle}>{item}</Text>
+              <FontAwesomeIcon icon={faChevronRight} size={20} />
+            </View>
+          </TouchableWithoutFeedback>
+        ));
     }
   };
 
@@ -38,7 +69,7 @@ const HasilDokterByDate = ({navigation}) => {
         onPress={() => navigation.goBack()}
       />
       <ScrollView style={style.scrollViewStyle}>
-        {showKeluhanByDate()}
+        {showHasilDokterByDate()}
       </ScrollView>
       <FloatingButton
         navigation={() => navigation.navigate('Input Hasil Dokter')}

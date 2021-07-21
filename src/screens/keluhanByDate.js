@@ -13,23 +13,27 @@ import {useState} from 'react';
 
 const KeluhanByDate = ({navigation, route}) => {
   const [keluhanByDate, setKeluhanByDate] = useState();
+  const [idPasien, setIdPasien] = useState();
   const [keluhan, setKeluhan] = useState();
 
   const keluhanFunc = (data, date) => {
+    let result = '';
     data.map(item => {
       if (item.tanggal_berobat.split('T')[0] === date) {
-        return item;
+        result = item;
       }
     });
+    return result;
   };
 
   useEffect(() => {
-    const keluhan = route.params?.data;
+    const keluhanData = route.params?.data;
+    setIdPasien(keluhanData[0].id_pasien);
     const keluhanDate = [];
-    keluhan.forEach(item => {
+    keluhanData.forEach(item => {
       keluhanDate.push(item.tanggal_berobat.split('T')[0]);
     });
-    setKeluhan(keluhan);
+    setKeluhan(keluhanData);
     setKeluhanByDate(keluhanDate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -48,7 +52,7 @@ const KeluhanByDate = ({navigation, route}) => {
               navigation.navigate({
                 name: 'Keluhan',
                 params: {data: keluhanFunc(keluhan, item)},
-                mergea: true,
+                merge: true,
               });
             }}>
             <View style={style.wrapper}>
@@ -69,7 +73,15 @@ const KeluhanByDate = ({navigation, route}) => {
       <ScrollView style={style.scrollViewStyle}>
         {showKeluhanByDate()}
       </ScrollView>
-      <FloatingButton navigation={() => navigation.navigate('Input Keluhan')} />
+      <FloatingButton
+        navigation={() =>
+          navigation.navigate({
+            name: 'Input Keluhan',
+            params: {data: idPasien},
+            merge: true,
+          })
+        }
+      />
     </View>
   );
 };
