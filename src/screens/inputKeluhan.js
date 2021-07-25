@@ -45,21 +45,26 @@ const InputKeluhan = ({navigation, route}) => {
   };
 
   const addKeluhan = () => {
-    fetch(`${HOST}/keluhan/tambah/${idPasien}`, bodyData)
-      .then(resJson => resJson.json())
-      .then(res => {
-        if (res.status === 'success') {
+    if (keluhan.length <= 0) {
+      setLoading(false);
+      Alert.alert('Tambahkan setidaknya satu keluhan!');
+    } else {
+      fetch(`${HOST}/keluhan/tambah/${idPasien}`, bodyData)
+        .then(resJson => resJson.json())
+        .then(res => {
+          if (res.status === 'success') {
+            setLoading(false);
+            navigation.navigate('DetailPasien');
+          } else {
+            Alert.alert('Gagal memperbarui data!');
+            setLoading(false);
+          }
+        })
+        .catch(() => {
+          Alert.alert('Terjadi kesalahan sistem!');
           setLoading(false);
-          navigation.navigate('Keluhan By Date');
-        } else {
-          Alert.alert('Gagal memperbarui data!');
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        Alert.alert('Terjadi kesalahan sistem!');
-        setLoading(false);
-      });
+        });
+    }
   };
 
   return (

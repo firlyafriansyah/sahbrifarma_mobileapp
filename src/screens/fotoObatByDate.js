@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,25 +9,56 @@ import {
 import {CustomHeader, FloatingButton} from '../components';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {useState} from 'react';
 
-const FotoObatByDate = ({navigation}) => {
-  const [fotoObat, setFotoObat] = useState(['20 April 2021']);
+const FotoObatByDate = ({navigation, route}) => {
+  const [idPasien, setIdPasien] = useState();
+  const [fotoObatByDate, setFotoObatByDate] = useState();
+  const [fotoObat, setFotoObat] = useState();
+
+  const fotoObatFunc = (data, date) => {
+    let result = '';
+    data.map(item => {
+      if (item.tanggal_berobat === date) {
+        result = item;
+      }
+    });
+    return result;
+  };
+
+  useEffect(() => {
+    const hasilDokterData = route.params?.data;
+    const hasilDokterDate = [];
+    hasilDokterData.forEach(item => {
+      setIdPasien(item.id_pasien);
+      hasilDokterDate.push(item.tanggal_berobat);
+    });
+    setFotoObat(hasilDokterData);
+    setFotoObatByDate(hasilDokterDate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const showKeluhanByDate = () => {
-    if (fotoObat.length <= 0) {
+    if (!fotoObatByDate) {
       return <Text style={style.textNoData}>Tidak ada hasil</Text>;
     } else {
-      return fotoObat.map((item, index) => (
-        <TouchableWithoutFeedback
-          key={index}
-          onPress={() => navigation.navigate('Foto Obat')}>
-          <View style={style.wrapper}>
-            <Text style={style.textStyle}>{item}</Text>
-            <FontAwesomeIcon icon={faChevronRight} size={20} />
-          </View>
-        </TouchableWithoutFeedback>
-      ));
+      return fotoObatByDate
+        .slice(0)
+        .reverse()
+        .map((item, index) => (
+          <TouchableWithoutFeedback
+            key={index}
+            onPress={() =>
+              navigation.navigate({
+                name: 'Foto Obat',
+                params: {data: fotoObatFunc(fotoObat, item)},
+              })
+            }>
+            <View style={style.wrapper}>
+              <Text style={style.textStyle}>{item.split('T')[0]}</Text>
+              <FontAwesomeIcon icon={faChevronRight} size={20} />
+            </View>
+          </TouchableWithoutFeedback>
+        ));
     }
   };
 
@@ -38,7 +69,12 @@ const FotoObatByDate = ({navigation}) => {
         {showKeluhanByDate()}
       </ScrollView>
       <FloatingButton
-        navigation={() => navigation.navigate('Input Foto Obat')}
+        navigation={() =>
+          navigation.navigate({
+            name: 'Input Foto Obat',
+            params: {data: idPasien},
+          })
+        }
       />
     </View>
   );

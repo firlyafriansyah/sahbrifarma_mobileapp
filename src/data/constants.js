@@ -1,3 +1,3 @@
-const HOST = 'https://a5bb1c7790cc.ngrok.io';
+const HOST = 'http://sahbriservice.origa.my.id';
 
 export {HOST};

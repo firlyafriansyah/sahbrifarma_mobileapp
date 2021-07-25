@@ -1,6 +1,6 @@
 import {faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,9 +8,8 @@ import {
   Text,
   Alert,
   RefreshControl,
+  ScrollView,
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
-import {useState} from 'react/cjs/react.development';
 import {Category, CustomHeader} from '../components';
 import {HOST} from '../data/constants';
 
@@ -24,6 +23,7 @@ const DetailPasien = ({navigation, route}) => {
   const [keluhan, setKeluhan] = useState();
   const [fotoObat, setFotoObat] = useState();
   const [hasilDokter, setHasilDokter] = useState();
+  const [riwayatBerobat, setRiwayatBerobat] = useState();
   const [loading, setLoading] = useState(false);
 
   const onRefresh = React.useCallback(() => {
@@ -35,7 +35,7 @@ const DetailPasien = ({navigation, route}) => {
   }, []);
 
   const getData = () => {
-    fetch(`${HOST}/detail/pasien/${route.params?.id_pasien}`)
+    fetch(`${HOST}/pasien/detail/${route.params?.id_pasien}`)
       .then(resJson => resJson.json())
       .then(res => {
         setIdnPasien(res.idnPasien);
@@ -43,10 +43,30 @@ const DetailPasien = ({navigation, route}) => {
         setKeluhan(res.keluhan);
         setFotoObat(res.fotoObat);
         setHasilDokter(res.hasilPeriksaDokter);
-        setLoading(false);
+        setRiwayatBerobat(res.riwayatBerobat);
         setLoading(false);
       })
       .catch(() => Alert.alert('Terjadi kesalahan pada jaringan!'));
+  };
+
+  const hapusPasien = () => {
+    setLoading(true);
+    fetch(`${HOST}/pasien/delete/${idnPasien.id_pasien}`, {method: 'DELETE'})
+      .then(resJson => resJson.json())
+      .then(res => {
+        if (res.status === 'success') {
+          setLoading(false);
+          Alert.alert('Data pasien berhasil dihapus!');
+          navigation.navigate('Home');
+        } else {
+          setLoading(false);
+          Alert.alert('Data pasien gagal dihapus!');
+        }
+      })
+      .catch(() => {
+        setLoading(false);
+        Alert.alert('Terjadi kesalahan pada sistem!');
+      });
   };
 
   useEffect(() => {
@@ -66,7 +86,7 @@ const DetailPasien = ({navigation, route}) => {
       <View style={style.container}>
         <CustomHeader
           onPress={() => navigation.goBack()}
-          title={'Detail Pasien'}
+          title={'DetailPasien'}
         />
         <View style={style.categoryWrapper}>
           <Category
@@ -74,7 +94,6 @@ const DetailPasien = ({navigation, route}) => {
               navigation.navigate({
                 name: 'Identitas Pasien',
                 params: {data: idnPasien},
-                merge: true,
               })
             }
             source={require('../../assets/images/profil_icon.png')}
@@ -85,7 +104,6 @@ const DetailPasien = ({navigation, route}) => {
               navigation.navigate({
                 name: 'Alergi Obat',
                 params: {data: alergiObat},
-                merge: true,
               })
             }
             source={require('../../assets/images/alergi_obat.png')}
@@ -96,7 +114,6 @@ const DetailPasien = ({navigation, route}) => {
               navigation.navigate({
                 name: 'Keluhan By Date',
                 params: {data: keluhan},
-                merge: true,
               })
             }
             source={require('../../assets/images/keluhan.png')}
@@ -107,7 +124,6 @@ const DetailPasien = ({navigation, route}) => {
               navigation.navigate({
                 name: 'Hasil Dokter By Date',
                 params: {data: hasilDokter},
-                merge: true,
               })
             }
             source={require('../../assets/images/hasil_cek_dokter.png')}
@@ -118,11 +134,42 @@ const DetailPasien = ({navigation, route}) => {
               navigation.navigate({
                 name: 'Foto Obat By Date',
                 params: {data: fotoObat},
-                merge: true,
               })
             }
             source={require('../../assets/images/foto_obat.png')}
             title={'Foto Obat'}
+          />
+          <Category
+            onPress={() =>
+              navigation.navigate({
+                name: 'Riwayat Berobat',
+                params: {data: riwayatBerobat},
+              })
+            }
+            source={require('../../assets/images/riwayat_berobat.png')}
+            title={'Riwayat Berobat'}
+          />
+          <Category
+            onPress={() => {
+              Alert.alert(
+                'Apakah anda yakin?',
+                'Apakah anda yakin akan menghapus seluruh data pasien ini?',
+                [
+                  // The "Yes" button
+                  {
+                    text: 'Ya',
+                    onPress: () => {
+                      hapusPasien();
+                    },
+                  },
+                  {
+                    text: 'Batal',
+                  },
+                ],
+              );
+            }}
+            source={require('../../assets/images/hapus_pasien.png')}
+            title={'Hapus Pasien'}
           />
         </View>
         <Modal animationType="fade" transparent={true} visible={loading}>

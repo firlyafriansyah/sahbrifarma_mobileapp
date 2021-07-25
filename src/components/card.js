@@ -4,11 +4,11 @@ import {
   View,
   ImageBackground,
   Text,
-  Image,
   StyleSheet,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMapMarkerAlt} from '@fortawesome/free-solid-svg-icons';
+import QRCode from 'react-native-qrcode-svg';
 
 const Card = props => {
   return (
@@ -20,7 +20,7 @@ const Card = props => {
           style={style.cardBackground}>
           <Text style={style.pasienName}>{props.namaPasien}</Text>
           <View style={style.cardDetail}>
-            <View style={{width: '50%'}}>
+            <View style={style.halfWidth}>
               <Text style={style.lastCheck}>Berobat Terakhir</Text>
               <Text style={style.dateCheck}>{props.dateCheck}</Text>
               <View style={style.locationWrapper}>
@@ -29,7 +29,7 @@ const Card = props => {
               </View>
             </View>
             <View style={style.qrCodeStyle}>
-              <Image source={require('../../assets/images/qr_sample.png')} />
+              <QRCode value={props.id} size={80} />
               <Text style={style.idPasien}>ID : {props.id}</Text>
             </View>
           </View>
@@ -101,6 +101,7 @@ const style = StyleSheet.create({
     marginTop: 10,
     color: '#2F3542',
   },
+  halfWidth: {width: '50%'},
 });
 
 export default Card;

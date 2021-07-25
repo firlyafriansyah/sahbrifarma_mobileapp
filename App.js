@@ -27,6 +27,10 @@ import {
   FotoObatByDateScreen,
   FotoObatScreen,
   InputFotoObatScreen,
+  RiwayatBerobatScreen,
+  ManageAdminScreen,
+  RegisterAdminScreen,
+  UpdateAdminScreen,
 } from './src/screens';
 
 const Stack = createStackNavigator();
@@ -44,7 +48,7 @@ const App = () => {
           screenOptions={{headerShown: false}}>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Detail Pasien" component={DetailPasienScreen} />
+          <Stack.Screen name="DetailPasien" component={DetailPasienScreen} />
           <Stack.Screen
             name="Input Pasien Baru"
             component={InputNewPasienScreen}
@@ -78,6 +82,16 @@ const App = () => {
             name={'Input Foto Obat'}
             component={InputFotoObatScreen}
           />
+          <Stack.Screen
+            name={'Riwayat Berobat'}
+            component={RiwayatBerobatScreen}
+          />
+          <Stack.Screen name={'Manage Admin'} component={ManageAdminScreen} />
+          <Stack.Screen
+            name={'Register Admin'}
+            component={RegisterAdminScreen}
+          />
+          <Stack.Screen name={'Update Admin'} component={UpdateAdminScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

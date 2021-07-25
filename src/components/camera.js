@@ -4,6 +4,7 @@ import {
   Alert,
   Modal,
   StyleSheet,
+  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -18,7 +19,7 @@ const Camera = props => {
   const takePicture = async () => {
     if (this.AmbilFotoObat && !takingPic) {
       let options = {
-        quality: 0.7,
+        quality: 0.1,
         base64: true,
       };
 
@@ -69,6 +70,11 @@ const Camera = props => {
             </TouchableWithoutFeedback>
           </View>
         </View>
+        <TouchableWithoutFeedback onPress={() => setModal(false)}>
+          <View style={style.backBtn}>
+            <Text style={style.backText}>Kembali</Text>
+          </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </>
   );
@@ -78,6 +84,7 @@ const style = StyleSheet.create({
   buttonCameraWrapper: {
     width: '100%',
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 30,
@@ -87,6 +94,21 @@ const style = StyleSheet.create({
   },
   flex: {
     flex: 1,
+    justifyContent: 'center',
+  },
+  backBtn: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2d3436',
+    height: 50,
+    width: '100%',
+  },
+  backText: {
+    textAlign: 'center',
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    color: '#FFFFFF',
   },
 });
 

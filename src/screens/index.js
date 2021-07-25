@@ -14,6 +14,10 @@ import {default as HasilDokterScreen} from './hasilDokter';
 import {default as FotoObatByDateScreen} from './fotoObatByDate';
 import {default as FotoObatScreen} from './fotoObat';
 import {default as InputFotoObatScreen} from './inputFotoObat';
+import {default as RiwayatBerobatScreen} from './riwayatBerobat';
+import {default as ManageAdminScreen} from './manageAdmin';
+import {default as RegisterAdminScreen} from './registerAdmin';
+import {default as UpdateAdminScreen} from './updateAdmin';
 
 export {
   LoginScreen,
@@ -32,4 +36,8 @@ export {
   FotoObatByDateScreen,
   FotoObatScreen,
   InputFotoObatScreen,
+  RiwayatBerobatScreen,
+  ManageAdminScreen,
+  RegisterAdminScreen,
+  UpdateAdminScreen,
 };

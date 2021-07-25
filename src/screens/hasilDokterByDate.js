@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,16 +9,16 @@ import {
 import {CustomHeader, FloatingButton} from '../components';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {useState} from 'react';
 
 const HasilDokterByDate = ({navigation, route}) => {
+  const [idPasien, setIdPasien] = useState();
   const [hasilDokterByDate, setHasilDokterByDate] = useState();
   const [hasilDokter, setHasilDokter] = useState();
 
   const hasilDokterFunc = (data, date) => {
     let result = '';
     data.map(item => {
-      if (item.tanggal_berobat.split('T')[0] === date) {
+      if (item.tanggal_berobat === date) {
         result = item;
       }
     });
@@ -29,7 +29,8 @@ const HasilDokterByDate = ({navigation, route}) => {
     const hasilDokterData = route.params?.data;
     const hasilDokterDate = [];
     hasilDokterData.forEach(item => {
-      hasilDokterDate.push(item.tanggal_berobat.split('T')[0]);
+      setIdPasien(item.id_pasien);
+      hasilDokterDate.push(item.tanggal_berobat);
     });
     setHasilDokter(hasilDokterData);
     setHasilDokterByDate(hasilDokterDate);
@@ -50,11 +51,10 @@ const HasilDokterByDate = ({navigation, route}) => {
               navigation.navigate({
                 name: 'Hasil Dokter',
                 params: {data: hasilDokterFunc(hasilDokter, item)},
-                merge: true,
               });
             }}>
             <View style={style.wrapper}>
-              <Text style={style.textStyle}>{item}</Text>
+              <Text style={style.textStyle}>{item.split('T')[0]}</Text>
               <FontAwesomeIcon icon={faChevronRight} size={20} />
             </View>
           </TouchableWithoutFeedback>
@@ -72,7 +72,12 @@ const HasilDokterByDate = ({navigation, route}) => {
         {showHasilDokterByDate()}
       </ScrollView>
       <FloatingButton
-        navigation={() => navigation.navigate('Input Hasil Dokter')}
+        navigation={() => {
+          navigation.navigate({
+            name: 'Input Hasil Dokter',
+            params: {data: idPasien},
+          });
+        }}
       />
     </View>
   );

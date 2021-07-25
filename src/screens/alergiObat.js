@@ -23,7 +23,7 @@ import {HOST} from '../data/constants';
 const AlergiObat = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [idPasien, setIdPasien] = useState();
-  const [namaObat, setNamaObat] = useState();
+  const [namaObat, setNamaObat] = useState([]);
   const [inputObat, setInputObat] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -53,6 +53,7 @@ const AlergiObat = ({navigation, route}) => {
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
+          Alert.alert('Data berhasil disimpan!');
         } else {
           Alert.alert('Data gagal diperbarui!');
         }
@@ -65,16 +66,20 @@ const AlergiObat = ({navigation, route}) => {
       <CustomHeader title={'Alergi Obat'} onPress={() => navigation.goBack()} />
       <ScrollView style={style.scrollViewStyle}>
         <View>
-          {!namaObat ? (
+          {namaObat.length <= 0 ? (
             <Text style={{textAlign: 'center'}}>Tidak ada Alergi</Text>
           ) : (
-            namaObat.map((item, index) => (
-              <ListItem
-                title={item}
-                key={index}
-                onPress={() => setNamaObat(namaObat.filter(it => it !== item))}
-              />
-            ))
+            namaObat
+              .slice(0)
+              .map((item, index) => (
+                <ListItem
+                  title={item}
+                  key={index}
+                  onPress={() =>
+                    setNamaObat(namaObat.filter(it => it !== item))
+                  }
+                />
+              ))
           )}
           {!namaObat ? null : (
             <CustomButton

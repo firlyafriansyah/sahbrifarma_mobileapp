@@ -6,6 +6,8 @@ import {
   ScrollView,
   Alert,
   TextInput,
+  Modal,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   BubbleTag,
@@ -17,6 +19,8 @@ import {
 } from '../components';
 import {HOST} from '../data/constants';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {faCalendar, faWalking} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const Month = e => {
   switch (e) {
@@ -56,9 +60,11 @@ const InputNewPasien = ({navigation}) => {
   const [namaPasien, setNamaPasien] = useState();
   const [alamatPasien, setAlamatPasien] = useState();
   const [tanggalLahir, setTanggalLahir] = useState();
+  const [date, setDate] = useState(new Date());
   const [kelaminPasien, setKelaminPasien] = useState('Laki - Laki');
   const [teleponPasien, setTeleponPasien] = useState();
   const [showDatePicker, setShowDatePicker] = useState();
+  const [loading, setLoading] = useState(false);
 
   const showBubbleTag = (arrayState, setArrayState) => {
     if (arrayState.length) {
@@ -99,17 +105,23 @@ const InputNewPasien = ({navigation}) => {
   };
 
   const savePasien = () => {
+    setLoading(true);
     fetch(`${HOST}/pasien`, data)
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
+          setLoading(false);
           Alert.alert('Data pasien berhasil disimpan!');
           navigation.navigate('Home');
         } else {
+          setLoading(false);
           Alert.alert('Terjadi kesalahan pada saat menyimpan!');
         }
       })
-      .catch(() => Alert.alert('Terjadi kesalahan pada sistem!'));
+      .catch(() => {
+        setLoading(false);
+        Alert.alert('Terjadi kesalahan pada sistem!');
+      });
   };
 
   const alergiFunction = () => {
@@ -154,19 +166,30 @@ const InputNewPasien = ({navigation}) => {
             onChangeText={item => setAlamatPasien(item)}
           />
           <Text style={style.label}>Tanggal Lahir</Text>
-          <TextInput
-            style={style.inputStyle}
-            placeholder={'Tanggal Lahir Pasien'}
-            value={tanggalLahir ? tanggalLahir : ''}
-            onFocus={() => setShowDatePicker(true)}
-          />
+          <View style={style.wrapper}>
+            <TextInput
+              editable={false}
+              style={style.input}
+              placeholder={'Tanggal Lahir Pasien'}
+              onChangeText={text => setTanggalLahir(text)}
+              value={tanggalLahir}
+            />
+            <TouchableWithoutFeedback onPress={() => setShowDatePicker(true)}>
+              <FontAwesomeIcon
+                icon={faCalendar}
+                size={20}
+                style={style.iconStyle}
+              />
+            </TouchableWithoutFeedback>
+          </View>
           {showDatePicker && (
             <DateTimePicker
-              value={new Date()}
+              value={date}
               mode={'date'}
               is24Hour={true}
               display="default"
               onChange={e => {
+                setShowDatePicker(false);
                 const Date = e.nativeEvent.timestamp;
                 if (Date !== undefined) {
                   setTanggalLahir(
@@ -174,6 +197,7 @@ const InputNewPasien = ({navigation}) => {
                       Date.getMonth(),
                     )} ${Date.getFullYear()}`,
                   );
+                  setDate(Date);
                   setShowDatePicker(false);
                 }
               }}
@@ -234,6 +258,14 @@ const InputNewPasien = ({navigation}) => {
           />
         </View>
       </ScrollView>
+      <Modal animationType="fade" transparent={true} visible={loading}>
+        <View style={style.modalStyle}>
+          <View style={style.modalWrapper}>
+            <FontAwesomeIcon icon={faWalking} size={25} sty />
+            <Text style={style.textModal}>Mohon Tunggu!</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -275,6 +307,49 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Reguler',
     fontSize: 16,
     marginBottom: 15,
+  },
+  wrapper: {
+    borderWidth: 1,
+    borderRadius: 12,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    flex: 1,
+    marginBottom: 15,
+    borderColor: '#A4B0BE80',
+  },
+  input: {
+    fontFamily: 'Poppins-Reguler',
+    fontSize: 16,
+    flex: 1,
+    color: '#000000',
+  },
+  iconStyle: {
+    color: '#2F3542',
+  },
+  modalStyle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00000050',
+    height: '100%',
+    width: '100%',
+  },
+  modalWrapper: {
+    width: '50%',
+    backgroundColor: '#FFF',
+    padding: 30,
+    borderRadius: 10,
+    elevation: 20,
+    alignItems: 'center',
+  },
+  textModal: {
+    marginTop: 20,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

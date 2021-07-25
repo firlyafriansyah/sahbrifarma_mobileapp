@@ -8,11 +8,11 @@ import {
   TouchableOpacity,
   Text,
   RefreshControl,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faSearch, faQrcode, faBolt} from '@fortawesome/free-solid-svg-icons';
 import {Card, FloatingButton, InputWithLogo} from '../components';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import {HOST} from '../data/constants';
@@ -21,11 +21,12 @@ const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
-const Home = ({navigation}) => {
+const Home = ({navigation, route}) => {
   const [modal, setModal] = useState(false);
   const [torch, setTorch] = useState(false);
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [search, setSearch] = useState();
+  const [role, setRole] = useState();
 
   const onSuccess = e => {
     setSearch(e.data);
@@ -50,9 +51,15 @@ const Home = ({navigation}) => {
       });
   };
 
+  const navigate = () => {
+    navigation.navigate('Manage Admin');
+  };
+
   useEffect(() => {
     getData();
+    setRole(route.params?.role);
     return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -63,7 +70,7 @@ const Home = ({navigation}) => {
       />
       <View style={style.searchWrapper}>
         <InputWithLogo
-          mb={45}
+          mb={30}
           mr={18}
           placeholder={'Search...'}
           icon={faSearch}
@@ -84,13 +91,20 @@ const Home = ({navigation}) => {
       <FloatingButton
         navigation={() => navigation.navigate('Input Pasien Baru')}
       />
+      {role === 1 ? (
+        <TouchableWithoutFeedback onPress={() => navigate()}>
+          <View style={style.manageAdminStyle}>
+            <Text style={style.manageAdminText}>Kelola Admin</Text>
+          </View>
+        </TouchableWithoutFeedback>
+      ) : null}
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         style={style.scrollViewStyle}
         showsVerticalScrollIndicator={false}>
-        {data !== undefined ? (
+        {data.length >= 1 ? (
           data
             .slice(0)
             .reverse()
@@ -105,9 +119,8 @@ const Home = ({navigation}) => {
                       key={e.id}
                       press={() =>
                         navigation.navigate({
-                          name: 'Detail Pasien',
+                          name: 'DetailPasien',
                           params: {id_pasien: e.id_pasien},
-                          merge: true,
                         })
                       }
                       namaPasien={e.nama_pasien}
@@ -123,9 +136,8 @@ const Home = ({navigation}) => {
                     key={e.id}
                     press={() =>
                       navigation.navigate({
-                        name: 'Detail Pasien',
+                        name: 'DetailPasien',
                         params: {id_pasien: e.id_pasien},
-                        merge: true,
                       })
                     }
                     namaPasien={e.nama_pasien}
@@ -137,7 +149,7 @@ const Home = ({navigation}) => {
               }
             })
         ) : (
-          <Text style={style.textLoading}>Loading...</Text>
+          <Text style={style.textLoading}>Tidak ada data pasien</Text>
         )}
       </ScrollView>
 
@@ -209,6 +221,21 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
     textAlign: 'center',
+  },
+  manageAdminStyle: {
+    width: 250,
+    height: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#5352ED',
+    borderRadius: 20,
+    marginBottom: 30,
+  },
+  manageAdminText: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    color: '#FFFFFF',
   },
 });
 

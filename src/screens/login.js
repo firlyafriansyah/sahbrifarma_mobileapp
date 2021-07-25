@@ -22,7 +22,10 @@ const Login = ({navigation}) => {
         .then(resJson => resJson.json())
         .then(res => {
           if (res.status === 'success') {
-            navigation.navigate('Home');
+            navigation.navigate({
+              name: 'Home',
+              params: {role: res.data.role},
+            });
             setPass('');
             setName('');
             setError(false);

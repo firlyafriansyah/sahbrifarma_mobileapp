@@ -21,8 +21,7 @@ import {HOST} from '../data/constants';
 
 const KeluhanPasien = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [idPasien, setIdPasien] = useState();
-  const [date, setDate] = useState();
+  const [id, setId] = useState();
   const [keluhan, setKeluhan] = useState([]);
   const [inputKeluhan, setInputKeluhan] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,8 +29,7 @@ const KeluhanPasien = ({navigation, route}) => {
   useEffect(() => {
     const data = route.params?.data;
     const keluhanData = data.keluhan;
-    setIdPasien(data.id_pasien);
-    setDate(data.tanggal_berobat);
+    setId(data.id);
     setKeluhan(keluhanData.slice(0, keluhanData.length - 2).split(', '));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -48,10 +46,11 @@ const KeluhanPasien = ({navigation, route}) => {
   };
 
   const updateKeluhan = () => {
-    fetch(`${HOST}/keluhan/${date}/${idPasien}`, bodyData)
+    fetch(`${HOST}/keluhan/${id}`, bodyData)
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
+          navigation.navigate('DetailPasien');
           setLoading(false);
         } else {
           Alert.alert('Data gagal diperbarui!');
@@ -60,13 +59,32 @@ const KeluhanPasien = ({navigation, route}) => {
       .catch(() => Alert.alert('Kesalahan pada sistem!'));
   };
 
+  const hapusKeluhan = () => {
+    setLoading(true);
+    fetch(`${HOST}/keluhan/delete/${id}`, {method: 'DELETE'})
+      .then(resJson => resJson.json())
+      .then(res => {
+        if (res.status === 'success') {
+          navigation.navigate('DetailPasien');
+          setLoading(false);
+        } else {
+          setLoading(false);
+          Alert.alert('Data gagal dihapus!');
+        }
+      })
+      .catch(() => {
+        setLoading(false);
+        Alert.alert('Terjadi kesalahan pada sistem!');
+      });
+  };
+
   return (
     <View style={style.container}>
       <CustomHeader title={'Keluhan'} onPress={() => navigation.goBack()} />
       <ScrollView style={style.scrollViewStyle}>
         <View>
           {keluhan.length <= 0 ? (
-            <Text style={{textAlign: 'center'}}>Tidak ada keluhan</Text>
+            <Text style={style.textCenter}>Tidak ada keluhan</Text>
           ) : (
             keluhan.map((item, index) => (
               <ListItem
@@ -79,7 +97,6 @@ const KeluhanPasien = ({navigation, route}) => {
           {!keluhan ? null : (
             <CustomButton
               mt={120}
-              mb={30}
               title="Simpan"
               navigation={() => {
                 setLoading(true);
@@ -87,6 +104,14 @@ const KeluhanPasien = ({navigation, route}) => {
               }}
             />
           )}
+          <CustomButton
+            mt={20}
+            mb={30}
+            title="Hapus"
+            navigation={() => {
+              hapusKeluhan();
+            }}
+          />
         </View>
       </ScrollView>
       <FloatingButton navigation={() => setModalVisible(true)} />
@@ -103,7 +128,7 @@ const KeluhanPasien = ({navigation, route}) => {
             />
             <View style={style.modalButton}>
               <Pressable
-                style={{marginRight: 30}}
+                style={style.cancelStyle}
                 onPress={() => setModalVisible(false)}>
                 <Text style={style.button}>Batal</Text>
               </Pressable>
@@ -197,6 +222,12 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
     textAlign: 'center',
+  },
+  textCenter: {
+    textAlign: 'center',
+  },
+  cancelStyle: {
+    marginRight: 30,
   },
 });
 

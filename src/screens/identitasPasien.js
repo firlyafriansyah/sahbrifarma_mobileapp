@@ -2,18 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
-  Image,
   Text,
   ScrollView,
   TextInput,
   Alert,
   Modal,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {CustomButton, CustomHeader, Input, InputSelect} from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {HOST} from '../data/constants';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faWalking} from '@fortawesome/free-solid-svg-icons';
+import {faCalendar, faWalking} from '@fortawesome/free-solid-svg-icons';
+import QRCode from 'react-native-qrcode-svg';
 
 const Month = e => {
   switch (e) {
@@ -55,6 +56,7 @@ const IdentitasPasien = ({navigation, route}) => {
   const [kelaminPasien, setKelaminPasien] = useState();
   const [teleponPasien, setTeleponPasien] = useState();
   const [showDatePicker, setShowDatePicker] = useState();
+  const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -91,6 +93,7 @@ const IdentitasPasien = ({navigation, route}) => {
         if (res.status === 'success') {
           setLoading(false);
           setEditable(!editable);
+          Alert.alert('Data berhasil disimpan!');
         } else {
           Alert.alert('Gagal mengupdate data!');
         }
@@ -104,11 +107,9 @@ const IdentitasPasien = ({navigation, route}) => {
         onPress={() => navigation.goBack()}
         title={'Identitas Pasien'}
       />
-      <Image
-        source={require('../../assets/images/qr_sample.png')}
-        width={150}
-        style={style.qrCodeStyle}
-      />
+      <View style={style.qrCodeStyle}>
+        <QRCode value={idPasien} size={80} />
+      </View>
       <ScrollView
         style={style.scrollViewStyle}
         showsVerticalScrollIndicator={false}>
@@ -137,20 +138,32 @@ const IdentitasPasien = ({navigation, route}) => {
             onChangeText={item => setAlamatPasien(item)}
           />
           <Text style={style.label}>Tanggal Lahir</Text>
-          <TextInput
-            style={style.inputStyle}
-            placeholder={'Tanggal Lahir Pasien'}
-            value={tanggalLahir ? tanggalLahir : ''}
-            editable={editable}
-            onFocus={() => setShowDatePicker(true)}
-          />
+          <View style={style.wrapper}>
+            <TextInput
+              style={style.input}
+              placeholder={'Tanggal Lahir Pasien'}
+              onChangeText={text => setTanggalLahir(text)}
+              value={tanggalLahir}
+              editable={false}
+            />
+            <TouchableWithoutFeedback
+              disabled={!editable}
+              onPress={() => setShowDatePicker(true)}>
+              <FontAwesomeIcon
+                icon={faCalendar}
+                size={20}
+                style={style.iconStyle}
+              />
+            </TouchableWithoutFeedback>
+          </View>
           {showDatePicker && (
             <DateTimePicker
-              value={new Date()}
+              value={date}
               mode={'date'}
               is24Hour={true}
               display="default"
               onChange={e => {
+                setShowDatePicker(false);
                 const Date = e.nativeEvent.timestamp;
                 if (Date !== undefined) {
                   setTanggalLahir(
@@ -158,6 +171,7 @@ const IdentitasPasien = ({navigation, route}) => {
                       Date.getMonth(),
                     )} ${Date.getFullYear()}`,
                   );
+                  setDate(Date);
                   setShowDatePicker(false);
                 }
               }}
@@ -268,6 +282,27 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
     textAlign: 'center',
+  },
+  wrapper: {
+    borderWidth: 1,
+    borderRadius: 12,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    flex: 1,
+    marginBottom: 15,
+    borderColor: '#A4B0BE80',
+  },
+  input: {
+    fontFamily: 'Poppins-Reguler',
+    fontSize: 16,
+    flex: 1,
+    color: '#000000',
+  },
+  iconStyle: {
+    color: '#2F3542',
   },
 });
 

@@ -6,7 +6,14 @@ const CustomButton = props => {
     <TouchableHighlight
       onPress={() => props.navigation()}
       style={[style.touchable, {marginBottom: props.mb, marginTop: props.mt}]}>
-      <View style={style.submitBtn}>
+      <View
+        style={[
+          // eslint-disable-next-line react-native/no-inline-styles
+          {
+            backgroundColor: props.title === 'Hapus' ? '#c0392b' : '#5352ED',
+          },
+          style.submitBtn,
+        ]}>
         <Text style={style.submitText}>{props.title}</Text>
       </View>
     </TouchableHighlight>
@@ -18,7 +25,6 @@ const style = StyleSheet.create({
     paddingVertical: 21,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#5352ED',
     borderRadius: 26,
     elevation: 12,
   },

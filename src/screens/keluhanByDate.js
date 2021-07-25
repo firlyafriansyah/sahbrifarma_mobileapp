@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,7 +9,6 @@ import {
 import {CustomHeader, FloatingButton} from '../components';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {useState} from 'react';
 
 const KeluhanByDate = ({navigation, route}) => {
   const [keluhanByDate, setKeluhanByDate] = useState();
@@ -19,7 +18,7 @@ const KeluhanByDate = ({navigation, route}) => {
   const keluhanFunc = (data, date) => {
     let result = '';
     data.map(item => {
-      if (item.tanggal_berobat.split('T')[0] === date) {
+      if (item.tanggal_berobat === date) {
         result = item;
       }
     });
@@ -31,7 +30,7 @@ const KeluhanByDate = ({navigation, route}) => {
     setIdPasien(keluhanData[0].id_pasien);
     const keluhanDate = [];
     keluhanData.forEach(item => {
-      keluhanDate.push(item.tanggal_berobat.split('T')[0]);
+      keluhanDate.push(item.tanggal_berobat);
     });
     setKeluhan(keluhanData);
     setKeluhanByDate(keluhanDate);
@@ -52,11 +51,10 @@ const KeluhanByDate = ({navigation, route}) => {
               navigation.navigate({
                 name: 'Keluhan',
                 params: {data: keluhanFunc(keluhan, item)},
-                merge: true,
               });
             }}>
             <View style={style.wrapper}>
-              <Text style={style.textStyle}>{item}</Text>
+              <Text style={style.textStyle}>{item.split('T')[0]}</Text>
               <FontAwesomeIcon icon={faChevronRight} size={20} />
             </View>
           </TouchableWithoutFeedback>
@@ -78,7 +76,6 @@ const KeluhanByDate = ({navigation, route}) => {
           navigation.navigate({
             name: 'Input Keluhan',
             params: {data: idPasien},
-            merge: true,
           })
         }
       />
