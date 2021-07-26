@@ -38,6 +38,7 @@ const ManageAdmin = ({navigation}) => {
         setLoading(false);
         Alert.alert('Terjadi kesalahan pada sistem!');
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const deleteAdmin = id => {

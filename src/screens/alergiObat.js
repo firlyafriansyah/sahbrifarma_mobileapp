@@ -18,6 +18,7 @@ import {
   Input,
   ListItem,
 } from '../components';
+import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../data/constants';
 
 const AlergiObat = ({navigation, route}) => {
@@ -54,6 +55,11 @@ const AlergiObat = ({navigation, route}) => {
         if (res.status === 'success') {
           setLoading(false);
           Alert.alert('Data berhasil disimpan!');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           Alert.alert('Data gagal diperbarui!');
         }

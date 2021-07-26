@@ -2,13 +2,24 @@
 import {faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, ScrollView, Alert, Modal} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  Alert,
+  Modal,
+  TextInput,
+} from 'react-native';
 import {CustomButton, CustomHeader, Input} from '../components';
+import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../data/constants';
 
 const InputHasilDokter = ({navigation, route}) => {
   const [idPasien, setIdPasien] = useState();
-  const [tensi, setTensi] = useState();
+  const [sistol, setSistol] = useState();
+  const [diastol, setDiastol] = useState();
+  const [pulse, setPulse] = useState();
   const [gula, setGula] = useState();
   const [asam, setAsam] = useState();
   const [kolestrol, setKolestrol] = useState();
@@ -26,7 +37,7 @@ const InputHasilDokter = ({navigation, route}) => {
     },
     method: 'POST',
     body: JSON.stringify({
-      tensi_darah: parseInt(tensi),
+      tensi_darah: `${sistol}/${diastol}/${pulse}`,
       gula_darah: parseInt(gula),
       asam_urat: parseInt(asam),
       kolestrol: parseInt(kolestrol),
@@ -39,8 +50,13 @@ const InputHasilDokter = ({navigation, route}) => {
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
-          navigation.navigate('DetailPasien');
           setLoading(false);
+          Alert.alert('Data berhasil disimpan!');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           setLoading(false);
           Alert.alert('Data gagal disimpan!');
@@ -64,12 +80,39 @@ const InputHasilDokter = ({navigation, route}) => {
         showsVerticalScrollIndicator={false}>
         <View style={style.wrapper}>
           <Text style={style.label}>Tensi</Text>
-          <Input
-            mb={15}
-            placeholder={'Tensi Pasien'}
-            onChangeText={item => setTensi(item)}
-            keyboardType={'number-pad'}
-          />
+          <View style={style.wrapperLahir}>
+            <View style={style.wrapperInput}>
+              <TextInput
+                keyboardType={'number-pad'}
+                style={style.input}
+                placeholder={'XXX'}
+                onChangeText={text => setSistol(text)}
+                value={sistol}
+                maxLength={3}
+                selectTextOnFocus={true}
+              />
+              <Text style={style.slash}>/</Text>
+              <TextInput
+                keyboardType={'number-pad'}
+                style={style.input}
+                placeholder={'XX'}
+                onChangeText={text => setDiastol(text)}
+                value={diastol}
+                maxLength={2}
+                selectTextOnFocus={true}
+              />
+              <Text style={style.slash}>.</Text>
+              <TextInput
+                keyboardType={'number-pad'}
+                style={style.input}
+                placeholder={'XX'}
+                onChangeText={text => setPulse(text)}
+                value={pulse}
+                maxLength={2}
+                selectTextOnFocus={true}
+              />
+            </View>
+          </View>
           <Text style={style.label}>Gula Darah</Text>
           <Input
             mb={15}
@@ -161,6 +204,33 @@ const style = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+  wrapperLahir: {
+    borderWidth: 1,
+    borderRadius: 12,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    marginBottom: 15,
+    borderColor: '#A4B0BE80',
+  },
+  wrapperInput: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#A4B0BE80',
+  },
+  input: {
+    fontFamily: 'Poppins-Reguler',
+    fontSize: 16,
+    flex: 0.2,
+    textAlign: 'center',
+    color: '#000000',
+    width: 2,
+  },
+  slash: {fontSize: 14, fontFamily: 'Poppins-Bold', color: '#A4B0BEDD'},
 });
 
 export default InputHasilDokter;

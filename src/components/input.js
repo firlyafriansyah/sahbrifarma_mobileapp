@@ -20,6 +20,7 @@ const Input = props => {
       editable={props.editable}
       onChangeText={item => props.onChangeText(item)}
       value={props.value}
+      selectTextOnFocus={props.selectTextOnFocus}
     />
   );
 };

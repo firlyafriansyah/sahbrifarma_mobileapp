@@ -27,7 +27,7 @@ const KeluhanByDate = ({navigation, route}) => {
 
   useEffect(() => {
     const keluhanData = route.params?.data;
-    setIdPasien(keluhanData[0].id_pasien);
+    setIdPasien(route.params?.id);
     const keluhanDate = [];
     keluhanData.forEach(item => {
       keluhanDate.push(item.tanggal_berobat);
@@ -41,24 +41,35 @@ const KeluhanByDate = ({navigation, route}) => {
     if (!keluhanByDate) {
       return <Text style={style.textNoData}>Tidak ada keluhan</Text>;
     } else {
-      return keluhanByDate
-        .slice(0)
-        .reverse()
-        .map((item, index) => (
-          <TouchableWithoutFeedback
-            key={index}
-            onPress={() => {
-              navigation.navigate({
-                name: 'Keluhan',
-                params: {data: keluhanFunc(keluhan, item)},
-              });
-            }}>
-            <View style={style.wrapper}>
-              <Text style={style.textStyle}>{item.split('T')[0]}</Text>
-              <FontAwesomeIcon icon={faChevronRight} size={20} />
-            </View>
-          </TouchableWithoutFeedback>
-        ));
+      return keluhanByDate.length <= 0 ? (
+        <Text
+          style={{
+            textAlign: 'center',
+            fontFamily: 'Poppins-Bold',
+            fontSize: 16,
+          }}>
+          Tidak ada data Keluhan!
+        </Text>
+      ) : (
+        keluhanByDate
+          .slice(0)
+          .reverse()
+          .map((item, index) => (
+            <TouchableWithoutFeedback
+              key={index}
+              onPress={() => {
+                navigation.navigate({
+                  name: 'Keluhan',
+                  params: {data: keluhanFunc(keluhan, item), id: idPasien},
+                });
+              }}>
+              <View style={style.wrapper}>
+                <Text style={style.textStyle}>{item.split('T')[0]}</Text>
+                <FontAwesomeIcon icon={faChevronRight} size={20} />
+              </View>
+            </TouchableWithoutFeedback>
+          ))
+      );
     }
   };
 

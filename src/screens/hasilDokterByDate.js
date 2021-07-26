@@ -28,8 +28,8 @@ const HasilDokterByDate = ({navigation, route}) => {
   useEffect(() => {
     const hasilDokterData = route.params?.data;
     const hasilDokterDate = [];
+    setIdPasien(route.params?.id);
     hasilDokterData.forEach(item => {
-      setIdPasien(item.id_pasien);
       hasilDokterDate.push(item.tanggal_berobat);
     });
     setHasilDokter(hasilDokterData);
@@ -41,24 +41,38 @@ const HasilDokterByDate = ({navigation, route}) => {
     if (!hasilDokterByDate) {
       return <Text style={style.textNoData}>Tidak ada hasil</Text>;
     } else {
-      return hasilDokterByDate
-        .slice(0)
-        .reverse()
-        .map((item, index) => (
-          <TouchableWithoutFeedback
-            key={index}
-            onPress={() => {
-              navigation.navigate({
-                name: 'Hasil Dokter',
-                params: {data: hasilDokterFunc(hasilDokter, item)},
-              });
-            }}>
-            <View style={style.wrapper}>
-              <Text style={style.textStyle}>{item.split('T')[0]}</Text>
-              <FontAwesomeIcon icon={faChevronRight} size={20} />
-            </View>
-          </TouchableWithoutFeedback>
-        ));
+      return hasilDokterByDate.length <= 0 ? (
+        <Text
+          style={{
+            textAlign: 'center',
+            fontFamily: 'Poppins-Bold',
+            fontSize: 16,
+          }}>
+          Tidak ada data Hasil Periksa Dokter!
+        </Text>
+      ) : (
+        hasilDokterByDate
+          .slice(0)
+          .reverse()
+          .map((item, index) => (
+            <TouchableWithoutFeedback
+              key={index}
+              onPress={() => {
+                navigation.navigate({
+                  name: 'Hasil Dokter',
+                  params: {
+                    data: hasilDokterFunc(hasilDokter, item),
+                    id: idPasien,
+                  },
+                });
+              }}>
+              <View style={style.wrapper}>
+                <Text style={style.textStyle}>{item.split('T')[0]}</Text>
+                <FontAwesomeIcon icon={faChevronRight} size={20} />
+              </View>
+            </TouchableWithoutFeedback>
+          ))
+      );
     }
   };
 

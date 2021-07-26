@@ -11,6 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {Category, CustomHeader} from '../components';
+import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../data/constants';
 
 const wait = timeout => {
@@ -18,12 +19,14 @@ const wait = timeout => {
 };
 
 const DetailPasien = ({navigation, route}) => {
+  const [idPasien, setIdPasien] = useState();
   const [idnPasien, setIdnPasien] = useState();
   const [alergiObat, setAlergiObat] = useState();
   const [keluhan, setKeluhan] = useState();
   const [fotoObat, setFotoObat] = useState();
   const [hasilDokter, setHasilDokter] = useState();
   const [riwayatBerobat, setRiwayatBerobat] = useState();
+  const [roleAdmin, setRoleAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   const onRefresh = React.useCallback(() => {
@@ -38,6 +41,7 @@ const DetailPasien = ({navigation, route}) => {
     fetch(`${HOST}/pasien/detail/${route.params?.id_pasien}`)
       .then(resJson => resJson.json())
       .then(res => {
+        setIdPasien(res.idnPasien.id_pasien);
         setIdnPasien(res.idnPasien);
         setAlergiObat(res.alergiObat);
         setKeluhan(res.keluhan);
@@ -58,6 +62,11 @@ const DetailPasien = ({navigation, route}) => {
           setLoading(false);
           Alert.alert('Data pasien berhasil dihapus!');
           navigation.navigate('Home');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'Home', params: {role: roleAdmin}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           setLoading(false);
           Alert.alert('Data pasien gagal dihapus!');
@@ -71,10 +80,11 @@ const DetailPasien = ({navigation, route}) => {
 
   useEffect(() => {
     setLoading(true);
+    setRoleAdmin(route.params?.role);
     getData();
     return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigation]);
 
   return (
     <ScrollView
@@ -93,7 +103,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Identitas Pasien',
-                params: {data: idnPasien},
+                params: {data: idnPasien, id: idPasien},
               })
             }
             source={require('../../assets/images/profil_icon.png')}
@@ -103,7 +113,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Alergi Obat',
-                params: {data: alergiObat},
+                params: {data: alergiObat, id: idPasien},
               })
             }
             source={require('../../assets/images/alergi_obat.png')}
@@ -113,7 +123,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Keluhan By Date',
-                params: {data: keluhan},
+                params: {data: keluhan, id: idPasien},
               })
             }
             source={require('../../assets/images/keluhan.png')}
@@ -123,7 +133,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Hasil Dokter By Date',
-                params: {data: hasilDokter},
+                params: {data: hasilDokter, id: idPasien},
               })
             }
             source={require('../../assets/images/hasil_cek_dokter.png')}
@@ -133,7 +143,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Foto Obat By Date',
-                params: {data: fotoObat},
+                params: {data: fotoObat, id: idPasien},
               })
             }
             source={require('../../assets/images/foto_obat.png')}
@@ -143,7 +153,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Riwayat Berobat',
-                params: {data: riwayatBerobat},
+                params: {data: riwayatBerobat, id: idPasien},
               })
             }
             source={require('../../assets/images/riwayat_berobat.png')}
@@ -155,7 +165,6 @@ const DetailPasien = ({navigation, route}) => {
                 'Apakah anda yakin?',
                 'Apakah anda yakin akan menghapus seluruh data pasien ini?',
                 [
-                  // The "Yes" button
                   {
                     text: 'Ya',
                     onPress: () => {

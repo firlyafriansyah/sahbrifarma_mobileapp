@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+/* eslint-disable radix */
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -21,50 +22,28 @@ import {HOST} from '../data/constants';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {faCalendar, faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {CommonActions} from '@react-navigation/routers';
 
-const Month = e => {
-  switch (e) {
-    case 0:
-      return 'Januari';
-    case 1:
-      return 'Februari';
-    case 2:
-      return 'Maret';
-    case 3:
-      return 'April';
-    case 4:
-      return 'Mei';
-    case 5:
-      return 'Juni';
-    case 6:
-      return 'Juli';
-    case 7:
-      return 'Agustus';
-    case 8:
-      return 'September';
-    case 9:
-      return 'Oktober';
-    case 10:
-      return 'November';
-    case 11:
-      return 'Desember';
-    default:
-      break;
-  }
-};
-
-const InputNewPasien = ({navigation}) => {
+const InputNewPasien = ({navigation, route}) => {
   const [alergiObat, setAlergiObat] = useState(false);
   const [namaObat, setNamaObat] = useState([]);
   const [keluhan, setKeluhan] = useState([]);
   const [namaPasien, setNamaPasien] = useState();
   const [alamatPasien, setAlamatPasien] = useState();
   const [tanggalLahir, setTanggalLahir] = useState();
+  const [bulanLahir, setBulanLahir] = useState();
+  const [tahunLahir, setTahunLahir] = useState();
   const [date, setDate] = useState(new Date());
   const [kelaminPasien, setKelaminPasien] = useState('Laki - Laki');
   const [teleponPasien, setTeleponPasien] = useState();
   const [showDatePicker, setShowDatePicker] = useState();
+  const [role, setRole] = useState();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setRole(route.params?.role);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const showBubbleTag = (arrayState, setArrayState) => {
     if (arrayState.length) {
@@ -96,7 +75,7 @@ const InputNewPasien = ({navigation}) => {
       nama_pasien: namaPasien,
       alamat_pasien: alamatPasien,
       nomor_telepon_pasien: teleponPasien,
-      tanggal_lahir_pasien: tanggalLahir,
+      tanggal_lahir_pasien: `${tanggalLahir}/${bulanLahir}/${tahunLahir}`,
       jenis_kelamin_pasien: kelaminPasien,
       foto: '',
       nama_obat: namaObat.length <= 0 ? null : arrayToString(namaObat),
@@ -112,7 +91,11 @@ const InputNewPasien = ({navigation}) => {
         if (res.status === 'success') {
           setLoading(false);
           Alert.alert('Data pasien berhasil disimpan!');
-          navigation.navigate('Home');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'Home', params: {role: role}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           setLoading(false);
           Alert.alert('Terjadi kesalahan pada saat menyimpan!');
@@ -167,13 +150,51 @@ const InputNewPasien = ({navigation}) => {
           />
           <Text style={style.label}>Tanggal Lahir</Text>
           <View style={style.wrapper}>
-            <TextInput
-              editable={false}
-              style={style.input}
-              placeholder={'Tanggal Lahir Pasien'}
-              onChangeText={text => setTanggalLahir(text)}
-              value={tanggalLahir}
-            />
+            <View style={style.wrapperInput}>
+              <TextInput
+                keyboardType={'number-pad'}
+                style={style.input}
+                placeholder={'DD'}
+                onChangeText={text => {
+                  setTanggalLahir(text);
+                  if (parseInt(text) > 31) {
+                    setTanggalLahir('31');
+                  } else {
+                    setTanggalLahir(text);
+                  }
+                }}
+                value={tanggalLahir}
+                maxLength={2}
+                selectTextOnFocus={true}
+              />
+              <Text style={style.slash}>/</Text>
+              <TextInput
+                keyboardType={'number-pad'}
+                style={style.input}
+                placeholder={'MM'}
+                selectTextOnFocus={true}
+                onChangeText={text => {
+                  setBulanLahir(text);
+                  if (parseInt(text) > 12) {
+                    setBulanLahir('12');
+                  } else {
+                    setBulanLahir(text);
+                  }
+                }}
+                value={bulanLahir}
+                maxLength={2}
+              />
+              <Text style={style.slashdua}>/</Text>
+              <TextInput
+                keyboardType={'number-pad'}
+                style={style.input}
+                placeholder={'YYYY'}
+                onChangeText={text => setTahunLahir(text)}
+                selectTextOnFocus={true}
+                value={tahunLahir}
+                maxLength={4}
+              />
+            </View>
             <TouchableWithoutFeedback onPress={() => setShowDatePicker(true)}>
               <FontAwesomeIcon
                 icon={faCalendar}
@@ -193,10 +214,16 @@ const InputNewPasien = ({navigation}) => {
                 const Date = e.nativeEvent.timestamp;
                 if (Date !== undefined) {
                   setTanggalLahir(
-                    `${Date.getDate()} ${Month(
-                      Date.getMonth(),
-                    )} ${Date.getFullYear()}`,
+                    `${Date.getDate()}`.length === 1
+                      ? `0${Date.getDate()}`
+                      : `${Date.getDate()}`,
                   );
+                  setBulanLahir(
+                    `${Date.getMonth()}`.length === 1
+                      ? `0${Date.getMonth()}`
+                      : `${Date.getMonth()}`,
+                  );
+                  setTahunLahir(`${Date.getFullYear()}`);
                   setDate(Date);
                   setShowDatePicker(false);
                 }
@@ -313,18 +340,26 @@ const style = StyleSheet.create({
     borderRadius: 12,
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
     paddingVertical: 3,
-    flex: 1,
     marginBottom: 15,
+    borderColor: '#A4B0BE80',
+  },
+  wrapperInput: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     borderColor: '#A4B0BE80',
   },
   input: {
     fontFamily: 'Poppins-Reguler',
     fontSize: 16,
-    flex: 1,
+    flex: 0.2,
+    textAlign: 'center',
     color: '#000000',
+    width: 2,
   },
   iconStyle: {
     color: '#2F3542',
@@ -350,6 +385,13 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
     textAlign: 'center',
+  },
+  slash: {fontSize: 14, fontFamily: 'Poppins-Bold', color: '#A4B0BEDD'},
+  slashdua: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Bold',
+    marginRight: 5,
+    color: '#A4B0BEDD',
   },
 });
 

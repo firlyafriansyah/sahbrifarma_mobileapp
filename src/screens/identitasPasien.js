@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -14,38 +15,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {HOST} from '../data/constants';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faCalendar, faWalking} from '@fortawesome/free-solid-svg-icons';
+import {CommonActions} from '@react-navigation/routers';
 import QRCode from 'react-native-qrcode-svg';
-
-const Month = e => {
-  switch (e) {
-    case 0:
-      return 'Januari';
-    case 1:
-      return 'Februari';
-    case 2:
-      return 'Maret';
-    case 3:
-      return 'April';
-    case 4:
-      return 'Mei';
-    case 5:
-      return 'Juni';
-    case 6:
-      return 'Juli';
-    case 7:
-      return 'Agustus';
-    case 8:
-      return 'September';
-    case 9:
-      return 'Oktober';
-    case 10:
-      return 'November';
-    case 11:
-      return 'Desember';
-    default:
-      break;
-  }
-};
 
 const IdentitasPasien = ({navigation, route}) => {
   const [editable, setEditable] = useState(false);
@@ -53,6 +24,8 @@ const IdentitasPasien = ({navigation, route}) => {
   const [namaPasien, setNamaPasien] = useState();
   const [alamatPasien, setAlamatPasien] = useState();
   const [tanggalLahir, setTanggalLahir] = useState();
+  const [bulanLahir, setBulanLahir] = useState();
+  const [tahunLahir, setTahunLahir] = useState();
   const [kelaminPasien, setKelaminPasien] = useState();
   const [teleponPasien, setTeleponPasien] = useState();
   const [showDatePicker, setShowDatePicker] = useState();
@@ -64,7 +37,9 @@ const IdentitasPasien = ({navigation, route}) => {
     setNamaPasien(data.nama_pasien);
     setIdPasien(data.id_pasien);
     setAlamatPasien(data.alamat_pasien);
-    setTanggalLahir(data.tanggal_lahir_pasien);
+    setTanggalLahir(data.tanggal_lahir_pasien.split('/')[0]);
+    setBulanLahir(data.tanggal_lahir_pasien.split('/')[1]);
+    setTahunLahir(data.tanggal_lahir_pasien.split('/')[2]);
     setKelaminPasien(data.jenis_kelamin_pasien);
     setTeleponPasien(data.nomor_telepon_pasien);
     return;
@@ -80,7 +55,7 @@ const IdentitasPasien = ({navigation, route}) => {
     body: JSON.stringify({
       nama_pasien: namaPasien,
       alamat_pasien: alamatPasien,
-      tanggal_lahir_pasien: tanggalLahir,
+      tanggal_lahir_pasien: `${tanggalLahir}/${bulanLahir}/${tahunLahir}`,
       jenis_kelamin_pasien: kelaminPasien,
       nomor_telepon_pasien: teleponPasien,
     }),
@@ -94,6 +69,11 @@ const IdentitasPasien = ({navigation, route}) => {
           setLoading(false);
           setEditable(!editable);
           Alert.alert('Data berhasil disimpan!');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           Alert.alert('Gagal mengupdate data!');
         }
@@ -139,16 +119,55 @@ const IdentitasPasien = ({navigation, route}) => {
           />
           <Text style={style.label}>Tanggal Lahir</Text>
           <View style={style.wrapper}>
-            <TextInput
-              style={style.input}
-              placeholder={'Tanggal Lahir Pasien'}
-              onChangeText={text => setTanggalLahir(text)}
-              value={tanggalLahir}
-              editable={false}
-            />
-            <TouchableWithoutFeedback
-              disabled={!editable}
-              onPress={() => setShowDatePicker(true)}>
+            <View style={style.wrapperInput}>
+              <TextInput
+                keyboardType={'number-pad'}
+                style={style.input}
+                editable={editable}
+                placeholder={'DD'}
+                onChangeText={text => {
+                  setTanggalLahir(text);
+                  if (parseInt(text) > 31) {
+                    setTanggalLahir('31');
+                  } else {
+                    setTanggalLahir(text);
+                  }
+                }}
+                value={tanggalLahir}
+                maxLength={2}
+                selectTextOnFocus={true}
+              />
+              <Text style={style.slash}>/</Text>
+              <TextInput
+                keyboardType={'number-pad'}
+                style={style.input}
+                editable={editable}
+                placeholder={'MM'}
+                selectTextOnFocus={true}
+                onChangeText={text => {
+                  setBulanLahir(text);
+                  if (parseInt(text) > 12) {
+                    setBulanLahir('12');
+                  } else {
+                    setBulanLahir(text);
+                  }
+                }}
+                value={bulanLahir}
+                maxLength={2}
+              />
+              <Text style={style.slashdua}>/</Text>
+              <TextInput
+                keyboardType={'number-pad'}
+                style={style.input}
+                placeholder={'YYYY'}
+                editable={editable}
+                onChangeText={text => setTahunLahir(text)}
+                selectTextOnFocus={true}
+                value={tahunLahir}
+                maxLength={4}
+              />
+            </View>
+            <TouchableWithoutFeedback onPress={() => setShowDatePicker(true)}>
               <FontAwesomeIcon
                 icon={faCalendar}
                 size={20}
@@ -167,10 +186,16 @@ const IdentitasPasien = ({navigation, route}) => {
                 const Date = e.nativeEvent.timestamp;
                 if (Date !== undefined) {
                   setTanggalLahir(
-                    `${Date.getDate()} ${Month(
-                      Date.getMonth(),
-                    )} ${Date.getFullYear()}`,
+                    `${Date.getDate()}`.length === 1
+                      ? `0${Date.getDate()}`
+                      : `${Date.getDate()}`,
                   );
+                  setBulanLahir(
+                    `${Date.getMonth()}`.length === 1
+                      ? `0${Date.getMonth()}`
+                      : `${Date.getMonth()}`,
+                  );
+                  setTahunLahir(`${Date.getFullYear()}`);
                   setDate(Date);
                   setShowDatePicker(false);
                 }
@@ -288,21 +313,36 @@ const style = StyleSheet.create({
     borderRadius: 12,
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
     paddingVertical: 3,
-    flex: 1,
     marginBottom: 15,
+    borderColor: '#A4B0BE80',
+  },
+  wrapperInput: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     borderColor: '#A4B0BE80',
   },
   input: {
     fontFamily: 'Poppins-Reguler',
     fontSize: 16,
-    flex: 1,
+    flex: 0.2,
+    textAlign: 'center',
     color: '#000000',
+    width: 2,
   },
   iconStyle: {
     color: '#2F3542',
+  },
+  slash: {fontSize: 14, fontFamily: 'Poppins-Bold', color: '#A4B0BEDD'},
+  slashdua: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Bold',
+    marginRight: 5,
+    color: '#A4B0BEDD',
   },
 });
 

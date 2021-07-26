@@ -12,16 +12,19 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import {Camera, CustomButton, CustomHeader} from '../components';
+import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../data/constants';
 
 const FotoObat = ({navigation, route}) => {
   const [img, setImg] = useState([]);
+  const [idPasien, setIdPasien] = useState();
   const [id, setId] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const data = route.params?.data;
     setId(data.id);
+    setIdPasien(route.params?.id);
     const image = data.foto !== '' ? data.foto.split(', ') : [];
     setImg(image.length <= 0 ? [] : image.slice(0, image.length - 1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,7 +53,11 @@ const FotoObat = ({navigation, route}) => {
           if (res.status === 'success') {
             setLoading(false);
             Alert.alert('Foto berhasil disimpan!');
-            navigation.navigate('DetailPasien');
+            const resetAction = CommonActions.reset({
+              index: 1,
+              routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+            });
+            navigation.dispatch(resetAction);
           } else {
             setLoading(false);
             Alert.alert('Data gagal disimpan!');
@@ -71,7 +78,11 @@ const FotoObat = ({navigation, route}) => {
         if (res.status === 'success') {
           setLoading(false);
           Alert.alert('Data berhasil dihapus!');
-          navigation.navigate('DetailPasien');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           setLoading(false);
           Alert.alert('Data gagal dihapus!');
@@ -99,22 +110,25 @@ const FotoObat = ({navigation, route}) => {
           {img.length <= 0 ? (
             <Text style={style.textStyle}>Tidak ada foto</Text>
           ) : (
-            img.map((item, index) => (
-              <View key={index} style={style.image}>
-                <Image
-                  key={index}
-                  style={style.imageStyle}
-                  source={{
-                    uri: `data:image/jpg;base64,${item}`,
-                  }}
-                />
-                <TouchableWithoutFeedback
-                  style={style.delete}
-                  onPress={() => setImg(img.filter(it => it !== item))}>
-                  <FontAwesomeIcon icon={faTrash} size={25} />
-                </TouchableWithoutFeedback>
-              </View>
-            ))
+            img
+              .slice(0)
+              .reverse()
+              .map((item, index) => (
+                <View key={index} style={style.image}>
+                  <Image
+                    key={index}
+                    style={style.imageStyle}
+                    source={{
+                      uri: `data:image/jpg;base64,${item}`,
+                    }}
+                  />
+                  <TouchableWithoutFeedback
+                    style={style.delete}
+                    onPress={() => setImg(img.filter(it => it !== item))}>
+                    <FontAwesomeIcon icon={faTrash} size={25} />
+                  </TouchableWithoutFeedback>
+                </View>
+              ))
           )}
         </View>
         <CustomButton

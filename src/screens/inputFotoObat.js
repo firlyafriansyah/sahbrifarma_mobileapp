@@ -10,6 +10,7 @@ import {
   Alert,
   Modal,
 } from 'react-native';
+import {CommonActions} from '@react-navigation/routers';
 import {Camera, CustomButton, CustomHeader} from '../components';
 import {HOST} from '../data/constants';
 
@@ -37,10 +38,14 @@ const InputFotoObat = ({navigation, route}) => {
         if (res.status === 'success') {
           setLoading(false);
           Alert.alert('Foto berhasil disimpan!');
-          navigation.navigate('Foto Obat By Date');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           setLoading(false);
-          Alert.alert('Foto berhasil disimpan!');
+          Alert.alert('Foto gagal disimpan!');
         }
       })
       .catch(() => {
@@ -134,8 +139,9 @@ const style = StyleSheet.create({
   },
   textStyle: {
     fontSize: 16,
-    fontFamily: 'Poppins-Reguler',
+    fontFamily: 'Poppins-Bold',
     textAlign: 'center',
+    marginBottom: 20,
   },
   modalStyleLoading: {
     display: 'flex',
@@ -162,8 +168,9 @@ const style = StyleSheet.create({
   textWarning: {
     fontFamily: 'Poppins-Reguler',
     textAlign: 'center',
-    marginBottom: 50,
+    marginBottom: 20,
     color: '#c0392b',
+    marginTop: 10,
   },
 });
 

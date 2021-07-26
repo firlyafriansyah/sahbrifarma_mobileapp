@@ -8,6 +8,7 @@ import {
   CustomHeader,
   InputWithButton,
 } from '../components';
+import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../data/constants';
 
 const InputKeluhan = ({navigation, route}) => {
@@ -54,7 +55,12 @@ const InputKeluhan = ({navigation, route}) => {
         .then(res => {
           if (res.status === 'success') {
             setLoading(false);
-            navigation.navigate('DetailPasien');
+            Alert.alert('Data berhasil disimpan!');
+            const resetAction = CommonActions.reset({
+              index: 1,
+              routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+            });
+            navigation.dispatch(resetAction);
           } else {
             Alert.alert('Gagal memperbarui data!');
             setLoading(false);

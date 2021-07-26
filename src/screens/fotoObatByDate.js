@@ -28,8 +28,8 @@ const FotoObatByDate = ({navigation, route}) => {
   useEffect(() => {
     const hasilDokterData = route.params?.data;
     const hasilDokterDate = [];
+    setIdPasien(route.params?.id);
     hasilDokterData.forEach(item => {
-      setIdPasien(item.id_pasien);
       hasilDokterDate.push(item.tanggal_berobat);
     });
     setFotoObat(hasilDokterData);
@@ -37,28 +37,39 @@ const FotoObatByDate = ({navigation, route}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const showKeluhanByDate = () => {
+  const showFotoObatByDate = () => {
     if (!fotoObatByDate) {
       return <Text style={style.textNoData}>Tidak ada hasil</Text>;
     } else {
-      return fotoObatByDate
-        .slice(0)
-        .reverse()
-        .map((item, index) => (
-          <TouchableWithoutFeedback
-            key={index}
-            onPress={() =>
-              navigation.navigate({
-                name: 'Foto Obat',
-                params: {data: fotoObatFunc(fotoObat, item)},
-              })
-            }>
-            <View style={style.wrapper}>
-              <Text style={style.textStyle}>{item.split('T')[0]}</Text>
-              <FontAwesomeIcon icon={faChevronRight} size={20} />
-            </View>
-          </TouchableWithoutFeedback>
-        ));
+      return fotoObatByDate.length <= 0 ? (
+        <Text
+          style={{
+            textAlign: 'center',
+            fontFamily: 'Poppins-Bold',
+            fontSize: 16,
+          }}>
+          Tidak ada data Foto Obat!
+        </Text>
+      ) : (
+        fotoObatByDate
+          .slice(0)
+          .reverse()
+          .map((item, index) => (
+            <TouchableWithoutFeedback
+              key={index}
+              onPress={() =>
+                navigation.navigate({
+                  name: 'Foto Obat',
+                  params: {data: fotoObatFunc(fotoObat, item), id: idPasien},
+                })
+              }>
+              <View style={style.wrapper}>
+                <Text style={style.textStyle}>{item.split('T')[0]}</Text>
+                <FontAwesomeIcon icon={faChevronRight} size={20} />
+              </View>
+            </TouchableWithoutFeedback>
+          ))
+      );
     }
   };
 
@@ -66,7 +77,7 @@ const FotoObatByDate = ({navigation, route}) => {
     <View style={style.container}>
       <CustomHeader title={'Foto Obat'} onPress={() => navigation.goBack()} />
       <ScrollView style={style.scrollViewStyle}>
-        {showKeluhanByDate()}
+        {showFotoObatByDate()}
       </ScrollView>
       <FloatingButton
         navigation={() =>

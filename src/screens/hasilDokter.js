@@ -1,25 +1,42 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable radix */
 import {faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useEffect} from 'react';
 import {useState} from 'react';
-import {View, Text, ScrollView, StyleSheet, Alert, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Alert,
+  Modal,
+  TextInput,
+} from 'react-native';
 import {CustomButton, CustomHeader, Input} from '../components';
+import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../data/constants';
 
 const HasilDokter = ({navigation, route}) => {
   const [editable, setEditable] = useState(false);
   const [id, setId] = useState();
-  const [tensi, setTensi] = useState();
+  const [sistol, setSistol] = useState();
+  const [diastol, setDiastol] = useState();
+  const [pulse, setPulse] = useState();
   const [gula, setGula] = useState();
   const [asam, setAsam] = useState();
   const [kolestrol, setKolestrol] = useState();
+  const [idPasien, setIdPasien] = useState();
+  const [colorText, setColorText] = useState('#A4B0BE80');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const data = route.params?.data;
     setId(data.id);
-    setTensi(data.tensi_darah.toString());
+    setIdPasien(route.params?.id);
+    setSistol(data.tensi_darah.split('/')[0]);
+    setDiastol(data.tensi_darah.split('/')[1]);
+    setPulse(data.tensi_darah.split('/')[2]);
     setGula(data.gula_darah.toString());
     setAsam(data.asam_urat.toString());
     setKolestrol(data.kolestrol.toString());
@@ -33,7 +50,7 @@ const HasilDokter = ({navigation, route}) => {
     },
     method: 'PUT',
     body: JSON.stringify({
-      tensi_darah: parseInt(tensi),
+      tensi_darah: `${sistol}/${diastol}/${pulse}`,
       gula_darah: parseInt(gula),
       asam_urat: parseInt(asam),
       kolestrol: parseInt(kolestrol),
@@ -48,6 +65,12 @@ const HasilDokter = ({navigation, route}) => {
         if (res.status === 'success') {
           setEditable(false);
           setLoading(false);
+          Alert.alert('Data berhasil disimpan!');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           setLoading(false);
           Alert.alert('Data gagal disimpan!');
@@ -66,7 +89,12 @@ const HasilDokter = ({navigation, route}) => {
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          navigation.navigate('DetailPasien');
+          Alert.alert('Data berhasil dihapus!');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           setLoading(false);
           Alert.alert('Data gagal dihapus!');
@@ -90,14 +118,63 @@ const HasilDokter = ({navigation, route}) => {
         showsVerticalScrollIndicator={false}>
         <View style={style.wrapper}>
           <Text style={style.label}>Tensi</Text>
-          <Input
-            mb={15}
-            placeholder={'Tensi Pasien'}
-            editable={editable}
-            onChangeText={item => setTensi(item)}
-            value={tensi}
-            keyboardType={'number-pad'}
-          />
+          <View style={[style.wrapperLahir, {borderColor: colorText}]}>
+            <View style={style.wrapperInput}>
+              <TextInput
+                onFocus={() => setColorText('#2F3542')}
+                onBlur={() => setColorText('#A4B0BE80')}
+                style={[
+                  style.input,
+                  {
+                    color: editable ? '#2F3542' : '#A4B0BE',
+                  },
+                ]}
+                keyboardType={'number-pad'}
+                editable={editable}
+                placeholder={'XXX'}
+                onChangeText={text => setSistol(text)}
+                value={sistol}
+                maxLength={3}
+                selectTextOnFocus={true}
+              />
+              <Text style={style.slash}>/</Text>
+              <TextInput
+                onFocus={() => setColorText('#2F3542')}
+                onBlur={() => setColorText('#A4B0BE80')}
+                style={[
+                  style.input,
+                  {
+                    color: editable ? '#2F3542' : '#A4B0BE',
+                  },
+                ]}
+                keyboardType={'number-pad'}
+                editable={editable}
+                placeholder={'XX'}
+                onChangeText={text => setDiastol(text)}
+                value={diastol}
+                maxLength={2}
+                selectTextOnFocus={true}
+              />
+              <Text style={style.slash}>.</Text>
+              <TextInput
+                onFocus={() => setColorText('#2F3542')}
+                onBlur={() => setColorText('#A4B0BE80')}
+                style={[
+                  style.input,
+                  {
+                    color: editable ? '#2F3542' : '#A4B0BE',
+                  },
+                ]}
+                keyboardType={'number-pad'}
+                editable={editable}
+                placeholder={'XX'}
+                onChangeText={text => setPulse(text)}
+                value={pulse}
+                maxLength={2}
+                selectTextOnFocus={true}
+              />
+            </View>
+          </View>
           <Text style={style.label}>Gula Darah</Text>
           <Input
             mb={15}
@@ -105,6 +182,7 @@ const HasilDokter = ({navigation, route}) => {
             editable={editable}
             onChangeText={item => setGula(item)}
             value={gula}
+            selectTextOnFocus={true}
             keyboardType={'number-pad'}
           />
           <Text style={style.label}>Asam Urat</Text>
@@ -113,6 +191,7 @@ const HasilDokter = ({navigation, route}) => {
             placeholder={'Asam Urat Pasien'}
             editable={editable}
             onChangeText={item => setAsam(item)}
+            selectTextOnFocus={true}
             value={asam}
             keyboardType={'number-pad'}
           />
@@ -121,6 +200,7 @@ const HasilDokter = ({navigation, route}) => {
             mb={15}
             placeholder={'Kolestrol Pasien'}
             editable={editable}
+            selectTextOnFocus={true}
             onChangeText={item => setKolestrol(item)}
             value={kolestrol}
             keyboardType={'number-pad'}
@@ -196,6 +276,33 @@ const style = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+  wrapperLahir: {
+    borderWidth: 1,
+    borderRadius: 12,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    marginBottom: 15,
+    borderColor: '#A4B0BE80',
+  },
+  wrapperInput: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#A4B0BE80',
+  },
+  input: {
+    fontFamily: 'Poppins-Reguler',
+    fontSize: 16,
+    flex: 0.2,
+    textAlign: 'center',
+    color: '#000000',
+    width: 2,
+  },
+  slash: {fontSize: 14, fontFamily: 'Poppins-Bold', color: '#A4B0BEDD'},
 });
 
 export default HasilDokter;

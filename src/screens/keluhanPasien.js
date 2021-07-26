@@ -17,11 +17,13 @@ import {
   Input,
   ListItem,
 } from '../components';
+import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../data/constants';
 
 const KeluhanPasien = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [id, setId] = useState();
+  const [idPasien, setIdPasien] = useState();
   const [keluhan, setKeluhan] = useState([]);
   const [inputKeluhan, setInputKeluhan] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,6 +32,7 @@ const KeluhanPasien = ({navigation, route}) => {
     const data = route.params?.data;
     const keluhanData = data.keluhan;
     setId(data.id);
+    setIdPasien(route.params?.id);
     setKeluhan(keluhanData.slice(0, keluhanData.length - 2).split(', '));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -50,8 +53,13 @@ const KeluhanPasien = ({navigation, route}) => {
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
-          navigation.navigate('DetailPasien');
           setLoading(false);
+          Alert.alert('Data berhasil diperbarui!');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           Alert.alert('Data gagal diperbarui!');
         }
@@ -65,8 +73,13 @@ const KeluhanPasien = ({navigation, route}) => {
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
-          navigation.navigate('DetailPasien');
           setLoading(false);
+          Alert.alert('Data berhasil dihapus!');
+          const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
+          });
+          navigation.dispatch(resetAction);
         } else {
           setLoading(false);
           Alert.alert('Data gagal dihapus!');
