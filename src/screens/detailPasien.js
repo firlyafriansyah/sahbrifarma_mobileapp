@@ -27,6 +27,7 @@ const DetailPasien = ({navigation, route}) => {
   const [hasilDokter, setHasilDokter] = useState();
   const [riwayatBerobat, setRiwayatBerobat] = useState();
   const [roleAdmin, setRoleAdmin] = useState();
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   const onRefresh = React.useCallback(() => {
@@ -50,7 +51,10 @@ const DetailPasien = ({navigation, route}) => {
         setRiwayatBerobat(res.riwayatBerobat);
         setLoading(false);
       })
-      .catch(() => Alert.alert('Terjadi kesalahan pada jaringan!'));
+      .catch(() => {
+        setLoading(false);
+        Alert.alert('Terjadi kesalahan pada jaringan!');
+      });
   };
 
   const hapusPasien = () => {
@@ -60,13 +64,18 @@ const DetailPasien = ({navigation, route}) => {
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          Alert.alert('Data pasien berhasil dihapus!');
-          navigation.navigate('Home');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'Home', params: {role: roleAdmin}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data pasien berhasil dihapus!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [{name: 'Home', params: {role: roleAdmin}}],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
           setLoading(false);
           Alert.alert('Data pasien gagal dihapus!');
@@ -81,6 +90,7 @@ const DetailPasien = ({navigation, route}) => {
   useEffect(() => {
     setLoading(true);
     setRoleAdmin(route.params?.role);
+    setAdmin(route.params?.admin);
     getData();
     return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,7 +105,12 @@ const DetailPasien = ({navigation, route}) => {
       showsVerticalScrollIndicator={false}>
       <View style={style.container}>
         <CustomHeader
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            navigation.navigate({
+              name: 'Home',
+              params: {role: roleAdmin, admin: admin},
+            });
+          }}
           title={'DetailPasien'}
         />
         <View style={style.categoryWrapper}>
@@ -103,7 +118,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Identitas Pasien',
-                params: {data: idnPasien, id: idPasien},
+                params: {data: idnPasien, id: idPasien, admin: admin},
               })
             }
             source={require('../../assets/images/profil_icon.png')}
@@ -113,7 +128,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Alergi Obat',
-                params: {data: alergiObat, id: idPasien},
+                params: {data: alergiObat, id: idPasien, admin: admin},
               })
             }
             source={require('../../assets/images/alergi_obat.png')}
@@ -123,7 +138,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Keluhan By Date',
-                params: {data: keluhan, id: idPasien},
+                params: {data: keluhan, id: idPasien, admin: admin},
               })
             }
             source={require('../../assets/images/keluhan.png')}
@@ -133,7 +148,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Hasil Dokter By Date',
-                params: {data: hasilDokter, id: idPasien},
+                params: {data: hasilDokter, id: idPasien, admin: admin},
               })
             }
             source={require('../../assets/images/hasil_cek_dokter.png')}
@@ -143,7 +158,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Foto Obat By Date',
-                params: {data: fotoObat, id: idPasien},
+                params: {data: fotoObat, id: idPasien, admin: admin},
               })
             }
             source={require('../../assets/images/foto_obat.png')}
@@ -153,7 +168,7 @@ const DetailPasien = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate({
                 name: 'Riwayat Berobat',
-                params: {data: riwayatBerobat, id: idPasien},
+                params: {data: riwayatBerobat, id: idPasien, admin: admin},
               })
             }
             source={require('../../assets/images/riwayat_berobat.png')}

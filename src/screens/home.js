@@ -23,6 +23,7 @@ import {Card, FloatingButton, InputWithLogo} from '../components';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import {HOST} from '../data/constants';
+import {CommonActions} from '@react-navigation/routers';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -34,6 +35,7 @@ const Home = ({navigation, route}) => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState();
   const [role, setRole] = useState();
+  const [admin, setAdmin] = useState();
 
   const onSuccess = e => {
     setSearch(e.data);
@@ -62,6 +64,7 @@ const Home = ({navigation, route}) => {
     BackHandler.addEventListener('hardwareBackPress', () => true);
     getData();
     setRole(route.params?.role);
+    setAdmin(route.params?.admin);
     return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
@@ -96,7 +99,7 @@ const Home = ({navigation, route}) => {
         navigation={() =>
           navigation.navigate({
             name: 'Input Pasien Baru',
-            params: {role: role},
+            params: {role: role, admin: admin},
           })
         }
       />
@@ -117,7 +120,15 @@ const Home = ({navigation, route}) => {
                   {
                     text: 'Ya',
                     onPress: () => {
-                      navigation.navigate('Login');
+                      const resetAction = CommonActions.reset({
+                        index: 1,
+                        routes: [
+                          {
+                            name: 'Login',
+                          },
+                        ],
+                      });
+                      navigation.dispatch(resetAction);
                     },
                   },
                   {
@@ -181,7 +192,7 @@ const Home = ({navigation, route}) => {
                       press={() =>
                         navigation.navigate({
                           name: 'DetailPasien',
-                          params: {id_pasien: e.id_pasien, role: role},
+                          params: {id_pasien: e.id_pasien, admin: admin},
                         })
                       }
                       namaPasien={e.nama_pasien}
@@ -198,7 +209,7 @@ const Home = ({navigation, route}) => {
                     press={() =>
                       navigation.navigate({
                         name: 'DetailPasien',
-                        params: {id_pasien: e.id_pasien},
+                        params: {id_pasien: e.id_pasien, admin: admin},
                       })
                     }
                     namaPasien={e.nama_pasien}

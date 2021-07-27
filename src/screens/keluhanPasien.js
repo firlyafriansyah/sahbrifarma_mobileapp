@@ -25,7 +25,9 @@ const KeluhanPasien = ({navigation, route}) => {
   const [id, setId] = useState();
   const [idPasien, setIdPasien] = useState();
   const [keluhan, setKeluhan] = useState([]);
+  const [firstKeluhan, setFirstKeluhan] = useState([]);
   const [inputKeluhan, setInputKeluhan] = useState('');
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -33,7 +35,9 @@ const KeluhanPasien = ({navigation, route}) => {
     const keluhanData = data.keluhan;
     setId(data.id);
     setIdPasien(route.params?.id);
+    setAdmin(route.params?.admin);
     setKeluhan(keluhanData.slice(0, keluhanData.length - 2).split(', '));
+    setFirstKeluhan(keluhanData.slice(0, keluhanData.length - 2).split(', '));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,6 +49,8 @@ const KeluhanPasien = ({navigation, route}) => {
     method: 'PUT',
     body: JSON.stringify({
       keluhan: keluhan ? keluhan.join(', ') + ', ' : null,
+      idPasien: idPasien,
+      admin: admin,
     }),
   };
 
@@ -54,32 +60,70 @@ const KeluhanPasien = ({navigation, route}) => {
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          Alert.alert('Data berhasil diperbarui!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data berhasil diperbarui!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'DetailPasien',
+                      params: {id_pasien: idPasien, admin: admin},
+                    },
+                  ],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
+          setLoading(false);
           Alert.alert('Data gagal diperbarui!');
         }
       })
-      .catch(() => Alert.alert('Kesalahan pada sistem!'));
+      .catch(() => {
+        setLoading(false);
+        Alert.alert('Kesalahan pada sistem!');
+      });
+  };
+
+  const hapusBody = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'DELETE',
+    body: JSON.stringify({
+      idPasien: idPasien,
+      admin: admin,
+    }),
   };
 
   const hapusKeluhan = () => {
     setLoading(true);
-    fetch(`${HOST}/keluhan/delete/${id}`, {method: 'DELETE'})
+    fetch(`${HOST}/keluhan/delete/${id}`, hapusBody)
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          Alert.alert('Data berhasil dihapus!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data berhasil dihapus!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'DetailPasien',
+                      params: {id_pasien: idPasien, admin: admin},
+                    },
+                  ],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
           setLoading(false);
           Alert.alert('Data gagal dihapus!');
@@ -113,7 +157,12 @@ const KeluhanPasien = ({navigation, route}) => {
               title="Simpan"
               navigation={() => {
                 setLoading(true);
-                updateKeluhan();
+                if (keluhan.join() === firstKeluhan.join()) {
+                  setLoading(false);
+                  Alert.alert('Tidak ada keluhan yang berubah!');
+                } else {
+                  updateKeluhan();
+                }
               }}
             />
           )}

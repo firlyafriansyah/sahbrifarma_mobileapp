@@ -1,3 +1,4 @@
-const HOST = 'https://2aeab2d17dba.ngrok.io';
+const HOST = 'http://sahbriservice.origa.my.id';
+const TZONE = 7;
 
-export {HOST};
+export {HOST, TZONE};

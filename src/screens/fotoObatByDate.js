@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
@@ -9,11 +10,13 @@ import {
 import {CustomHeader, FloatingButton} from '../components';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {TZONE} from '../data/constants';
 
 const FotoObatByDate = ({navigation, route}) => {
   const [idPasien, setIdPasien] = useState();
   const [fotoObatByDate, setFotoObatByDate] = useState();
   const [fotoObat, setFotoObat] = useState();
+  const [admin, setAdmin] = useState();
 
   const fotoObatFunc = (data, date) => {
     let result = '';
@@ -29,6 +32,7 @@ const FotoObatByDate = ({navigation, route}) => {
     const hasilDokterData = route.params?.data;
     const hasilDokterDate = [];
     setIdPasien(route.params?.id);
+    setAdmin(route.params?.admin);
     hasilDokterData.forEach(item => {
       hasilDokterDate.push(item.tanggal_berobat);
     });
@@ -42,14 +46,7 @@ const FotoObatByDate = ({navigation, route}) => {
       return <Text style={style.textNoData}>Tidak ada hasil</Text>;
     } else {
       return fotoObatByDate.length <= 0 ? (
-        <Text
-          style={{
-            textAlign: 'center',
-            fontFamily: 'Poppins-Bold',
-            fontSize: 16,
-          }}>
-          Tidak ada data Foto Obat!
-        </Text>
+        <Text style={style.textWarning}>Tidak ada data Foto Obat!</Text>
       ) : (
         fotoObatByDate
           .slice(0)
@@ -60,11 +57,25 @@ const FotoObatByDate = ({navigation, route}) => {
               onPress={() =>
                 navigation.navigate({
                   name: 'Foto Obat',
-                  params: {data: fotoObatFunc(fotoObat, item), id: idPasien},
+                  params: {
+                    data: fotoObatFunc(fotoObat, item),
+                    id: idPasien,
+                    admin: admin,
+                  },
                 })
               }>
               <View style={style.wrapper}>
-                <Text style={style.textStyle}>{item.split('T')[0]}</Text>
+                <View style={style.wraperDate}>
+                  <Text style={style.textStyle}>{item.split('T')[0]}</Text>
+                  <Text style={style.textStyleHours}>
+                    {`${
+                      parseInt(item.split('T')[1].split('.')[0].split(':')[0]) +
+                      TZONE
+                    }:${item.split('T')[1].split('.')[0].split(':')[1]}:${
+                      item.split('T')[1].split('.')[0].split(':')[2]
+                    }`}
+                  </Text>
+                </View>
                 <FontAwesomeIcon icon={faChevronRight} size={20} />
               </View>
             </TouchableWithoutFeedback>
@@ -83,7 +94,7 @@ const FotoObatByDate = ({navigation, route}) => {
         navigation={() =>
           navigation.navigate({
             name: 'Input Foto Obat',
-            params: {data: idPasien},
+            params: {data: idPasien, admin: admin},
           })
         }
       />
@@ -107,19 +118,33 @@ const style = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#D2D8DF',
   },
+  wraperDate: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
   scrollViewStyle: {
     paddingHorizontal: 30,
     width: '100%',
     marginTop: 50,
   },
   textStyle: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Poppins-SemiBold',
+  },
+  textStyleHours: {
+    fontSize: 18,
+    fontFamily: 'Poppins-SemiBold',
+    marginLeft: 30,
   },
   textNoData: {
     fontFamily: 'Poppins-Reguler',
     fontSize: 14,
     textAlign: 'center',
+  },
+  textWarning: {
+    textAlign: 'center',
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
   },
 });
 

@@ -17,16 +17,20 @@ import {HOST} from '../data/constants';
 
 const FotoObat = ({navigation, route}) => {
   const [img, setImg] = useState([]);
+  const [firstImg, setFirstImg] = useState([]);
   const [idPasien, setIdPasien] = useState();
   const [id, setId] = useState();
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const data = route.params?.data;
     setId(data.id);
     setIdPasien(route.params?.id);
+    setAdmin(route.params?.admin);
     const image = data.foto !== '' ? data.foto.split(', ') : [];
     setImg(image.length <= 0 ? [] : image.slice(0, image.length - 1));
+    setFirstImg(image.length <= 0 ? [] : image.slice(0, image.length - 1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -38,6 +42,8 @@ const FotoObat = ({navigation, route}) => {
     method: 'PUT',
     body: JSON.stringify({
       foto: img ? img.join(', ') + ', ' : null,
+      admin: admin,
+      idPasien: idPasien,
     }),
   };
 
@@ -52,12 +58,23 @@ const FotoObat = ({navigation, route}) => {
         .then(res => {
           if (res.status === 'success') {
             setLoading(false);
-            Alert.alert('Foto berhasil disimpan!');
-            const resetAction = CommonActions.reset({
-              index: 1,
-              routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-            });
-            navigation.dispatch(resetAction);
+            Alert.alert('Berhasil!', 'Foto berhasil disimpan!', [
+              {
+                text: 'Oke',
+                onPress: () => {
+                  const resetAction = CommonActions.reset({
+                    index: 1,
+                    routes: [
+                      {
+                        name: 'DetailPasien',
+                        params: {id_pasien: idPasien, admin: admin},
+                      },
+                    ],
+                  });
+                  navigation.dispatch(resetAction);
+                },
+              },
+            ]);
           } else {
             setLoading(false);
             Alert.alert('Data gagal disimpan!');
@@ -70,19 +87,42 @@ const FotoObat = ({navigation, route}) => {
     }
   };
 
+  const hapsuBody = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'DELETE',
+    body: JSON.stringify({
+      admin: admin,
+      idPasien: idPasien,
+    }),
+  };
+
   const hapus = () => {
     setLoading(true);
-    fetch(`${HOST}/foto/delete/${id}`, {method: 'DELETE'})
+    fetch(`${HOST}/foto/delete/${id}`, hapsuBody)
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          Alert.alert('Data berhasil dihapus!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data berhasil dihapus!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'DetailPasien',
+                      params: {id_pasien: idPasien, admin: admin},
+                    },
+                  ],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
           setLoading(false);
           Alert.alert('Data gagal dihapus!');
@@ -135,7 +175,15 @@ const FotoObat = ({navigation, route}) => {
           mt={30}
           title={'Simpan'}
           navigation={() => {
-            update();
+            if (img.join() === firstImg.join()) {
+              Alert.alert('Tidak ada perubahan pada foto obat!');
+            } else {
+              if (img.length > 0) {
+                update();
+              } else {
+                Alert.alert('Tambahkan setidaknya satu foto!');
+              }
+            }
           }}
         />
         <CustomButton

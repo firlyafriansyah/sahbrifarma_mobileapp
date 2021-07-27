@@ -24,7 +24,7 @@ const Login = ({navigation}) => {
           if (res.status === 'success') {
             navigation.navigate({
               name: 'Home',
-              params: {role: res.data.role},
+              params: {role: res.data.role, admin: res.data.username},
             });
             setPass('');
             setName('');

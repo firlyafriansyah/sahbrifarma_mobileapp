@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -9,11 +10,13 @@ import {
 import {CustomHeader, FloatingButton} from '../components';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {TZONE} from '../data/constants';
 
 const KeluhanByDate = ({navigation, route}) => {
   const [keluhanByDate, setKeluhanByDate] = useState();
   const [idPasien, setIdPasien] = useState();
   const [keluhan, setKeluhan] = useState();
+  const [admin, setAdmin] = useState();
 
   const keluhanFunc = (data, date) => {
     let result = '';
@@ -28,6 +31,7 @@ const KeluhanByDate = ({navigation, route}) => {
   useEffect(() => {
     const keluhanData = route.params?.data;
     setIdPasien(route.params?.id);
+    setAdmin(route.params?.admin);
     const keluhanDate = [];
     keluhanData.forEach(item => {
       keluhanDate.push(item.tanggal_berobat);
@@ -42,14 +46,7 @@ const KeluhanByDate = ({navigation, route}) => {
       return <Text style={style.textNoData}>Tidak ada keluhan</Text>;
     } else {
       return keluhanByDate.length <= 0 ? (
-        <Text
-          style={{
-            textAlign: 'center',
-            fontFamily: 'Poppins-Bold',
-            fontSize: 16,
-          }}>
-          Tidak ada data Keluhan!
-        </Text>
+        <Text style={style.textWarning}>Tidak ada data Keluhan!</Text>
       ) : (
         keluhanByDate
           .slice(0)
@@ -60,11 +57,25 @@ const KeluhanByDate = ({navigation, route}) => {
               onPress={() => {
                 navigation.navigate({
                   name: 'Keluhan',
-                  params: {data: keluhanFunc(keluhan, item), id: idPasien},
+                  params: {
+                    data: keluhanFunc(keluhan, item),
+                    id: idPasien,
+                    admin: admin,
+                  },
                 });
               }}>
               <View style={style.wrapper}>
-                <Text style={style.textStyle}>{item.split('T')[0]}</Text>
+                <View style={style.wraperDate}>
+                  <Text style={style.textStyle}>{item.split('T')[0]}</Text>
+                  <Text style={style.textStyleHours}>
+                    {`${
+                      parseInt(item.split('T')[1].split('.')[0].split(':')[0]) +
+                      TZONE
+                    }:${item.split('T')[1].split('.')[0].split(':')[1]}:${
+                      item.split('T')[1].split('.')[0].split(':')[2]
+                    }`}
+                  </Text>
+                </View>
                 <FontAwesomeIcon icon={faChevronRight} size={20} />
               </View>
             </TouchableWithoutFeedback>
@@ -86,7 +97,7 @@ const KeluhanByDate = ({navigation, route}) => {
         navigation={() =>
           navigation.navigate({
             name: 'Input Keluhan',
-            params: {data: idPasien},
+            params: {data: idPasien, admin: admin},
           })
         }
       />
@@ -110,19 +121,33 @@ const style = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#D2D8DF',
   },
+  wraperDate: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
   scrollViewStyle: {
     paddingHorizontal: 30,
     width: '100%',
     marginTop: 50,
   },
   textStyle: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Poppins-SemiBold',
+  },
+  textStyleHours: {
+    fontSize: 18,
+    fontFamily: 'Poppins-SemiBold',
+    marginLeft: 30,
   },
   textNoData: {
     fontFamily: 'Poppins-Reguler',
     fontSize: 14,
     textAlign: 'center',
+  },
+  textWarning: {
+    textAlign: 'center',
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
   },
 });
 

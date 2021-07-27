@@ -14,6 +14,7 @@ import {HOST} from '../data/constants';
 const InputKeluhan = ({navigation, route}) => {
   const [keluhan, setKeluhan] = useState([]);
   const [idPasien, setIdPasien] = useState();
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   const showBubbleTag = (arrayState, setArrayState) => {
@@ -30,6 +31,7 @@ const InputKeluhan = ({navigation, route}) => {
 
   useEffect(() => {
     setIdPasien(route.params?.data);
+    setAdmin(route.params?.admin);
     return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -42,6 +44,7 @@ const InputKeluhan = ({navigation, route}) => {
     method: 'POST',
     body: JSON.stringify({
       keluhan: keluhan.length > 0 ? keluhan.join(', ') + ', ' : null,
+      admin: admin,
     }),
   };
 
@@ -55,12 +58,23 @@ const InputKeluhan = ({navigation, route}) => {
         .then(res => {
           if (res.status === 'success') {
             setLoading(false);
-            Alert.alert('Data berhasil disimpan!');
-            const resetAction = CommonActions.reset({
-              index: 1,
-              routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-            });
-            navigation.dispatch(resetAction);
+            Alert.alert('Berhasil!', 'Data berhasil disimpan!', [
+              {
+                text: 'Oke',
+                onPress: () => {
+                  const resetAction = CommonActions.reset({
+                    index: 1,
+                    routes: [
+                      {
+                        name: 'DetailPasien',
+                        params: {id_pasien: idPasien, admin: admin},
+                      },
+                    ],
+                  });
+                  navigation.dispatch(resetAction);
+                },
+              },
+            ]);
           } else {
             Alert.alert('Gagal memperbarui data!');
             setLoading(false);

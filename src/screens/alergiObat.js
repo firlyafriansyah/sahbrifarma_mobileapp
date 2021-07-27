@@ -25,14 +25,18 @@ const AlergiObat = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [idPasien, setIdPasien] = useState();
   const [namaObat, setNamaObat] = useState([]);
+  const [firstNamaObat, setFirstNamaObat] = useState([]);
   const [inputObat, setInputObat] = useState('');
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const obat = route.params?.data.nama_obat;
     setIdPasien(route.params?.data.id_pasien);
+    setAdmin(route.params?.admin);
     if (obat) {
       setNamaObat(obat.slice(0, obat.length - 2).split(', '));
+      setFirstNamaObat(obat.slice(0, obat.length - 2).split(', '));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -45,6 +49,7 @@ const AlergiObat = ({navigation, route}) => {
     method: 'PUT',
     body: JSON.stringify({
       nama_obat: namaObat ? namaObat.join(', ') + ', ' : null,
+      admin: admin,
     }),
   };
 
@@ -54,17 +59,32 @@ const AlergiObat = ({navigation, route}) => {
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          Alert.alert('Data berhasil disimpan!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data berhasil disimpan!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'DetailPasien',
+                      params: {id_pasien: idPasien, admin: admin},
+                    },
+                  ],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
+          setLoading(false);
           Alert.alert('Data gagal diperbarui!');
         }
       })
-      .catch(() => Alert.alert('Kesalahan pada sistem!'));
+      .catch(() => {
+        setLoading(false);
+        Alert.alert('Kesalahan pada sistem!');
+      });
   };
 
   return (
@@ -94,7 +114,12 @@ const AlergiObat = ({navigation, route}) => {
               title="Simpan"
               navigation={() => {
                 setLoading(true);
-                updateObat();
+                if (firstNamaObat.join() === namaObat.join()) {
+                  setLoading(false);
+                  Alert.alert('Anda belum melakukan perubahan!');
+                } else {
+                  updateObat();
+                }
               }}
             />
           )}
@@ -120,9 +145,11 @@ const AlergiObat = ({navigation, route}) => {
               </Pressable>
               <Pressable
                 onPress={() => {
-                  setNamaObat(arr => [...arr, `${inputObat}`]);
-                  setInputObat('');
-                  setModalVisible(false);
+                  if (inputObat !== '') {
+                    setNamaObat(arr => [...arr, `${inputObat}`]);
+                    setInputObat('');
+                    setModalVisible(false);
+                  }
                 }}>
                 <Text style={style.button}>Simpan</Text>
               </Pressable>

@@ -28,6 +28,7 @@ const HasilDokter = ({navigation, route}) => {
   const [kolestrol, setKolestrol] = useState();
   const [idPasien, setIdPasien] = useState();
   const [colorText, setColorText] = useState('#A4B0BE80');
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -40,6 +41,7 @@ const HasilDokter = ({navigation, route}) => {
     setGula(data.gula_darah.toString());
     setAsam(data.asam_urat.toString());
     setKolestrol(data.kolestrol.toString());
+    setAdmin(route.params?.admin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,6 +56,8 @@ const HasilDokter = ({navigation, route}) => {
       gula_darah: parseInt(gula),
       asam_urat: parseInt(asam),
       kolestrol: parseInt(kolestrol),
+      admin: admin,
+      idPasien: idPasien,
     }),
   };
 
@@ -65,12 +69,23 @@ const HasilDokter = ({navigation, route}) => {
         if (res.status === 'success') {
           setEditable(false);
           setLoading(false);
-          Alert.alert('Data berhasil disimpan!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data berhasil disimpan!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'DetailPasien',
+                      params: {id_pasien: idPasien, admin: admin},
+                    },
+                  ],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
           setLoading(false);
           Alert.alert('Data gagal disimpan!');
@@ -82,19 +97,42 @@ const HasilDokter = ({navigation, route}) => {
       });
   };
 
+  const bodyHapus = {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'DELETE',
+    body: JSON.stringify({
+      admin: admin,
+      idPasien: idPasien,
+    }),
+  };
+
   const hapusHasilDokter = () => {
     setLoading(true);
-    fetch(`${HOST}/hasil-dokter/delete/${id}`, {method: 'DELETE'})
+    fetch(`${HOST}/hasil-dokter/delete/${id}`, bodyHapus)
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          Alert.alert('Data berhasil dihapus!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data berhasil dihapus!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'DetailPasien',
+                      params: {id_pasien: idPasien, admin: admin},
+                    },
+                  ],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
           setLoading(false);
           Alert.alert('Data gagal dihapus!');

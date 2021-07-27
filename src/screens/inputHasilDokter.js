@@ -23,10 +23,12 @@ const InputHasilDokter = ({navigation, route}) => {
   const [gula, setGula] = useState();
   const [asam, setAsam] = useState();
   const [kolestrol, setKolestrol] = useState();
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIdPasien(route.params?.data);
+    setAdmin(route.params?.admin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -41,6 +43,7 @@ const InputHasilDokter = ({navigation, route}) => {
       gula_darah: parseInt(gula),
       asam_urat: parseInt(asam),
       kolestrol: parseInt(kolestrol),
+      admin: admin,
     }),
   };
 
@@ -51,12 +54,23 @@ const InputHasilDokter = ({navigation, route}) => {
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          Alert.alert('Data berhasil disimpan!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data berhasil disimpan!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'DetailPasien',
+                      params: {id_pasien: idPasien, admin: admin},
+                    },
+                  ],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
           setLoading(false);
           Alert.alert('Data gagal disimpan!');
@@ -138,7 +152,13 @@ const InputHasilDokter = ({navigation, route}) => {
             title={'Simpan'}
             mt={60}
             mb={60}
-            navigation={() => simpan()}
+            navigation={() => {
+              if (sistol && diastol && pulse && gula && asam && kolestrol) {
+                simpan();
+              } else {
+                Alert.alert('Semua data harus diisi!');
+              }
+            }}
           />
         </View>
       </ScrollView>

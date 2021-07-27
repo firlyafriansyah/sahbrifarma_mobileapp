@@ -1,4 +1,4 @@
-import {faWalking} from '@fortawesome/free-solid-svg-icons';
+import {faTrash, faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React, {useEffect, useState} from 'react';
 import {
@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Alert,
   Modal,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/routers';
 import {Camera, CustomButton, CustomHeader} from '../components';
@@ -17,6 +18,7 @@ import {HOST} from '../data/constants';
 const InputFotoObat = ({navigation, route}) => {
   const [idPasien, setIdPasien] = useState();
   const [img, setImg] = useState([]);
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   const bodyData = {
@@ -27,6 +29,7 @@ const InputFotoObat = ({navigation, route}) => {
     method: 'POST',
     body: JSON.stringify({
       foto: img ? img.join(', ') + ', ' : null,
+      admin: admin,
     }),
   };
 
@@ -37,12 +40,23 @@ const InputFotoObat = ({navigation, route}) => {
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          Alert.alert('Foto berhasil disimpan!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Foto berhasil disimpan!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'DetailPasien',
+                      params: {id_pasien: idPasien, admin: admin},
+                    },
+                  ],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
           setLoading(false);
           Alert.alert('Foto gagal disimpan!');
@@ -57,6 +71,7 @@ const InputFotoObat = ({navigation, route}) => {
   useEffect(() => {
     const data = route.params?.data;
     setIdPasien(data);
+    setAdmin(route.params?.admin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -82,15 +97,25 @@ const InputFotoObat = ({navigation, route}) => {
           {img.length <= 0 ? (
             <Text style={style.textStyle}>Tidak ada foto</Text>
           ) : (
-            img.map((item, index) => (
-              <Image
-                key={index}
-                style={style.imageStyle}
-                source={{
-                  uri: `data:image/jpg;base64,${item}`,
-                }}
-              />
-            ))
+            img
+              .slice(0)
+              .reverse()
+              .map((item, index) => (
+                <View key={index} style={style.image}>
+                  <Image
+                    key={index}
+                    style={style.imageStyle}
+                    source={{
+                      uri: `data:image/jpg;base64,${item}`,
+                    }}
+                  />
+                  <TouchableWithoutFeedback
+                    style={style.delete}
+                    onPress={() => setImg(img.filter(it => it !== item))}>
+                    <FontAwesomeIcon icon={faTrash} size={25} />
+                  </TouchableWithoutFeedback>
+                </View>
+              ))
           )}
         </View>
         <CustomButton
@@ -98,7 +123,11 @@ const InputFotoObat = ({navigation, route}) => {
           mb={30}
           title={'Simpan'}
           navigation={() => {
-            simpan();
+            if (img.length > 0) {
+              simpan();
+            } else {
+              Alert.alert('Tambahkan setidaknya satu foto!');
+            }
           }}
         />
       </ScrollView>
@@ -133,8 +162,8 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   imageStyle: {
-    width: 300,
-    height: 300,
+    width: 250,
+    height: 250,
     marginBottom: 30,
   },
   textStyle: {
@@ -171,6 +200,14 @@ const style = StyleSheet.create({
     marginBottom: 20,
     color: '#c0392b',
     marginTop: 10,
+  },
+  delete: {
+    marginLeft: 10,
+    zIndex: 99,
+  },
+  image: {
+    display: 'flex',
+    flexDirection: 'row',
   },
 });
 

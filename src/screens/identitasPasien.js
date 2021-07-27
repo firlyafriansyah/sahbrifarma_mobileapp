@@ -30,6 +30,7 @@ const IdentitasPasien = ({navigation, route}) => {
   const [teleponPasien, setTeleponPasien] = useState();
   const [showDatePicker, setShowDatePicker] = useState();
   const [date, setDate] = useState(new Date());
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -42,6 +43,7 @@ const IdentitasPasien = ({navigation, route}) => {
     setTahunLahir(data.tanggal_lahir_pasien.split('/')[2]);
     setKelaminPasien(data.jenis_kelamin_pasien);
     setTeleponPasien(data.nomor_telepon_pasien);
+    setAdmin(route.params?.admin);
     return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -58,6 +60,7 @@ const IdentitasPasien = ({navigation, route}) => {
       tanggal_lahir_pasien: `${tanggalLahir}/${bulanLahir}/${tahunLahir}`,
       jenis_kelamin_pasien: kelaminPasien,
       nomor_telepon_pasien: teleponPasien,
+      admin: admin,
     }),
   };
 
@@ -68,17 +71,32 @@ const IdentitasPasien = ({navigation, route}) => {
         if (res.status === 'success') {
           setLoading(false);
           setEditable(!editable);
-          Alert.alert('Data berhasil disimpan!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'DetailPasien', params: {id_pasien: idPasien}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data berhasil disimpan!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    {
+                      name: 'DetailPasien',
+                      params: {id_pasien: idPasien, admin: admin},
+                    },
+                  ],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
+          setLoading(false);
           Alert.alert('Gagal mengupdate data!');
         }
       })
-      .catch(() => Alert.alert('Terjadi kesalahan pada sistem!'));
+      .catch(() => {
+        setLoading(false);
+        Alert.alert('Terjadi kesalahan pada sistem!');
+      });
   };
 
   return (

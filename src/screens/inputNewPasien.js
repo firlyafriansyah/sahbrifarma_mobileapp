@@ -38,10 +38,12 @@ const InputNewPasien = ({navigation, route}) => {
   const [teleponPasien, setTeleponPasien] = useState();
   const [showDatePicker, setShowDatePicker] = useState();
   const [role, setRole] = useState();
+  const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setRole(route.params?.role);
+    setAdmin(route.params?.admin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -80,6 +82,7 @@ const InputNewPasien = ({navigation, route}) => {
       foto: '',
       nama_obat: namaObat.length <= 0 ? null : arrayToString(namaObat),
       keluhan: arrayToString(keluhan),
+      admin: admin,
     }),
   };
 
@@ -90,12 +93,18 @@ const InputNewPasien = ({navigation, route}) => {
       .then(res => {
         if (res.status === 'success') {
           setLoading(false);
-          Alert.alert('Data pasien berhasil disimpan!');
-          const resetAction = CommonActions.reset({
-            index: 1,
-            routes: [{name: 'Home', params: {role: role}}],
-          });
-          navigation.dispatch(resetAction);
+          Alert.alert('Berhasil!', 'Data pasien berhasil disimpan!', [
+            {
+              text: 'Oke',
+              onPress: () => {
+                const resetAction = CommonActions.reset({
+                  index: 1,
+                  routes: [{name: 'Home', params: {role: role}}],
+                });
+                navigation.dispatch(resetAction);
+              },
+            },
+          ]);
         } else {
           setLoading(false);
           Alert.alert('Terjadi kesalahan pada saat menyimpan!');
