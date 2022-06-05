@@ -18,12 +18,12 @@ import {
   InputNewPasienScreen,
   IdentitasPasienScreen,
   AlergiObatScreen,
-  KeluhanPasienScreen,
+  KeluhanScreen,
   KeluhanByDateScreen,
   InputKeluhanScreen,
-  HasilDokterByDateScreen,
-  InputHasilDokterScreen,
-  HasilDokterScreen,
+  HasilPeriksaByDateScreen,
+  InputHasilPeriksaScreen,
+  HasilPeriksaScreen,
   FotoObatByDateScreen,
   FotoObatScreen,
   InputFotoObatScreen,
@@ -58,21 +58,21 @@ const App = () => {
             component={IdentitasPasienScreen}
           />
           <Stack.Screen name="Alergi Obat" component={AlergiObatScreen} />
-          <Stack.Screen name="Keluhan" component={KeluhanPasienScreen} />
+          <Stack.Screen name="Keluhan" component={KeluhanScreen} />
           <Stack.Screen
             name="Keluhan By Date"
             component={KeluhanByDateScreen}
           />
           <Stack.Screen name={'Input Keluhan'} component={InputKeluhanScreen} />
           <Stack.Screen
-            name={'Hasil Dokter By Date'}
-            component={HasilDokterByDateScreen}
+            name={'Hasil Periksa By Date'}
+            component={HasilPeriksaByDateScreen}
           />
           <Stack.Screen
-            name={'Input Hasil Dokter'}
-            component={InputHasilDokterScreen}
+            name={'Input Hasil Periksa'}
+            component={InputHasilPeriksaScreen}
           />
-          <Stack.Screen name={'Hasil Dokter'} component={HasilDokterScreen} />
+          <Stack.Screen name={'Hasil Periksa'} component={HasilPeriksaScreen} />
           <Stack.Screen
             name={'Foto Obat By Date'}
             component={FotoObatByDateScreen}

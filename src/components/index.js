@@ -1,16 +1,16 @@
-import Input from './input';
-import InputPass from './inputPass';
-import InputWithLogo from './inputWithLogo';
-import Card from './card';
-import CustomHeader from './header';
-import Category from './category';
-import InputSelect from './inputSelect';
-import InputWithButton from './inputWithButton';
-import CustomButton from './customButton';
-import BubbleTag from './bubbleTag';
-import ListItem from './listItem';
-import FloatingButton from './floatingButton';
-import Camera from './camera';
+import Input from './Input';
+import InputPass from './InputPass';
+import InputWithLogo from './InputWithLogo';
+import Card from './Card';
+import CustomHeader from './Header';
+import Category from './Category';
+import InputSelect from './InputSelect';
+import InputWithButton from './InputWithButton';
+import CustomButton from './CustomButton';
+import BubbleTag from './BubbleTag';
+import ListItem from './ListItem';
+import FloatingButton from './FloatingButton';
+import Camera from './Camera';
 
 export {
   Input,

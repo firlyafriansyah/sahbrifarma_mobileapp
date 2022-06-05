@@ -1,23 +1,23 @@
-import {default as LoginScreen} from './login';
-import {default as HomeScreen} from './home';
-import {default as DetailPasienScreen} from './detailPasien';
-import {default as InputNewPasienScreen} from './inputNewPasien';
-import {default as QrScannerScreen} from './qrScanner';
-import {default as IdentitasPasienScreen} from './identitasPasien';
-import {default as AlergiObatScreen} from './alergiObat';
-import {default as KeluhanPasienScreen} from './keluhanPasien';
-import {default as KeluhanByDateScreen} from './keluhanByDate';
-import {default as InputKeluhanScreen} from './inputKeluhan';
-import {default as HasilDokterByDateScreen} from './hasilDokterByDate';
-import {default as InputHasilDokterScreen} from './inputHasilDokter';
-import {default as HasilDokterScreen} from './hasilDokter';
-import {default as FotoObatByDateScreen} from './fotoObatByDate';
-import {default as FotoObatScreen} from './fotoObat';
-import {default as InputFotoObatScreen} from './inputFotoObat';
-import {default as RiwayatBerobatScreen} from './riwayatBerobat';
-import {default as ManageAdminScreen} from './manageAdmin';
-import {default as RegisterAdminScreen} from './registerAdmin';
-import {default as UpdateAdminScreen} from './updateAdmin';
+import {default as LoginScreen} from './Login';
+import {default as HomeScreen} from './Home';
+import {default as DetailPasienScreen} from './DetailPasien';
+import {default as InputNewPasienScreen} from './InputNewPasien';
+import {default as QrScannerScreen} from './QRScanner';
+import {default as IdentitasPasienScreen} from './IdentitasPasien';
+import {default as AlergiObatScreen} from './AlergiObat';
+import {default as KeluhanScreen} from './Keluhan';
+import {default as KeluhanByDateScreen} from './KeluhanByDate';
+import {default as InputKeluhanScreen} from './InputKeluhan';
+import {default as HasilPeriksaByDateScreen} from './HasilPeriksaByDate';
+import {default as InputHasilPeriksaScreen} from './InputHasilPeriksa';
+import {default as HasilPeriksaScreen} from './HasilPeriksa';
+import {default as FotoObatByDateScreen} from './FotoObatByDate';
+import {default as FotoObatScreen} from './FotoObat';
+import {default as InputFotoObatScreen} from './InputFotoObat';
+import {default as RiwayatBerobatScreen} from './RiwayatBerobat';
+import {default as ManageAdminScreen} from './ManageAdmin';
+import {default as RegisterAdminScreen} from './RegisterAdmin';
+import {default as UpdateAdminScreen} from './UpdateAdmin';
 
 export {
   LoginScreen,
@@ -27,12 +27,12 @@ export {
   QrScannerScreen,
   IdentitasPasienScreen,
   AlergiObatScreen,
-  KeluhanPasienScreen,
+  KeluhanScreen,
   KeluhanByDateScreen,
   InputKeluhanScreen,
-  HasilDokterByDateScreen,
-  InputHasilDokterScreen,
-  HasilDokterScreen,
+  HasilPeriksaByDateScreen,
+  InputHasilPeriksaScreen,
+  HasilPeriksaScreen,
   FotoObatByDateScreen,
   FotoObatScreen,
   InputFotoObatScreen,
