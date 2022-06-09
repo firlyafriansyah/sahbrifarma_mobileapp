@@ -28,4 +28,18 @@ const removeDataAsyncStorage = async key => {
   }
 };
 
-export {storeDataAsyncStorage, getDataAsyncStorage, removeDataAsyncStorage};
+const multiRemoveDataAsyncStorage = async (key1, key2) => {
+  try {
+    await AsyncStorage.multiRemove([key1, key2]);
+    return {status: 'success'};
+  } catch (e) {
+    return {status: 'error remove data from async storage!'};
+  }
+};
+
+export {
+  storeDataAsyncStorage,
+  getDataAsyncStorage,
+  removeDataAsyncStorage,
+  multiRemoveDataAsyncStorage,
+};

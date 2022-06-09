@@ -27,7 +27,7 @@ import {HOST} from '../../data/constants';
 import {CommonActions} from '@react-navigation/routers';
 import {
   getDataAsyncStorage,
-  removeDataAsyncStorage,
+  multiRemoveDataAsyncStorage,
 } from '../../data/asyncStorage';
 
 const wait = timeout => {
@@ -75,6 +75,7 @@ const Home = ({navigation}) => {
     getData();
     getDataAsyncStorage('admin')
       .then(res => {
+        console.log(res);
         setRole(res.adminRole);
       })
       .catch(() => {
@@ -132,21 +133,23 @@ const Home = ({navigation}) => {
                   {
                     text: 'Ya',
                     onPress: () => {
-                      removeDataAsyncStorage('admin').then(res => {
-                        if (res.status === 'success') {
-                          const resetAction = CommonActions.reset({
-                            index: 1,
-                            routes: [
-                              {
-                                name: 'Login',
-                              },
-                            ],
-                          });
-                          navigation.dispatch(resetAction);
-                        } else {
-                          Alert('Gagal menghapus async storage!');
-                        }
-                      });
+                      multiRemoveDataAsyncStorage('admin', 'autoLogin').then(
+                        res => {
+                          if (res.status === 'success') {
+                            const resetAction = CommonActions.reset({
+                              index: 1,
+                              routes: [
+                                {
+                                  name: 'Login',
+                                },
+                              ],
+                            });
+                            navigation.dispatch(resetAction);
+                          } else {
+                            Alert('Gagal menghapus async storage!');
+                          }
+                        },
+                      );
                     },
                   },
                   {

@@ -1,17 +1,30 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text, Modal, Image} from 'react-native';
 import {faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {CustomButton, Input, InputPass} from '../../components';
 import {HOST} from '../../data/constants';
-import {storeDataAsyncStorage} from '../../data/asyncStorage';
+import {
+  storeDataAsyncStorage,
+  getDataAsyncStorage,
+} from '../../data/asyncStorage';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 const Login = ({navigation}) => {
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
+  const [saveLogin, setSaveLogin] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getDataAsyncStorage('autoLogin').then(res => {
+      if (res) {
+        navigation.navigate({name: 'Home'});
+      }
+    });
+  });
 
   const checkInput = () => {
     if (name === '' || pass === '') {
@@ -19,6 +32,7 @@ const Login = ({navigation}) => {
       setErrorMessage('Nama dan Kata Sandi tidak boleh kosong!');
       setLoading(false);
     } else {
+      storeDataAsyncStorage('autoLogin', saveLogin);
       fetch(`${HOST}/admin/login`, optionsRequest)
         .then(resJson => resJson.json())
         .then(res => {
@@ -85,7 +99,17 @@ const Login = ({navigation}) => {
         <Text style={style.label}>Nama</Text>
         <Input mb={20} onChangeText={item => setName(item)} value={name} />
         <Text style={style.label}>Kata Sandi</Text>
-        <InputPass mb={15} onChangeText={item => setPass(item)} value={pass} />
+        <InputPass mb={25} onChangeText={item => setPass(item)} value={pass} />
+        <BouncyCheckbox
+          style={style.checkBoxStyle}
+          size={20}
+          fillColor="#5352ED"
+          unfillColor="#FFFFFF"
+          text="Aktifkan Login Otomatis"
+          iconStyle={style.checkBoxIconStyle}
+          textStyle={style.checkBoxTextStyle}
+          onPress={() => setSaveLogin(!saveLogin)}
+        />
       </View>
       <CustomButton
         title={'Masuk'}
@@ -113,6 +137,7 @@ const style = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     paddingHorizontal: 23,
+    marginTop: -80,
   },
   wrapper: {
     marginBottom: 100,
@@ -128,7 +153,7 @@ const style = StyleSheet.create({
     borderRadius: 26,
     backgroundColor: '#fff',
     elevation: 12,
-    paddingHorizontal: 14,
+    paddingHorizontal: 20,
     paddingVertical: 18,
     marginBottom: 55,
     marginTop: 30,
@@ -137,6 +162,18 @@ const style = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins-Light',
     marginBottom: 6,
+    marginTop: 10,
+  },
+  checkBoxStyle: {
+    marginLeft: 5,
+    marginBottom: 10,
+  },
+  checkBoxIconStyle: {
+    borderColor: '#A4B0BE80',
+    borderRadius: 8,
+  },
+  checkBoxTextStyle: {
+    textDecorationLine: 'none',
   },
   submitBtn: {
     paddingVertical: 21,
