@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, Modal, Image} from 'react-native';
+import {View, StyleSheet, Text, Modal, Image, Alert} from 'react-native';
 import {faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {CustomButton, Input, InputPass} from '../../components';
@@ -19,12 +19,22 @@ const Login = ({navigation}) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getDataAsyncStorage('autoLogin').then(res => {
-      if (res) {
-        navigation.navigate({name: 'Home'});
-      }
-    });
-  });
+    fetch(`${HOST}/check`)
+      .then(resJson => resJson.json())
+      .then(resCheck => {
+        if (resCheck.status === 'success') {
+          getDataAsyncStorage('autoLogin').then(res => {
+            if (res) {
+              navigation.navigate({name: 'Home'});
+            }
+          });
+        }
+      })
+      .catch(() => {
+        Alert.alert('Maaf saat ini service sedang tidak tersedia!');
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const checkInput = () => {
     if (name === '' || pass === '') {
