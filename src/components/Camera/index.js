@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 const {RNCamera} = require('react-native-camera');
 import {
   Alert,
