@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 const {RNCamera} = require('react-native-camera');
 import {
   Alert,
@@ -43,7 +43,14 @@ const Camera = props => {
 
   return (
     <>
-      <TouchableWithoutFeedback onPress={() => setModal(true)}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          if (props.image.length >= 3) {
+            Alert.alert('Kamu sudah ambil 3 foto!');
+          } else {
+            return setModal(true);
+          }
+        }}>
         <FontAwesomeIcon icon={faCamera} size={50} />
       </TouchableWithoutFeedback>
       <Modal style={style.flex} visible={modal}>

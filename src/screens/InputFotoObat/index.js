@@ -92,6 +92,7 @@ const InputFotoObat = ({navigation, route}) => {
         <Camera
           uri={uri => setImg(arr => [...arr, `${uri}`])}
           back={() => navigation.goBack()}
+          image={img}
         />
         <Text style={style.textWarning}>
           Ambil foto secukupnya untuk menghemat memori server! (max: 3 Foto)
@@ -209,7 +210,7 @@ const style = StyleSheet.create({
     marginTop: 10,
   },
   delete: {
-    marginLeft: 10,
+    marginLeft: 30,
     zIndex: 99,
   },
   image: {

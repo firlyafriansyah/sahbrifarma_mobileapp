@@ -145,7 +145,7 @@ const FotoObat = ({navigation, route}) => {
     <View style={style.conatiner}>
       <CustomHeader title={'Foto Obat'} onPress={() => navigation.goBack()} />
       <View style={style.btnCameraWrapper}>
-        <Camera uri={uri => setImg(arr => [...arr, `${uri}`])} />
+        <Camera uri={uri => setImg(arr => [...arr, `${uri}`])} image={img} />
       </View>
       <Text style={style.textWarning}>
         Ambil foto secukupnya untuk menghemat memori server! (max: 3 Foto)
