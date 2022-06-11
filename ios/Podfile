@@ -24,6 +24,10 @@ target 'sahbrifarma' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
 
+  pod 'react-native-view-shot', :path => '../node_modules/react-native-view-shot'
+
+  pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
+
   target 'sahbrifarmaTests' do
     inherit! :complete
     # Pods for testing

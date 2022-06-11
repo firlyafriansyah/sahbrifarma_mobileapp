@@ -172,6 +172,16 @@ const DetailPasien = ({navigation, route}) => {
             title={'Riwayat Berobat'}
           />
           <Category
+            onPress={() =>
+              navigation.navigate({
+                name: 'Unduh Kartu',
+                params: {data: pasien},
+              })
+            }
+            source={require('../../../assets/images/unduh_kartu.png')}
+            title={'Unduh Kartu'}
+          />
+          <Category
             onPress={() => {
               Alert.alert(
                 'Apakah anda yakin?',

@@ -32,6 +32,7 @@ import {
   RegisterAdminScreen,
   UpdateAdminScreen,
 } from './src/screens';
+import UnduhKartu from './src/screens/UnduhKartu';
 
 const Stack = createStackNavigator();
 
@@ -86,6 +87,7 @@ const App = () => {
             name={'Riwayat Berobat'}
             component={RiwayatBerobatScreen}
           />
+          <Stack.Screen name={'Unduh Kartu'} component={UnduhKartu} />
           <Stack.Screen name={'Manage Admin'} component={ManageAdminScreen} />
           <Stack.Screen
             name={'Register Admin'}

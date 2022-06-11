@@ -177,7 +177,23 @@ const Home = ({navigation}) => {
                 {
                   text: 'Ya',
                   onPress: () => {
-                    navigation.navigate('Login');
+                    multiRemoveDataAsyncStorage('admin', 'autoLogin').then(
+                      res => {
+                        if (res.status === 'success') {
+                          const resetAction = CommonActions.reset({
+                            index: 1,
+                            routes: [
+                              {
+                                name: 'Login',
+                              },
+                            ],
+                          });
+                          navigation.dispatch(resetAction);
+                        } else {
+                          Alert('Gagal menghapus async storage!');
+                        }
+                      },
+                    );
                   },
                 },
                 {
@@ -208,8 +224,27 @@ const Home = ({navigation}) => {
                   e.id.includes(search)
                 ) {
                   return (
+                    <View key={e.id} style={style.cardWrapper}>
+                      <Card
+                        press={() =>
+                          navigation.navigate({
+                            name: 'DetailPasien',
+                            params: {id_pasien: e.id},
+                          })
+                        }
+                        namaPasien={e.nama}
+                        dateCheck={e.tanggal_berobat_terakhir.split('T')[0]}
+                        location={e.alamat}
+                        id={e.id}
+                        unduh={false}
+                      />
+                    </View>
+                  );
+                }
+              } else {
+                return (
+                  <View key={e.id} style={style.cardWrapper}>
                     <Card
-                      key={e.id}
                       press={() =>
                         navigation.navigate({
                           name: 'DetailPasien',
@@ -220,24 +255,9 @@ const Home = ({navigation}) => {
                       dateCheck={e.tanggal_berobat_terakhir.split('T')[0]}
                       location={e.alamat}
                       id={e.id}
+                      unduh={false}
                     />
-                  );
-                }
-              } else {
-                return (
-                  <Card
-                    key={e.id}
-                    press={() =>
-                      navigation.navigate({
-                        name: 'DetailPasien',
-                        params: {id_pasien: e.id},
-                      })
-                    }
-                    namaPasien={e.nama}
-                    dateCheck={e.tanggal_berobat_terakhir.split('T')[0]}
-                    location={e.alamat}
-                    id={e.id}
-                  />
+                  </View>
                 );
               }
             })
@@ -282,7 +302,6 @@ const style = StyleSheet.create({
     backgroundColor: '#FFF',
     alignItems: 'center',
     paddingTop: 5,
-    paddingHorizontal: 36,
   },
   wrapper: {
     display: 'flex',
@@ -294,6 +313,7 @@ const style = StyleSheet.create({
   searchWrapper: {
     display: 'flex',
     flexDirection: 'row',
+    marginHorizontal: 20,
   },
   qrCodeStyle: {
     color: '#646975',
@@ -301,6 +321,12 @@ const style = StyleSheet.create({
   },
   scrollViewStyle: {
     width: '100%',
+  },
+  cardWrapper: {
+    alignSelf: 'center',
+    width: 350,
+    height: 218.75,
+    marginBottom: 20,
   },
   buttonText: {
     fontSize: 16,
