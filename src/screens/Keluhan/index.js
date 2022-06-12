@@ -31,8 +31,6 @@ const Keluhan = ({navigation, route}) => {
   const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
-  console.log(keluhan);
-
   useEffect(() => {
     const data = route.params?.data;
     const keluhanData = data.keluhan;
@@ -151,7 +149,6 @@ const Keluhan = ({navigation, route}) => {
       <CustomHeader title={'Keluhan'} onPress={() => navigation.goBack()} />
       <ScrollView style={style.scrollViewStyle}>
         <View>
-          {console.log(keluhan)}
           {keluhan.length <= 0 ? (
             <Text style={style.textCenter}>Tidak ada keluhan</Text>
           ) : (

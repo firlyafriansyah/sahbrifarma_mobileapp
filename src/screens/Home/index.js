@@ -75,7 +75,6 @@ const Home = ({navigation}) => {
     getData();
     getDataAsyncStorage('admin')
       .then(res => {
-        console.log(res);
         setRole(res.adminRole);
       })
       .catch(() => {

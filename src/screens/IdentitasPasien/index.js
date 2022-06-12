@@ -236,7 +236,6 @@ const IdentitasPasien = ({navigation, route}) => {
             default={kelaminPasien}
             value={item => {
               setKelaminPasien(item);
-              console.log(item);
             }}
             onChangeLabel={() => null}
           />

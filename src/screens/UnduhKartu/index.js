@@ -39,7 +39,7 @@ const UnduhKartu = ({navigation, route}) => {
       Alert.alert(
         'Simpan gambar',
         'Gagal menyimpan gambar: ' + err.message,
-        [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+        [{text: 'OK', onPress: () => {}}],
         {cancelable: false},
       );
     }

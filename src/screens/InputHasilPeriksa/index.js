@@ -90,9 +90,8 @@ const InputHasilPeriksa = ({navigation, route}) => {
           Alert.alert('Data gagal disimpan!');
         }
       })
-      .catch(err => {
+      .catch(() => {
         setLoading(false);
-        console.log(err);
         Alert.alert('Terjadi kesalahan pada sistem!');
       });
   };

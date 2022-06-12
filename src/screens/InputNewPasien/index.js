@@ -113,7 +113,6 @@ const InputNewPasien = ({navigation, route}) => {
           ]);
         } else {
           setLoading(false);
-          console.log(res);
           Alert.alert('Terjadi kesalahan pada saat menyimpan!');
         }
       })
@@ -244,7 +243,6 @@ const InputNewPasien = ({navigation, route}) => {
             default={kelaminPasien}
             value={item => {
               setKelaminPasien(item);
-              console.log(item);
             }}
             onChangeLabel={() => null}
           />
