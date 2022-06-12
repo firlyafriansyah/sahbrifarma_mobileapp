@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 import {faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   View,
@@ -17,6 +17,9 @@ import {HOST} from '../../data/constants';
 import {getDataAsyncStorage} from '../../data/asyncStorage';
 
 const InputHasilPeriksa = ({navigation, route}) => {
+  const sistolRef = useRef(null);
+  const diastolRef = useRef(null);
+  const pulseRef = useRef(null);
   const [idPasien, setIdPasien] = useState();
   const [sistol, setSistol] = useState();
   const [diastol, setDiastol] = useState();
@@ -36,6 +39,7 @@ const InputHasilPeriksa = ({navigation, route}) => {
       .catch(() => {
         Alert('Terjadi kegagalan mengambil data dari Async Storage!');
       });
+    sistolRef.current.focus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -108,26 +112,39 @@ const InputHasilPeriksa = ({navigation, route}) => {
           <View style={style.wrapperLahir}>
             <View style={style.wrapperInput}>
               <TextInput
+                ref={sistolRef}
                 keyboardType={'number-pad'}
                 style={style.input}
                 placeholder={'XXX'}
-                onChangeText={text => setSistol(text)}
+                onChangeText={text => {
+                  setSistol(text);
+                  if (text.length === 3) {
+                    diastolRef.current.focus();
+                  }
+                }}
                 value={sistol}
                 maxLength={3}
                 selectTextOnFocus={true}
               />
               <Text style={style.slash}>/</Text>
               <TextInput
+                ref={diastolRef}
                 keyboardType={'number-pad'}
                 style={style.input}
                 placeholder={'XX'}
-                onChangeText={text => setDiastol(text)}
+                onChangeText={text => {
+                  setDiastol(text);
+                  if (text.length === 2) {
+                    pulseRef.current.focus();
+                  }
+                }}
                 value={diastol}
                 maxLength={2}
                 selectTextOnFocus={true}
               />
               <Text style={style.slash}>.</Text>
               <TextInput
+                ref={pulseRef}
                 keyboardType={'number-pad'}
                 style={style.input}
                 placeholder={'XX'}

@@ -1,5 +1,5 @@
 /* eslint-disable radix */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   View,
@@ -26,6 +26,8 @@ import {CommonActions} from '@react-navigation/routers';
 import {getDataAsyncStorage} from '../../data/asyncStorage';
 
 const InputNewPasien = ({navigation, route}) => {
+  const monthBirth = useRef(null);
+  const yearBirth = useRef(null);
   const [alergiObat, setAlergiObat] = useState(false);
   const [namaObat, setNamaObat] = useState([]);
   const [keluhan, setKeluhan] = useState([]);
@@ -121,24 +123,6 @@ const InputNewPasien = ({navigation, route}) => {
       });
   };
 
-  const alergiFunction = () => {
-    if (alergiObat) {
-      return (
-        <>
-          <Text style={style.label}>Nama Obat</Text>
-          <InputWithButton
-            placeholder={'Nama Obat'}
-            mb={5}
-            onPress={item => setNamaObat(arr => [...arr, `${item}`])}
-          />
-          <View style={style.bubbleTag}>
-            {showBubbleTag(namaObat, setNamaObat)}
-          </View>
-        </>
-      );
-    }
-  };
-
   return (
     <View style={style.container}>
       <CustomHeader
@@ -176,6 +160,9 @@ const InputNewPasien = ({navigation, route}) => {
                   } else {
                     setTanggalLahir(text);
                   }
+                  if (text.length === 2) {
+                    monthBirth.current.focus();
+                  }
                 }}
                 value={tanggalLahir}
                 maxLength={2}
@@ -183,6 +170,7 @@ const InputNewPasien = ({navigation, route}) => {
               />
               <Text style={style.slash}>/</Text>
               <TextInput
+                ref={monthBirth}
                 keyboardType={'number-pad'}
                 style={style.input}
                 placeholder={'MM'}
@@ -194,12 +182,16 @@ const InputNewPasien = ({navigation, route}) => {
                   } else {
                     setBulanLahir(text);
                   }
+                  if (text.length === 2) {
+                    yearBirth.current.focus();
+                  }
                 }}
                 value={bulanLahir}
                 maxLength={2}
               />
               <Text style={style.slashdua}>/</Text>
               <TextInput
+                ref={yearBirth}
                 keyboardType={'number-pad'}
                 style={style.input}
                 placeholder={'YYYY'}
@@ -268,18 +260,34 @@ const InputNewPasien = ({navigation, route}) => {
             labelA={'Ya'}
             labelB={'Tidak'}
             mb={15}
-            value={item => {
-              setAlergiObat(item);
+            value={() => {
+              setAlergiObat(!alergiObat);
             }}
             onChangeLabel={() => setNamaObat([])}
           />
-          {alergiFunction()}
+          {alergiObat || (
+            <>
+              <Text style={style.label}>Nama Obat</Text>
+              <InputWithButton
+                placeholder={'Nama Obat'}
+                mb={5}
+                onPress={item => setNamaObat(arr => [...arr, `${item}`])}
+              />
+              <Text style={style.textCoution}>
+                Klik tanda + untuk menambahkan.
+              </Text>
+              <View style={style.bubbleTag}>
+                {showBubbleTag(namaObat, setNamaObat)}
+              </View>
+            </>
+          )}
           <Text style={style.label}>Keluhan</Text>
           <InputWithButton
             placeholder={'Keluhan Pasien'}
             mb={5}
             onPress={item => setKeluhan(arr => [...arr, `${item}`])}
           />
+          <Text style={style.textCoution}>Klik tanda + untuk menambahkan.</Text>
           <View style={style.bubbleTag}>
             {showBubbleTag(keluhan, setKeluhan)}
           </View>
@@ -329,6 +337,10 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Reguler',
     color: '#2F3542',
     marginBottom: 5,
+    marginLeft: 5,
+  },
+  textCoution: {
+    color: '#00000080',
     marginLeft: 5,
   },
   bubbleTag: {

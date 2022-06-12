@@ -20,25 +20,25 @@ const UnduhKartu = ({navigation, route}) => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         {
-          title: 'Image Download Permission',
-          message: 'Your permission is required to save images to your device',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
+          title: 'Izin Unduh Gambar',
+          message: 'Izinkan aplikasi ini untuk menyimpan gambar di galery!',
+          buttonNegative: 'Tidak',
+          buttonPositive: 'Izinkan',
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         return true;
       }
       Alert.alert(
-        'Permission required',
-        'Permission is required to save images to your device',
+        'Perizinan Dibutuhkan',
+        'Izinkan aplikasi ini untuk menyimpan gambar di galery!',
         [{text: 'OK', onPress: () => {}}],
         {cancelable: false},
       );
     } catch (err) {
       Alert.alert(
-        'Save remote image',
-        'Failed to save Image: ' + err.message,
+        'Simpan gambar',
+        'Gagal menyimpan gambar: ' + err.message,
         [{text: 'OK', onPress: () => console.log('OK Pressed')}],
         {cancelable: false},
       );
@@ -56,8 +56,8 @@ const UnduhKartu = ({navigation, route}) => {
       const image = CameraRoll.save(res, 'photo');
       if (image) {
         Alert.alert(
-          'Image saved',
-          'Successfully saved image to your gallery.',
+          'Gambar berhasil disimpan',
+          'Gambar telah tersimpan di gallery.',
           [{text: 'OK', onPress: () => {}}],
           {cancelable: false},
         );

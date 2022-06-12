@@ -28,13 +28,15 @@ const Login = ({navigation}) => {
               navigation.navigate({name: 'Home'});
             }
           });
+        } else {
+          Alert.alert('Maaf saat ini service sedang tidak tersedia!');
         }
       })
       .catch(() => {
         Alert.alert('Maaf saat ini service sedang tidak tersedia!');
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [0]);
 
   const checkInput = () => {
     if (name === '' || pass === '') {

@@ -2,7 +2,7 @@
 /* eslint-disable radix */
 import {faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useState} from 'react';
 import {
   View,
@@ -19,6 +19,8 @@ import {HOST} from '../../data/constants';
 import {getDataAsyncStorage} from '../../data/asyncStorage';
 
 const HasilPeriksa = ({navigation, route}) => {
+  const diastolRef = useRef(null);
+  const pulseRef = useRef(null);
   const [editable, setEditable] = useState(false);
   const [id, setId] = useState();
   const [sistol, setSistol] = useState();
@@ -154,7 +156,7 @@ const HasilPeriksa = ({navigation, route}) => {
   return (
     <View style={style.container}>
       <CustomHeader
-        title={'Hasil Cek Periksa'}
+        title={'Hasil Periksa'}
         onPress={() => navigation.goBack()}
       />
       <ScrollView
@@ -177,13 +179,19 @@ const HasilPeriksa = ({navigation, route}) => {
                 keyboardType={'number-pad'}
                 editable={editable}
                 placeholder={'XXX'}
-                onChangeText={text => setSistol(text)}
+                onChangeText={text => {
+                  setSistol(text);
+                  if (text.length === 3) {
+                    diastolRef.current.focus();
+                  }
+                }}
                 value={sistol}
                 maxLength={3}
                 selectTextOnFocus={true}
               />
               <Text style={style.slash}>/</Text>
               <TextInput
+                ref={diastolRef}
                 onFocus={() => setColorText('#2F3542')}
                 onBlur={() => setColorText('#A4B0BE80')}
                 style={[
@@ -195,13 +203,19 @@ const HasilPeriksa = ({navigation, route}) => {
                 keyboardType={'number-pad'}
                 editable={editable}
                 placeholder={'XX'}
-                onChangeText={text => setDiastol(text)}
+                onChangeText={text => {
+                  setDiastol(text);
+                  if (text.length === 2) {
+                    pulseRef.current.focus();
+                  }
+                }}
                 value={diastol}
                 maxLength={2}
                 selectTextOnFocus={true}
               />
               <Text style={style.slash}>.</Text>
               <TextInput
+                ref={pulseRef}
                 onFocus={() => setColorText('#2F3542')}
                 onBlur={() => setColorText('#A4B0BE80')}
                 style={[
