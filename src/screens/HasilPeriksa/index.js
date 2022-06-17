@@ -39,6 +39,7 @@ const HasilPeriksa = ({navigation, route}) => {
 
   useEffect(() => {
     const data = route.params?.data;
+    console.log(data.anamnesa);
     setId(data.id);
     setIdPasien(route.params?.id);
     setSistol(data.tensi_darah ? data.tensi_darah.split('/')[0] : '0');
@@ -47,6 +48,9 @@ const HasilPeriksa = ({navigation, route}) => {
     setGula(data.gula_darah ? data.gula_darah.toString() : '0');
     setAsam(data.asam_urat ? data.asam_urat.toString() : '0');
     setKolestrol(data.kolestrol ? data.kolestrol.toString() : '0');
+    setAnamnesa(data.anamnesa || '');
+    setDiagnosis(data.diagnosis || '');
+    setKeterangan(data.keterangan || '');
     getDataAsyncStorage('admin')
       .then(res => {
         setAdmin(res.adminName);
