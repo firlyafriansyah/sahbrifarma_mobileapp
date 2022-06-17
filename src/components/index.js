@@ -11,6 +11,7 @@ import BubbleTag from './BubbleTag';
 import ListItem from './ListItem';
 import FloatingButton from './FloatingButton';
 import Camera from './Camera';
+import TextArea from './TextArea';
 
 export {
   Input,
@@ -26,4 +27,5 @@ export {
   ListItem,
   FloatingButton,
   Camera,
+  TextArea,
 };

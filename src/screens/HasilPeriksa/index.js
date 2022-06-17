@@ -13,7 +13,7 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
-import {CustomButton, CustomHeader, Input} from '../../components';
+import {CustomButton, CustomHeader, Input, TextArea} from '../../components';
 import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../../data/constants';
 import {getDataAsyncStorage} from '../../data/asyncStorage';
@@ -29,6 +29,9 @@ const HasilPeriksa = ({navigation, route}) => {
   const [gula, setGula] = useState();
   const [asam, setAsam] = useState();
   const [kolestrol, setKolestrol] = useState();
+  const [anamnesa, setAnamnesa] = useState();
+  const [diagnosis, setDiagnosis] = useState();
+  const [keterangan, setKeterangan] = useState();
   const [idPasien, setIdPasien] = useState();
   const [colorText, setColorText] = useState('#A4B0BE80');
   const [admin, setAdmin] = useState();
@@ -65,6 +68,9 @@ const HasilPeriksa = ({navigation, route}) => {
       gula_darah: parseInt(gula),
       asam_urat: parseInt(asam),
       kolestrol: parseInt(kolestrol),
+      anamnesa,
+      diagnosis,
+      keterangan,
       admin: admin,
       idPasien: idPasien,
     }),
@@ -263,6 +269,36 @@ const HasilPeriksa = ({navigation, route}) => {
             onChangeText={item => setKolestrol(item)}
             value={kolestrol}
             keyboardType={'number-pad'}
+          />
+          <Text style={style.label}>Anamnesa</Text>
+          <TextArea
+            mb={15}
+            height={120}
+            placeholder={'Anamnesa Pasien'}
+            editable={editable}
+            selectTextOnFocus={true}
+            onChangeText={item => setAnamnesa(item)}
+            value={anamnesa}
+          />
+          <Text style={style.label}>Diagnosis</Text>
+          <TextArea
+            mb={15}
+            height={120}
+            placeholder={'Diagnosis Pasien'}
+            editable={editable}
+            selectTextOnFocus={true}
+            onChangeText={item => setDiagnosis(item)}
+            value={diagnosis}
+          />
+          <Text style={style.label}>Keterangan</Text>
+          <TextArea
+            mb={15}
+            height={120}
+            placeholder={'Keterangan lainnya'}
+            editable={editable}
+            selectTextOnFocus={true}
+            onChangeText={item => setKeterangan(item)}
+            value={keterangan}
           />
           <CustomButton
             title={editable ? 'Simpan' : 'Ubah'}

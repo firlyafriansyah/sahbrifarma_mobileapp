@@ -11,7 +11,7 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
-import {CustomButton, CustomHeader, Input} from '../../components';
+import {CustomButton, CustomHeader, Input, TextArea} from '../../components';
 import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../../data/constants';
 import {getDataAsyncStorage} from '../../data/asyncStorage';
@@ -27,6 +27,9 @@ const InputHasilPeriksa = ({navigation, route}) => {
   const [gula, setGula] = useState();
   const [asam, setAsam] = useState();
   const [kolestrol, setKolestrol] = useState();
+  const [anamnesa, setAnamnesa] = useState();
+  const [diagnosis, setDiagnosis] = useState();
+  const [keterangan, setKeterangan] = useState();
   const [admin, setAdmin] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -57,6 +60,9 @@ const InputHasilPeriksa = ({navigation, route}) => {
       gula_darah: gula ? parseInt(gula) : null,
       asam_urat: asam ? parseInt(asam) : null,
       kolestrol: kolestrol ? parseInt(kolestrol) : null,
+      anamnesa,
+      diagnosis,
+      keterangan,
       admin: admin,
     }),
   };
@@ -174,6 +180,33 @@ const InputHasilPeriksa = ({navigation, route}) => {
             placeholder={'Kolestrol Pasien'}
             onChangeText={item => setKolestrol(item)}
             keyboardType={'number-pad'}
+          />
+          <Text style={style.label}>Anamnesa</Text>
+          <TextArea
+            mb={15}
+            height={120}
+            placeholder={'Anamnesa Pasien'}
+            selectTextOnFocus={true}
+            onChangeText={item => setAnamnesa(item)}
+            value={anamnesa}
+          />
+          <Text style={style.label}>Diagnosis</Text>
+          <TextArea
+            mb={15}
+            height={120}
+            placeholder={'Diagnosis Pasien'}
+            selectTextOnFocus={true}
+            onChangeText={item => setDiagnosis(item)}
+            value={diagnosis}
+          />
+          <Text style={style.label}>Keterangan</Text>
+          <TextArea
+            mb={15}
+            height={120}
+            placeholder={'Keterangan lainnya'}
+            selectTextOnFocus={true}
+            onChangeText={item => setKeterangan(item)}
+            value={keterangan}
           />
           <CustomButton
             title={'Simpan'}
