@@ -29,6 +29,7 @@ const AlergiObat = ({navigation, route}) => {
   const [firstNamaObat, setFirstNamaObat] = useState([]);
   const [inputObat, setInputObat] = useState('');
   const [admin, setAdmin] = useState();
+  const [adminRole, setAdminRole] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -37,9 +38,10 @@ const AlergiObat = ({navigation, route}) => {
     getDataAsyncStorage('admin')
       .then(res => {
         setAdmin(res.adminName);
+        setAdminRole(res.adminRole);
       })
       .catch(() => {
-        Alert('Terjadi kegagalan mengambil data dari Async Storage!');
+        Alert.alert('Terjadi kegagalan mengambil data dari Async Storage!');
       });
     if (obat) {
       setNamaObat(obat.slice(0, obat.length - 2).split(', '));
@@ -114,7 +116,7 @@ const AlergiObat = ({navigation, route}) => {
                 />
               ))
           )}
-          {!namaObat ? null : (
+          {!namaObat ? null : adminRole !== 1 ? (
             <CustomButton
               mt={120}
               mb={30}
@@ -129,10 +131,12 @@ const AlergiObat = ({navigation, route}) => {
                 }
               }}
             />
-          )}
+          ) : null}
         </View>
       </ScrollView>
-      <FloatingButton navigation={() => setModalVisible(true)} />
+      {adminRole !== 1 ? (
+        <FloatingButton navigation={() => setModalVisible(true)} />
+      ) : null}
 
       <Modal animationType="fade" transparent={true} visible={modalVisible}>
         <View style={style.modalStyle}>

@@ -1,17 +1,32 @@
 import {faWalking} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import React, {useState} from 'react';
+import {Picker} from '@react-native-picker/picker';
+import React, {useState, useEffect} from 'react';
 import {View, ScrollView, Text, StyleSheet, Modal, Alert} from 'react-native';
 import {CustomButton, CustomHeader, Input, InputPass} from '../../components';
+import {getDataAsyncStorage} from '../../data/asyncStorage';
 import {HOST} from '../../data/constants';
 
 const RegisterAdmin = ({navigation}) => {
+  const [role, setRole] = useState();
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
   const [passConfirm, setPassConfirm] = useState('');
+  const [roleRegister, setRoleRegister] = useState(1);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getDataAsyncStorage('admin')
+      .then(res => {
+        setRole(res.adminRole);
+      })
+      .catch(() => {
+        Alert('Terjadi kegagalan mengambil data dari Async Storage!');
+      });
+    return;
+  }, [navigation]);
 
   const bodyData = {
     headers: {
@@ -22,6 +37,7 @@ const RegisterAdmin = ({navigation}) => {
     body: JSON.stringify({
       username: name,
       password: pass,
+      role: parseInt(roleRegister, 10),
     }),
   };
 
@@ -70,6 +86,25 @@ const RegisterAdmin = ({navigation}) => {
         <View style={style.formWrapper}>
           <Text style={style.label}>Nama</Text>
           <Input mb={20} onChangeText={item => setName(item)} value={name} />
+          <Text style={style.label}>Pilih Tipe User</Text>
+          <View style={style.picker}>
+            {role === 0 ? (
+              <Picker
+                selectedValue={roleRegister}
+                onValueChange={value => setRoleRegister(value)}>
+                <Picker.Item label="Admin" value={1} />
+                <Picker.Item label="Perawat" value={2} />
+                <Picker.Item label="Apoteker" value={3} />
+              </Picker>
+            ) : (
+              <Picker
+                selectedValue={roleRegister}
+                onValueChange={value => setRoleRegister(value)}>
+                <Picker.Item label="Perawat" value={2} />
+                <Picker.Item label="Apoteker" value={3} />
+              </Picker>
+            )}
+          </View>
           <Text style={style.label}>Kata Sandi</Text>
           <InputPass
             mb={15}
@@ -124,6 +159,13 @@ const style = StyleSheet.create({
     color: '#2F3542',
     marginBottom: 5,
     marginLeft: 5,
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: '#A4B0BE80',
+    borderRadius: 12,
+    paddingVertical: 3,
+    marginBottom: 15,
   },
   modalStyle: {
     display: 'flex',

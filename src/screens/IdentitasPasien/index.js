@@ -32,6 +32,7 @@ const IdentitasPasien = ({navigation, route}) => {
   const [showDatePicker, setShowDatePicker] = useState();
   const [date, setDate] = useState(new Date());
   const [admin, setAdmin] = useState();
+  const [adminRole, setAdminRole] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -47,6 +48,7 @@ const IdentitasPasien = ({navigation, route}) => {
     getDataAsyncStorage('admin')
       .then(res => {
         setAdmin(res.adminName);
+        setAdminRole(res.adminRole);
       })
       .catch(() => {
         Alert('Terjadi kegagalan mengambil data dari Async Storage!');
@@ -248,19 +250,21 @@ const IdentitasPasien = ({navigation, route}) => {
             editable={editable}
             onChangeText={item => setTeleponPasien(item)}
           />
-          <CustomButton
-            title={editable ? 'Simpan' : 'Ubah'}
-            mb={60}
-            mt={30}
-            navigation={() => {
-              if (editable) {
-                updatePasien();
-                setLoading(true);
-              } else {
-                setEditable(true);
-              }
-            }}
-          />
+          {adminRole !== 2 && adminRole !== 3 ? (
+            <CustomButton
+              title={editable ? 'Simpan' : 'Ubah'}
+              mb={60}
+              mt={30}
+              navigation={() => {
+                if (editable) {
+                  updatePasien();
+                  setLoading(true);
+                } else {
+                  setEditable(true);
+                }
+              }}
+            />
+          ) : null}
           <Modal animationType="fade" transparent={true} visible={loading}>
             <View style={style.modalStyle}>
               <View style={style.modalWrapper}>

@@ -35,11 +35,11 @@ const HasilPeriksa = ({navigation, route}) => {
   const [idPasien, setIdPasien] = useState();
   const [colorText, setColorText] = useState('#A4B0BE80');
   const [admin, setAdmin] = useState();
+  const [adminRole, setAdminRole] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const data = route.params?.data;
-    console.log(data.anamnesa);
     setId(data.id);
     setIdPasien(route.params?.id);
     setSistol(data.tensi_darah ? data.tensi_darah.split('/')[0] : '0');
@@ -54,6 +54,7 @@ const HasilPeriksa = ({navigation, route}) => {
     getDataAsyncStorage('admin')
       .then(res => {
         setAdmin(res.adminName);
+        setAdminRole(res.adminRole);
       })
       .catch(() => {
         Alert('Terjadi kegagalan mengambil data dari Async Storage!');
@@ -304,19 +305,23 @@ const HasilPeriksa = ({navigation, route}) => {
             onChangeText={item => setKeterangan(item)}
             value={keterangan}
           />
-          <CustomButton
-            title={editable ? 'Simpan' : 'Ubah'}
-            mt={60}
-            navigation={() => {
-              editable ? update() : setEditable(true);
-            }}
-          />
-          <CustomButton
-            title={'Hapus'}
-            mt={20}
-            mb={60}
-            navigation={() => hapusHasilPeriksa()}
-          />
+          {adminRole !== 1 && adminRole !== 3 ? (
+            <>
+              <CustomButton
+                title={editable ? 'Simpan' : 'Ubah'}
+                mt={60}
+                navigation={() => {
+                  editable ? update() : setEditable(true);
+                }}
+              />
+              <CustomButton
+                title={'Hapus'}
+                mt={20}
+                mb={60}
+                navigation={() => hapusHasilPeriksa()}
+              />
+            </>
+          ) : null}
         </View>
       </ScrollView>
       <Modal animationType="fade" transparent={true} visible={loading}>

@@ -29,6 +29,7 @@ const Keluhan = ({navigation, route}) => {
   const [firstKeluhan, setFirstKeluhan] = useState([]);
   const [inputKeluhan, setInputKeluhan] = useState('');
   const [admin, setAdmin] = useState();
+  const [adminRole, setAdminRole] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -43,9 +44,10 @@ const Keluhan = ({navigation, route}) => {
     getDataAsyncStorage('admin')
       .then(res => {
         setAdmin(res.adminName);
+        setAdminRole(res.adminRole);
       })
       .catch(() => {
-        Alert('Terjadi kegagalan mengambil data dari Async Storage!');
+        Alert.alert('Terjadi kegagalan mengambil data dari Async Storage!');
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -160,7 +162,7 @@ const Keluhan = ({navigation, route}) => {
               />
             ))
           )}
-          {!keluhan ? null : (
+          {!keluhan ? null : adminRole !== 1 && adminRole !== 3 ? (
             <CustomButton
               mt={120}
               title="Simpan"
@@ -174,18 +176,22 @@ const Keluhan = ({navigation, route}) => {
                 }
               }}
             />
-          )}
-          <CustomButton
-            mt={20}
-            mb={30}
-            title="Hapus"
-            navigation={() => {
-              hapusKeluhan();
-            }}
-          />
+          ) : null}
+          {adminRole !== 1 && adminRole !== 3 ? (
+            <CustomButton
+              mt={20}
+              mb={30}
+              title="Hapus"
+              navigation={() => {
+                hapusKeluhan();
+              }}
+            />
+          ) : null}
         </View>
       </ScrollView>
-      <FloatingButton navigation={() => setModalVisible(true)} />
+      {adminRole !== 1 && adminRole !== 3 ? (
+        <FloatingButton navigation={() => setModalVisible(true)} />
+      ) : null}
 
       <Modal animationType="fade" transparent={true} visible={modalVisible}>
         <View style={style.modalStyle}>

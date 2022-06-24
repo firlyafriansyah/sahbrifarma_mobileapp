@@ -22,6 +22,7 @@ const FotoObat = ({navigation, route}) => {
   const [idPasien, setIdPasien] = useState();
   const [id, setId] = useState();
   const [admin, setAdmin] = useState();
+  const [adminRole, setAdminRole] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const FotoObat = ({navigation, route}) => {
     getDataAsyncStorage('admin')
       .then(res => {
         setAdmin(res.adminName);
+        setAdminRole(res.adminRole);
       })
       .catch(() => {
         Alert('Terjadi kegagalan mengambil data dari Async Storage!');
@@ -144,12 +146,19 @@ const FotoObat = ({navigation, route}) => {
   return (
     <View style={style.conatiner}>
       <CustomHeader title={'Foto Obat'} onPress={() => navigation.goBack()} />
-      <View style={style.btnCameraWrapper}>
-        <Camera uri={uri => setImg(arr => [...arr, `${uri}`])} image={img} />
-      </View>
-      <Text style={style.textWarning}>
-        Ambil foto secukupnya untuk menghemat memori server! (max: 3 Foto)
-      </Text>
+      {adminRole !== 1 && adminRole !== 2 ? (
+        <>
+          <View style={style.btnCameraWrapper}>
+            <Camera
+              uri={uri => setImg(arr => [...arr, `${uri}`])}
+              image={img}
+            />
+          </View>
+          <Text style={style.textWarning}>
+            Ambil foto secukupnya untuk menghemat memori server! (max: 3 Foto)
+          </Text>
+        </>
+      ) : null}
       <ScrollView
         style={style.scrollViewStyle}
         showsVerticalScrollIndicator={false}>
@@ -169,38 +178,44 @@ const FotoObat = ({navigation, route}) => {
                       uri: `data:image/jpg;base64,${item}`,
                     }}
                   />
-                  <TouchableWithoutFeedback
-                    style={style.delete}
-                    onPress={() => setImg(img.filter(it => it !== item))}>
-                    <FontAwesomeIcon icon={faTrash} size={25} />
-                  </TouchableWithoutFeedback>
+                  {adminRole !== 1 && adminRole !== 2 ? (
+                    <TouchableWithoutFeedback
+                      style={style.delete}
+                      onPress={() => setImg(img.filter(it => it !== item))}>
+                      <FontAwesomeIcon icon={faTrash} size={25} />
+                    </TouchableWithoutFeedback>
+                  ) : null}
                 </View>
               ))
           )}
         </View>
-        <CustomButton
-          mt={30}
-          title={'Simpan'}
-          navigation={() => {
-            if (img.join() === firstImg.join()) {
-              Alert.alert('Tidak ada perubahan pada foto obat!');
-            } else {
-              if (img.length > 0) {
-                update();
-              } else {
-                Alert.alert('Tambahkan setidaknya satu foto!');
-              }
-            }
-          }}
-        />
-        <CustomButton
-          mt={30}
-          mb={30}
-          title={'Hapus'}
-          navigation={() => {
-            hapus();
-          }}
-        />
+        {adminRole !== 1 && adminRole !== 2 ? (
+          <>
+            <CustomButton
+              mt={30}
+              title={'Simpan'}
+              navigation={() => {
+                if (img.join() === firstImg.join()) {
+                  Alert.alert('Tidak ada perubahan pada foto obat!');
+                } else {
+                  if (img.length > 0) {
+                    update();
+                  } else {
+                    Alert.alert('Tambahkan setidaknya satu foto!');
+                  }
+                }
+              }}
+            />
+            <CustomButton
+              mt={30}
+              mb={30}
+              title={'Hapus'}
+              navigation={() => {
+                hapus();
+              }}
+            />
+          </>
+        ) : null}
       </ScrollView>
       <Modal animationType="fade" transparent={true} visible={loading}>
         <View style={style.modalStyleLoading}>

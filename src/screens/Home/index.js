@@ -112,10 +112,12 @@ const Home = ({navigation}) => {
           />
         </TouchableWithoutFeedback>
       </View>
-      <FloatingButton
-        navigation={() => navigation.navigate({name: 'Input Pasien Baru'})}
-      />
-      {role === 1 ? (
+      {role !== 2 && role !== 3 ? (
+        <FloatingButton
+          navigation={() => navigation.navigate({name: 'Input Pasien Baru'})}
+        />
+      ) : null}
+      {role === 0 || role === 1 ? (
         <View style={style.wrapper}>
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate('Manage Admin')}>

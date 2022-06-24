@@ -6,16 +6,19 @@ import {
   Text,
   ScrollView,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import {CustomHeader, FloatingButton} from '../../components';
 import {faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {TZONE} from '../../data/constants';
+import {getDataAsyncStorage} from '../../data/asyncStorage';
 
 const FotoObatByDate = ({navigation, route}) => {
   const [idPasien, setIdPasien] = useState();
   const [fotoObatByDate, setFotoObatByDate] = useState();
   const [fotoObat, setFotoObat] = useState();
+  const [adminRole, setAdminRole] = useState();
 
   const fotoObatFunc = (data, date) => {
     let result = '';
@@ -36,6 +39,13 @@ const FotoObatByDate = ({navigation, route}) => {
     });
     setFotoObat(hasilPeriksa);
     setFotoObatByDate(hasilPeriksaDate);
+    getDataAsyncStorage('admin')
+      .then(res => {
+        setAdminRole(res.adminRole);
+      })
+      .catch(() => {
+        Alert.alert('Terjadi kegagalan mengambil data dari Async Storage!');
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -87,14 +97,16 @@ const FotoObatByDate = ({navigation, route}) => {
       <ScrollView style={style.scrollViewStyle}>
         {showFotoObatByDate()}
       </ScrollView>
-      <FloatingButton
-        navigation={() =>
-          navigation.navigate({
-            name: 'Input Foto Obat',
-            params: {data: idPasien},
-          })
-        }
-      />
+      {adminRole !== 1 && adminRole !== 2 ? (
+        <FloatingButton
+          navigation={() =>
+            navigation.navigate({
+              name: 'Input Foto Obat',
+              params: {data: idPasien},
+            })
+          }
+        />
+      ) : null}
     </View>
   );
 };

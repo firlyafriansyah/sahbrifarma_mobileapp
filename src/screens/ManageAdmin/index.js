@@ -11,13 +11,22 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import {CustomHeader, FloatingButton} from '../../components';
+import {getDataAsyncStorage} from '../../data/asyncStorage';
 import {HOST} from '../../data/constants';
 
 const ManageAdmin = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [adminData, setAdminData] = useState([]);
+  const [role, setRole] = useState();
 
   useEffect(() => {
+    getDataAsyncStorage('admin')
+      .then(res => {
+        setRole(res.adminRole);
+      })
+      .catch(() => {
+        Alert.alert('Gagal menarik data dari async storage');
+      });
     setLoading(true);
     fetch(`${HOST}/admin`)
       .then(resJson => resJson.json())
@@ -69,46 +78,99 @@ const ManageAdmin = ({navigation}) => {
         {adminData.length <= 0 ? (
           <Text style={style.textWarning}>Tidak ada data admin!</Text>
         ) : (
-          adminData.map((item, index) => (
-            <View style={style.listWrapper} key={index}>
-              <Text style={style.listText}>{item.username}</Text>
-              <View style={style.listBtnWrapper}>
-                <TouchableWithoutFeedback
-                  onPress={() =>
-                    navigation.navigate({
-                      name: 'Update Admin',
-                      params: {data: item.id},
-                    })
-                  }>
-                  <View style={style.listBtn}>
-                    <FontAwesomeIcon icon={faPen} size={20} />
+          adminData.map((item, index) => {
+            if (role === 1) {
+              if (adminData.filter(i => i.role !== 1).length > 0) {
+                if (item.role !== 1) {
+                  return (
+                    <View style={style.listWrapper} key={index}>
+                      <Text style={style.listText}>{item.username}</Text>
+                      <View style={style.listBtnWrapper}>
+                        <TouchableWithoutFeedback
+                          onPress={() =>
+                            navigation.navigate({
+                              name: 'Update Admin',
+                              params: {data: item.id},
+                            })
+                          }>
+                          <View style={style.listBtn}>
+                            <FontAwesomeIcon icon={faPen} size={20} />
+                          </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback
+                          onPress={() => {
+                            Alert.alert(
+                              'Apakah anda yakin?',
+                              'Apakah anda yakin akan menghapus admin ini?',
+                              [
+                                {
+                                  text: 'Ya',
+                                  onPress: () => {
+                                    deleteAdmin(item.id);
+                                  },
+                                },
+                                {
+                                  text: 'Batal',
+                                },
+                              ],
+                            );
+                          }}>
+                          <View style={style.listBtn}>
+                            <FontAwesomeIcon icon={faTrash} size={20} />
+                          </View>
+                        </TouchableWithoutFeedback>
+                      </View>
+                    </View>
+                  );
+                }
+              } else {
+                return (
+                  <Text style={style.textWarning}>Tidak ada data admin!</Text>
+                );
+              }
+            } else {
+              return (
+                <View style={style.listWrapper} key={index}>
+                  <Text style={style.listText}>{item.username}</Text>
+                  <View style={style.listBtnWrapper}>
+                    <TouchableWithoutFeedback
+                      onPress={() =>
+                        navigation.navigate({
+                          name: 'Update Admin',
+                          params: {data: item.id},
+                        })
+                      }>
+                      <View style={style.listBtn}>
+                        <FontAwesomeIcon icon={faPen} size={20} />
+                      </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        Alert.alert(
+                          'Apakah anda yakin?',
+                          'Apakah anda yakin akan menghapus admin ini?',
+                          [
+                            {
+                              text: 'Ya',
+                              onPress: () => {
+                                deleteAdmin(item.id);
+                              },
+                            },
+                            {
+                              text: 'Batal',
+                            },
+                          ],
+                        );
+                      }}>
+                      <View style={style.listBtn}>
+                        <FontAwesomeIcon icon={faTrash} size={20} />
+                      </View>
+                    </TouchableWithoutFeedback>
                   </View>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    Alert.alert(
-                      'Apakah anda yakin?',
-                      'Apakah anda yakin akan menghapus admin ini?',
-                      [
-                        {
-                          text: 'Ya',
-                          onPress: () => {
-                            deleteAdmin(item.id);
-                          },
-                        },
-                        {
-                          text: 'Batal',
-                        },
-                      ],
-                    );
-                  }}>
-                  <View style={style.listBtn}>
-                    <FontAwesomeIcon icon={faTrash} size={20} />
-                  </View>
-                </TouchableWithoutFeedback>
-              </View>
-            </View>
-          ))
+                </View>
+              );
+            }
+          })
         )}
       </ScrollView>
       <FloatingButton

@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
   Alert,
   PermissionsAndroid,
@@ -11,9 +11,22 @@ import {TouchableHighlight} from 'react-native-gesture-handler';
 import ViewShot from 'react-native-view-shot';
 import {Card, CustomHeader} from '../../components';
 import CameraRoll from '@react-native-community/cameraroll';
+import {getDataAsyncStorage} from '../../data/asyncStorage';
 
 const UnduhKartu = ({navigation, route}) => {
   const viewShotRef = useRef(null);
+  const [adminRole, setAdminRole] = useState();
+
+  useEffect(() => {
+    getDataAsyncStorage('admin')
+      .then(res => {
+        setAdminRole(res.adminRole);
+      })
+      .catch(() => {
+        Alert.alert('Terjadi kegagalan mengambil data dari Async Storage!');
+      });
+    return;
+  }, []);
 
   const getPermissionAndroid = async () => {
     try {
@@ -91,11 +104,15 @@ const UnduhKartu = ({navigation, route}) => {
           />
         </View>
       </ViewShot>
-      <TouchableHighlight onPress={onCapture} style={style.unduhButtonWrapper}>
-        <View style={style.unduhButton}>
-          <Text style={style.unduhButtonText}>Unduh Kartu</Text>
-        </View>
-      </TouchableHighlight>
+      {adminRole !== 2 && adminRole !== 3 ? (
+        <TouchableHighlight
+          onPress={onCapture}
+          style={style.unduhButtonWrapper}>
+          <View style={style.unduhButton}>
+            <Text style={style.unduhButtonText}>Unduh Kartu</Text>
+          </View>
+        </TouchableHighlight>
+      ) : null}
     </View>
   );
 };

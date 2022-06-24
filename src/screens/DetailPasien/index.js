@@ -13,6 +13,7 @@ import {
 import {Category, CustomHeader} from '../../components';
 import {CommonActions} from '@react-navigation/routers';
 import {HOST} from '../../data/constants';
+import {getDataAsyncStorage} from '../../data/asyncStorage';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -27,6 +28,7 @@ const DetailPasien = ({navigation, route}) => {
   const [hasilPeriksa, setHasilPeriksa] = useState();
   const [riwayatBerobat, setRiwayatBerobat] = useState();
   const [loading, setLoading] = useState(false);
+  const [adminRole, setAdminRole] = useState();
 
   const onRefresh = React.useCallback(() => {
     setLoading(true);
@@ -88,6 +90,13 @@ const DetailPasien = ({navigation, route}) => {
   useEffect(() => {
     setLoading(true);
     getData();
+    getDataAsyncStorage('admin')
+      .then(res => {
+        setAdminRole(res.adminRole);
+      })
+      .catch(() => {
+        Alert.alert('Terjadi kegagalan mengambil data dari Async Storage!');
+      });
     return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
@@ -181,27 +190,29 @@ const DetailPasien = ({navigation, route}) => {
             source={require('../../../assets/images/unduh_kartu.png')}
             title={'Unduh Kartu'}
           />
-          <Category
-            onPress={() => {
-              Alert.alert(
-                'Apakah anda yakin?',
-                'Apakah anda yakin akan menghapus seluruh data pasien ini?',
-                [
-                  {
-                    text: 'Ya',
-                    onPress: () => {
-                      hapusPasien();
+          {adminRole !== 2 && adminRole !== 3 ? (
+            <Category
+              onPress={() => {
+                Alert.alert(
+                  'Apakah anda yakin?',
+                  'Apakah anda yakin akan menghapus seluruh data pasien ini?',
+                  [
+                    {
+                      text: 'Ya',
+                      onPress: () => {
+                        hapusPasien();
+                      },
                     },
-                  },
-                  {
-                    text: 'Batal',
-                  },
-                ],
-              );
-            }}
-            source={require('../../../assets/images/hapus_pasien.png')}
-            title={'Hapus Pasien'}
-          />
+                    {
+                      text: 'Batal',
+                    },
+                  ],
+                );
+              }}
+              source={require('../../../assets/images/hapus_pasien.png')}
+              title={'Hapus Pasien'}
+            />
+          ) : null}
         </View>
         <Modal animationType="fade" transparent={true} visible={loading}>
           <View style={style.modalStyle}>

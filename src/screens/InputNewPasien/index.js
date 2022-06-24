@@ -263,7 +263,7 @@ const InputNewPasien = ({navigation, route}) => {
             }}
             onChangeLabel={() => setNamaObat([])}
           />
-          {alergiObat || (
+          {!alergiObat || (
             <>
               <Text style={style.label}>Nama Obat</Text>
               <InputWithButton
