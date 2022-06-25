@@ -117,7 +117,7 @@ const DetailPasien = ({navigation, route}) => {
             });
             navigation.dispatch(resetAction);
           }}
-          title={'DetailPasien'}
+          title={'Detail Pasien'}
         />
         <View style={style.categoryWrapper}>
           <Category

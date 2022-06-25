@@ -239,7 +239,7 @@ const Home = ({navigation}) => {
                       <Card
                         press={() =>
                           navigation.navigate({
-                            name: 'DetailPasien',
+                            name: 'Detail Pasien',
                             params: {id_pasien: e.id},
                           })
                         }
@@ -258,7 +258,7 @@ const Home = ({navigation}) => {
                     <Card
                       press={() =>
                         navigation.navigate({
-                          name: 'DetailPasien',
+                          name: 'Detail Pasien',
                           params: {id_pasien: e.id},
                         })
                       }

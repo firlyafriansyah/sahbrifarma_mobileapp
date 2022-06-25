@@ -50,7 +50,7 @@ const App = () => {
           screenOptions={{headerShown: false}}>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="DetailPasien" component={DetailPasienScreen} />
+          <Stack.Screen name="Detail Pasien" component={DetailPasienScreen} />
           <Stack.Screen
             name="Input Pasien Baru"
             component={InputNewPasienScreen}

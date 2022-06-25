@@ -82,7 +82,7 @@ const InputHasilPeriksa = ({navigation, route}) => {
                   index: 1,
                   routes: [
                     {
-                      name: 'DetailPasien',
+                      name: 'Detail Pasien',
                       params: {id_pasien: idPasien},
                     },
                   ],
@@ -243,7 +243,7 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 30,
-    marginTop: 60,
+    marginTop: 30,
   },
   label: {
     fontSize: 14,

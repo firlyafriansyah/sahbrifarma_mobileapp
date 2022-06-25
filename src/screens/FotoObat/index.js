@@ -75,7 +75,7 @@ const FotoObat = ({navigation, route}) => {
                     index: 1,
                     routes: [
                       {
-                        name: 'DetailPasien',
+                        name: 'Detail Pasien',
                         params: {id_pasien: idPasien},
                       },
                     ],
@@ -123,7 +123,7 @@ const FotoObat = ({navigation, route}) => {
                   index: 1,
                   routes: [
                     {
-                      name: 'DetailPasien',
+                      name: 'Detail Pasien',
                       params: {id_pasien: idPasien},
                     },
                   ],
