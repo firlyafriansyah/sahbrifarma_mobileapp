@@ -4,7 +4,7 @@ import {CustomHeader, Input} from '../../components';
 import {getDataAsyncStorage} from '../../data/asyncStorage';
 
 const LoginInformation = ({navigation}) => {
-  const [admin, setAdmin] = useState([]);
+  const [admin, setAdmin] = useState();
   const [role, setRole] = useState();
 
   useEffect(() => {
