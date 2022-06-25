@@ -31,6 +31,7 @@ import {
   ManageAdminScreen,
   RegisterAdminScreen,
   UpdateAdminScreen,
+  LoginInformation,
 } from './src/screens';
 import UnduhKartu from './src/screens/UnduhKartu';
 
@@ -94,6 +95,10 @@ const App = () => {
             component={RegisterAdminScreen}
           />
           <Stack.Screen name={'Update Admin'} component={UpdateAdminScreen} />
+          <Stack.Screen
+            name={'Login Information'}
+            component={LoginInformation}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

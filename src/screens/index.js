@@ -18,6 +18,7 @@ import {default as RiwayatBerobatScreen} from './RiwayatBerobat';
 import {default as ManageAdminScreen} from './ManageAdmin';
 import {default as RegisterAdminScreen} from './RegisterAdmin';
 import {default as UpdateAdminScreen} from './UpdateAdmin';
+import {default as LoginInformation} from './LoginInformation';
 
 export {
   LoginScreen,
@@ -40,4 +41,5 @@ export {
   ManageAdminScreen,
   RegisterAdminScreen,
   UpdateAdminScreen,
+  LoginInformation,
 };

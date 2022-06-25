@@ -19,6 +19,7 @@ import {
   faBolt,
   faSignOutAlt,
   faTrash,
+  faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import {Card, FloatingButton, InputWithLogo} from '../../components';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -117,14 +118,65 @@ const Home = ({navigation}) => {
           navigation={() => navigation.navigate({name: 'Input Pasien Baru'})}
         />
       ) : null}
-      {role === 0 || role === 1 ? (
-        <View style={style.wrapper}>
-          <TouchableWithoutFeedback
-            onPress={() => navigation.navigate('Manage Admin')}>
-            <View style={style.manageAdminStyle}>
-              <Text style={style.manageAdminText}>Kelola Admin</Text>
-            </View>
-          </TouchableWithoutFeedback>
+      <View style={style.wrapper}>
+        <TouchableWithoutFeedback
+          onPress={() => navigation.navigate('Login Information')}>
+          <View style={style.loginInfo}>
+            <FontAwesomeIcon icon={faUser} size={25} color={'#FFFFFF'} />
+          </View>
+        </TouchableWithoutFeedback>
+        {role === 0 || role === 1 ? (
+          <>
+            <TouchableWithoutFeedback
+              onPress={() => navigation.navigate('Manage Admin')}>
+              <View style={style.manageAdminStyle}>
+                <Text style={style.manageAdminText}>Kelola Admin</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                Alert.alert(
+                  'Apakah anda yakin?',
+                  'Apakah anda yakin akan keluar dari akun ini?',
+                  [
+                    {
+                      text: 'Ya',
+                      onPress: () => {
+                        multiRemoveDataAsyncStorage('admin', 'autoLogin').then(
+                          res => {
+                            if (res.status === 'success') {
+                              const resetAction = CommonActions.reset({
+                                index: 1,
+                                routes: [
+                                  {
+                                    name: 'Login',
+                                  },
+                                ],
+                              });
+                              navigation.dispatch(resetAction);
+                            } else {
+                              Alert('Gagal menghapus async storage!');
+                            }
+                          },
+                        );
+                      },
+                    },
+                    {
+                      text: 'Batal',
+                    },
+                  ],
+                );
+              }}>
+              <View style={style.logoutSuper}>
+                <FontAwesomeIcon
+                  icon={faSignOutAlt}
+                  size={25}
+                  color={'#FFFFFF'}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </>
+        ) : (
           <TouchableWithoutFeedback
             onPress={() => {
               Alert.alert(
@@ -159,55 +211,12 @@ const Home = ({navigation}) => {
                 ],
               );
             }}>
-            <View style={style.logoutSuper}>
-              <FontAwesomeIcon
-                icon={faSignOutAlt}
-                size={25}
-                color={'#FFFFFF'}
-              />
+            <View style={style.logout}>
+              <Text style={style.manageAdminText}>Keluar</Text>
             </View>
           </TouchableWithoutFeedback>
-        </View>
-      ) : (
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Alert.alert(
-              'Apakah anda yakin?',
-              'Apakah anda yakin akan keluar dari akun ini?',
-              [
-                {
-                  text: 'Ya',
-                  onPress: () => {
-                    multiRemoveDataAsyncStorage('admin', 'autoLogin').then(
-                      res => {
-                        if (res.status === 'success') {
-                          const resetAction = CommonActions.reset({
-                            index: 1,
-                            routes: [
-                              {
-                                name: 'Login',
-                              },
-                            ],
-                          });
-                          navigation.dispatch(resetAction);
-                        } else {
-                          Alert('Gagal menghapus async storage!');
-                        }
-                      },
-                    );
-                  },
-                },
-                {
-                  text: 'Batal',
-                },
-              ],
-            );
-          }}>
-          <View style={style.logout}>
-            <Text style={style.manageAdminText}>Keluar</Text>
-          </View>
-        </TouchableWithoutFeedback>
-      )}
+        )}
+      </View>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -347,7 +356,7 @@ const style = StyleSheet.create({
     textAlign: 'center',
   },
   manageAdminStyle: {
-    width: 250,
+    width: 200,
     height: 50,
     display: 'flex',
     justifyContent: 'center',
@@ -360,6 +369,16 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
     color: '#FFFFFF',
+  },
+  loginInfo: {
+    width: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0662eb',
+    height: 50,
+    borderRadius: 25,
+    marginRight: 20,
   },
   logoutSuper: {
     width: 50,

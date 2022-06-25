@@ -328,7 +328,7 @@ const style = StyleSheet.create({
   formWrapper: {
     width: '100%',
     paddingHorizontal: 30,
-    marginTop: 60,
+    marginTop: 10,
   },
   label: {
     fontSize: 14,
