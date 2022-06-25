@@ -133,7 +133,7 @@ const style = StyleSheet.create({
     padding: 20,
   },
   scannerBack: {
-    marginBottom: 30,
+    marginBottom: 10,
   },
   scannerTitle: {
     fontSize: 20,
@@ -144,7 +144,7 @@ const style = StyleSheet.create({
     fontSize: 16,
     color: '#00000088',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
 });
 

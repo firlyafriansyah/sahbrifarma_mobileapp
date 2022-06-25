@@ -25,8 +25,7 @@ const style = StyleSheet.create({
     paddingVertical: 21,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 26,
-    elevation: 12,
+    borderRadius: 20,
   },
   submitText: {
     color: '#FFF',

@@ -25,7 +25,6 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 64,
-    elevation: 6,
     zIndex: 5,
   },
   floatingBtnIcon: {

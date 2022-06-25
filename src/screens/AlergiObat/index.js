@@ -118,7 +118,7 @@ const AlergiObat = ({navigation, route}) => {
           )}
           {!namaObat ? null : adminRole !== 1 ? (
             <CustomButton
-              mt={120}
+              mt={60}
               mb={30}
               title="Simpan"
               navigation={() => {
@@ -188,7 +188,7 @@ const style = StyleSheet.create({
   },
   scrollViewStyle: {
     width: '100%',
-    marginTop: 60,
+    marginTop: 30,
     paddingHorizontal: 30,
   },
   modalStyle: {

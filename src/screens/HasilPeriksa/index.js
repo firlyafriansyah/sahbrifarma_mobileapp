@@ -309,7 +309,7 @@ const HasilPeriksa = ({navigation, route}) => {
             <>
               <CustomButton
                 title={editable ? 'Simpan' : 'Ubah'}
-                mt={60}
+                mt={30}
                 navigation={() => {
                   editable ? update() : setEditable(true);
                 }}
@@ -349,7 +349,7 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 30,
-    marginTop: 60,
+    marginTop: 30,
   },
   label: {
     fontSize: 14,

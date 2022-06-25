@@ -240,7 +240,7 @@ const style = StyleSheet.create({
   },
   categoryWrapper: {
     width: '100%',
-    marginTop: 60,
+    marginTop: 30,
   },
   modalStyle: {
     display: 'flex',

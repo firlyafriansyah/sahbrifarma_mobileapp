@@ -196,7 +196,7 @@ const style = StyleSheet.create({
   },
   scrollViewStyle: {
     width: '100%',
-    marginTop: 60,
+    marginTop: 30,
     paddingHorizontal: 30,
   },
   listWrapper: {
