@@ -2,7 +2,6 @@ import {default as LoginScreen} from './Login';
 import {default as HomeScreen} from './Home';
 import {default as DetailPasienScreen} from './DetailPasien';
 import {default as InputNewPasienScreen} from './InputNewPasien';
-import {default as QrScannerScreen} from './QRScanner';
 import {default as IdentitasPasienScreen} from './IdentitasPasien';
 import {default as AlergiObatScreen} from './AlergiObat';
 import {default as KeluhanScreen} from './Keluhan';
@@ -25,7 +24,6 @@ export {
   HomeScreen,
   DetailPasienScreen,
   InputNewPasienScreen,
-  QrScannerScreen,
   IdentitasPasienScreen,
   AlergiObatScreen,
   KeluhanScreen,

@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {faCamera} from '@fortawesome/free-solid-svg-icons';
+import {faCamera, faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import RNFS from 'react-native-fs';
 
@@ -55,6 +55,21 @@ const Camera = props => {
       </TouchableWithoutFeedback>
       <Modal style={style.flex} visible={modal}>
         <View style={style.flex}>
+          <View style={style.scannerTopWrapper}>
+            <View style={style.scannerBack}>
+              <TouchableWithoutFeedback onPress={() => setModal(false)}>
+                <FontAwesomeIcon
+                  icon={faChevronLeft}
+                  size={33}
+                  style={style.iconHeader}
+                />
+              </TouchableWithoutFeedback>
+            </View>
+            <Text style={style.scannerTitle}>Foto Obat</Text>
+            <Text style={style.scannerSubTitle}>
+              Silahkan foto obat pasien dengan jelas
+            </Text>
+          </View>
           <RNCamera
             ref={ref => {
               this.AmbilFotoObat = ref;
@@ -77,11 +92,6 @@ const Camera = props => {
             </TouchableWithoutFeedback>
           </View>
         </View>
-        <TouchableWithoutFeedback onPress={() => setModal(false)}>
-          <View style={style.backBtn}>
-            <Text style={style.backText}>Kembali</Text>
-          </View>
-        </TouchableWithoutFeedback>
       </Modal>
     </>
   );
@@ -116,6 +126,25 @@ const style = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
     color: '#FFFFFF',
+  },
+  scannerTopWrapper: {
+    width: '100%',
+    display: 'flex',
+    padding: 20,
+  },
+  scannerBack: {
+    marginBottom: 30,
+  },
+  scannerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  scannerSubTitle: {
+    fontSize: 16,
+    color: '#00000088',
+    textAlign: 'center',
+    marginBottom: 20,
   },
 });
 

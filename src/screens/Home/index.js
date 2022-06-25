@@ -16,10 +16,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
   faSearch,
   faQrcode,
-  faBolt,
   faSignOutAlt,
   faTrash,
   faUser,
+  faChevronLeft,
+  faBolt,
 } from '@fortawesome/free-solid-svg-icons';
 import {Card, FloatingButton, InputWithLogo} from '../../components';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -278,6 +279,7 @@ const Home = ({navigation}) => {
 
       <Modal visible={modal}>
         <QRCodeScanner
+          showMarker={true}
           onRead={onSuccess}
           flashMode={
             torch
@@ -285,19 +287,29 @@ const Home = ({navigation}) => {
               : RNCamera.Constants.FlashMode.off
           }
           topContent={
+            <View style={style.scannerTopWrapper}>
+              <View style={style.scannerBack}>
+                <TouchableWithoutFeedback onPress={() => setModal(false)}>
+                  <FontAwesomeIcon
+                    icon={faChevronLeft}
+                    size={33}
+                    style={style.iconHeader}
+                  />
+                </TouchableWithoutFeedback>
+              </View>
+              <Text style={style.scannerTitle}>QR Code Scanner</Text>
+              <Text style={style.scannerSubTitle}>
+                Silahkan scan QR Code pada kartu pasien
+              </Text>
+            </View>
+          }
+          bottomContent={
             <TouchableOpacity onPress={() => setTorch(!torch)}>
               <FontAwesomeIcon
                 icon={faBolt}
                 size={25}
                 style={{color: `${torch ? '#000' : '#CCC'}`}}
               />
-            </TouchableOpacity>
-          }
-          bottomContent={
-            <TouchableOpacity
-              style={style.buttonTouchable}
-              onPress={() => setModal(false)}>
-              <Text style={style.buttonText}>Kembali</Text>
             </TouchableOpacity>
           }
         />
@@ -399,6 +411,25 @@ const style = StyleSheet.create({
     height: 50,
     borderRadius: 20,
     marginBottom: 30,
+  },
+  scannerTopWrapper: {
+    width: '100%',
+    display: 'flex',
+    padding: 20,
+  },
+  scannerBack: {
+    marginBottom: 30,
+  },
+  scannerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  scannerSubTitle: {
+    fontSize: 16,
+    color: '#00000088',
+    textAlign: 'center',
+    marginBottom: 80,
   },
 });
 
