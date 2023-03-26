@@ -37,9 +37,22 @@ const multiRemoveDataAsyncStorage = async (key1: string, key2: string) => {
   }
 };
 
+const clearAsyncStorage = async () => {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.clear()
+      .then(() => {
+        resolve('Success');
+      })
+      .catch(() => {
+        reject('Error remove data from async storage');
+      });
+  });
+};
+
 export {
   storeDataAsyncStorage,
   getDataAsyncStorage,
   removeDataAsyncStorage,
   multiRemoveDataAsyncStorage,
+  clearAsyncStorage,
 };

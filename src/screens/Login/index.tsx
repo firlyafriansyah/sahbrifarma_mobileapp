@@ -1,3 +1,4 @@
+import {CommonActions} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {Alert, Image, Text, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -20,7 +21,12 @@ const Login = ({navigation}: any) => {
     DatabaseCheck.then(() => {
       AutoLoginCheck.then(() => {
         setLoading(false);
-        navigation.navigate({name: 'Scanner'});
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 1,
+            routes: [{name: 'Scanner'}],
+          }),
+        );
       }).catch(() => {
         setLoading(false);
       });
@@ -38,7 +44,12 @@ const Login = ({navigation}: any) => {
         );
         LoginService(username, password)
           .then(() => {
-            navigation.navigate({name: 'Scanner'});
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Scanner'}],
+              }),
+            );
             setPassword('');
             setUsername('');
             setError(false);

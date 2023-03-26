@@ -13,7 +13,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {
   // DetailPasienScreen,
-  // HomeScreen,
+  HomeScreen,
   LoginScreen,
   ScannerScreen,
   // InputNewPasienScreen,
@@ -51,8 +51,8 @@ const App = () => {
           screenOptions={{headerShown: false}}>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Scanner" component={ScannerScreen} />
-          {/* <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Detail Pasien" component={DetailPasienScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          {/* <Stack.Screen name="Detail Pasien" component={DetailPasienScreen} />
           <Stack.Screen
             name="Input Pasien Baru"
             component={InputNewPasienScreen}

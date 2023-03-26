@@ -1,10 +1,11 @@
+import {CommonActions} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {Alert, BackHandler, Image, Text, View} from 'react-native';
 import {Camera, CameraType} from 'react-native-camera-kit';
 import {CustomButton, CustomInput, Gap, LoadingModal} from '../../components';
 import {PasienCheck} from '../../services';
 import styles from '../../styles/ScannerScreenStyles';
-import {multiRemoveDataAsyncStorage} from '../../utils/AsyncStorage';
+import {clearAsyncStorage} from '../../utils/AsyncStorage';
 
 const Scanner = ({navigation}: any) => {
   const [idPasien, setIdPasien] = useState('');
@@ -12,7 +13,7 @@ const Scanner = ({navigation}: any) => {
 
   useEffect(() => {
     const backAction = () => {
-      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+      Alert.alert('Hold on!', 'Are you sure you want to logout?', [
         {
           text: 'Cancel',
           onPress: () => null,
@@ -21,8 +22,15 @@ const Scanner = ({navigation}: any) => {
         {
           text: 'YES',
           onPress: () => {
-            multiRemoveDataAsyncStorage('admin', 'autoLogin')
-              .then(() => navigation.navigate({name: 'Login'}))
+            clearAsyncStorage()
+              .then(() => {
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 1,
+                    routes: [{name: 'Login'}],
+                  }),
+                );
+              })
               .catch(err => Alert.alert(err));
           },
         },
@@ -45,7 +53,8 @@ const Scanner = ({navigation}: any) => {
     PasienCheck(code)
       .then(() => {
         setLoading(false);
-        Alert.alert('Pasien id found!');
+        setIdPasien('');
+        navigation.navigate({name: 'Home'});
       })
       .catch(() => {
         setLoading(false);
@@ -62,9 +71,30 @@ const Scanner = ({navigation}: any) => {
   };
 
   const logoutHandler = () => {
-    multiRemoveDataAsyncStorage('admin', 'autoLogin')
-      .then(() => navigation.navigate({name: 'Login'}))
-      .catch(err => Alert.alert(err));
+    Alert.alert('Hold on!', 'Are you sure you want to logout?', [
+      {
+        text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      {
+        text: 'YES',
+        onPress: () => {
+          clearAsyncStorage()
+            .then(() => {
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [{name: 'Login'}],
+                }),
+              );
+            })
+            .catch(err => {
+              Alert.alert(err);
+            });
+        },
+      },
+    ]);
   };
 
   return (
@@ -77,7 +107,7 @@ const Scanner = ({navigation}: any) => {
           cameraType={CameraType.Back}
           scanBarcode={true}
           onReadCode={(code: any) => {
-            idPasien
+            idPasien.trim() !== ''
               ? null
               : onReadCodeHandler(code.nativeEvent.codeStringValue.toString());
           }}
