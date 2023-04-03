@@ -1,5 +1,4 @@
 import InputCheck from './InputCheck';
-import AutoLoginCheck from './AutoLoginCheck';
-import CustomAlert from './CustomAlert';
+import DayGenerator from './DayGenerator';
 
-export {InputCheck, AutoLoginCheck, CustomAlert};
+export {InputCheck, DayGenerator};

@@ -6,104 +6,88 @@
  * @flow strict-local
  */
 
-import React from 'react';
-// import SplashScreen from 'react-native-splash-screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import * as React from 'react';
+import {Alert, DevSettings} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {IsLogedInContext} from './src/context/AuthContext';
 import {
-  // DetailPasienScreen,
   HomeScreen,
   LoginScreen,
   ScannerScreen,
-  // InputNewPasienScreen,
-  // IdentitasPasienScreen,
-  // AlergiObatScreen,
-  // KeluhanScreen,
-  // KeluhanByDateScreen,
-  // InputKeluhanScreen,
-  // HasilPeriksaByDateScreen,
-  // InputHasilPeriksaScreen,
-  // HasilPeriksaScreen,
-  // FotoObatByDateScreen,
-  // FotoObatScreen,
-  // InputFotoObatScreen,
-  // RiwayatBerobatScreen,
-  // ManageAdminScreen,
-  // RegisterAdminScreen,
-  // UpdateAdminScreen,
-  // LoginInformation,
+  SplashScreen,
 } from './src/screens';
-// import UnduhKartu from './src/screens/UnduhKartu';
+import {DatabaseCheck} from './src/services';
+import {getDataAsyncStorage} from './src/utils/AsyncStorage';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  // useEffect(() => {
-  //   SplashScreen.hide();
-  // }, []);
+  const [loggedInUsername, setLoggedInUsername] = React.useState('');
+  const [loggedInRole, setLoggedInRole] = React.useState(0);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const isLoggedInValue = React.useMemo(
+    () => ({
+      loggedInUsername,
+      setLoggedInUsername,
+      loggedInRole,
+      setLoggedInRole,
+    }),
+    [loggedInUsername, loggedInRole],
+  );
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    DatabaseCheck.then(() => {
+      getDataAsyncStorage('@loggedUser')
+        .then(res => {
+          if (res) {
+            setLoggedInUsername(res.loggedUsername);
+            setLoggedInRole(res.loggedRole);
+          }
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }).catch((err: string) => {
+      Alert.alert('Error!', err, [
+        {
+          text: 'Close',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'Try Again',
+          onPress: () => DevSettings.reload(),
+        },
+      ]);
+    });
+  }, []);
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="HomeActivity"
-          screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Scanner" component={ScannerScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-          {/* <Stack.Screen name="Detail Pasien" component={DetailPasienScreen} />
-          <Stack.Screen
-            name="Input Pasien Baru"
-            component={InputNewPasienScreen}
-          />
-          <Stack.Screen
-            name="Identitas Pasien"
-            component={IdentitasPasienScreen}
-          />
-          <Stack.Screen name="Alergi Obat" component={AlergiObatScreen} />
-          <Stack.Screen name="Keluhan" component={KeluhanScreen} />
-          <Stack.Screen
-            name="Keluhan By Date"
-            component={KeluhanByDateScreen}
-          />
-          <Stack.Screen name={'Input Keluhan'} component={InputKeluhanScreen} />
-          <Stack.Screen
-            name={'Hasil Periksa By Date'}
-            component={HasilPeriksaByDateScreen}
-          />
-          <Stack.Screen
-            name={'Input Hasil Periksa'}
-            component={InputHasilPeriksaScreen}
-          />
-          <Stack.Screen name={'Hasil Periksa'} component={HasilPeriksaScreen} />
-          <Stack.Screen
-            name={'Foto Obat By Date'}
-            component={FotoObatByDateScreen}
-          />
-          <Stack.Screen name={'Foto Obat'} component={FotoObatScreen} />
-          <Stack.Screen
-            name={'Input Foto Obat'}
-            component={InputFotoObatScreen}
-          />
-          <Stack.Screen
-            name={'Riwayat Berobat'}
-            component={RiwayatBerobatScreen}
-          />
-          <Stack.Screen name={'Unduh Kartu'} component={UnduhKartu} />
-          <Stack.Screen name={'Manage Admin'} component={ManageAdminScreen} />
-          <Stack.Screen
-            name={'Register Admin'}
-            component={RegisterAdminScreen}
-          />
-          <Stack.Screen name={'Update Admin'} component={UpdateAdminScreen} />
-          <Stack.Screen
-            name={'Login Information'}
-            component={LoginInformation}
-          /> */}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <IsLogedInContext.Provider value={isLoggedInValue}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          {isLoading ? (
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen name="SplashScreen" component={SplashScreen} />
+            </Stack.Navigator>
+          ) : loggedInUsername === '' ? (
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen name="Login" component={LoginScreen} />
+            </Stack.Navigator>
+          ) : (
+            <Stack.Navigator
+              initialRouteName="Scanner"
+              screenOptions={{headerShown: false}}>
+              <Stack.Screen name="Scanner" component={ScannerScreen} />
+              <Stack.Screen name="Home" component={HomeScreen} />
+            </Stack.Navigator>
+          )}
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </IsLogedInContext.Provider>
   );
 };
 

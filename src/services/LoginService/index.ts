@@ -1,5 +1,4 @@
 import {DB_HOST} from '../../database/config';
-import {storeDataAsyncStorage} from '../../utils/AsyncStorage';
 
 const LoginService = (username: string, password: string) => {
   const optionsRequest = {
@@ -19,20 +18,7 @@ const LoginService = (username: string, password: string) => {
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
-          storeDataAsyncStorage('admin', {
-            adminName: res.data.username,
-            adminRole: res.data.role,
-          })
-            .then(() => {
-              if (res.status === 'success') {
-                resolve('Login success!');
-              } else {
-                reject(res.status);
-              }
-            })
-            .catch(() => {
-              reject('Async storage pada device tidak bisa digunakan!');
-            });
+          resolve(res.data);
         } else {
           reject('Nama dan Kata Sandi salah. Periksa Kembali!');
         }

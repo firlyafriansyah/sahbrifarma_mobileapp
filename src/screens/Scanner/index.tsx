@@ -1,17 +1,23 @@
-import {CommonActions} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import {faCheck, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import * as React from 'react';
 import {Alert, BackHandler, Image, Text, View} from 'react-native';
 import {Camera, CameraType} from 'react-native-camera-kit';
-import {CustomButton, CustomInput, Gap, LoadingModal} from '../../components';
+import {TextInput, TouchableHighlight} from 'react-native-gesture-handler';
+import {CustomStatusBar, LoadingModal} from '../../components';
+import {IsLogedInContext} from '../../context/AuthContext';
 import {PasienCheck} from '../../services';
 import styles from '../../styles/ScannerScreenStyles';
 import {clearAsyncStorage} from '../../utils/AsyncStorage';
 
 const Scanner = ({navigation}: any) => {
-  const [idPasien, setIdPasien] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [idPasien, setIdPasien] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [pasienStatus, setPasienStatus] = React.useState(false);
+  const {setLoggedInRole, setLoggedInUsername} =
+    React.useContext(IsLogedInContext);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const backAction = () => {
       Alert.alert('Hold on!', 'Are you sure you want to logout?', [
         {
@@ -21,18 +27,7 @@ const Scanner = ({navigation}: any) => {
         },
         {
           text: 'YES',
-          onPress: () => {
-            clearAsyncStorage()
-              .then(() => {
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 1,
-                    routes: [{name: 'Login'}],
-                  }),
-                );
-              })
-              .catch(err => Alert.alert(err));
-          },
+          onPress: () => logout(),
         },
       ]);
       return true;
@@ -49,15 +44,11 @@ const Scanner = ({navigation}: any) => {
 
   const onReadCodeHandler = (code: string) => {
     setLoading(true);
-    setIdPasien(code);
     PasienCheck(code)
       .then(() => {
-        setLoading(false);
-        setIdPasien('');
-        navigation.navigate({name: 'Home'});
+        setPasienStatus(true);
       })
       .catch(() => {
-        setLoading(false);
         Alert.alert('Not Found!', 'Pasien with this id not found?', [
           {
             text: 'OK',
@@ -67,7 +58,8 @@ const Scanner = ({navigation}: any) => {
             },
           },
         ]);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const logoutHandler = () => {
@@ -79,69 +71,76 @@ const Scanner = ({navigation}: any) => {
       },
       {
         text: 'YES',
-        onPress: () => {
-          clearAsyncStorage()
-            .then(() => {
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 1,
-                  routes: [{name: 'Login'}],
-                }),
-              );
-            })
-            .catch(err => {
-              Alert.alert(err);
-            });
-        },
+        onPress: () => logout(),
       },
     ]);
   };
 
+  const logout = () => {
+    clearAsyncStorage();
+    setLoggedInUsername('');
+    setLoggedInRole(0);
+  };
+
+  const submit = () => {
+    navigation.navigate({name: 'Home'});
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Pemindai Kartu Pasien</Text>
-      <Gap height={70} />
-      <View style={styles.scanner}>
-        <Camera
-          style={styles.scannerCamera}
-          cameraType={CameraType.Back}
-          scanBarcode={true}
-          onReadCode={(code: any) => {
-            idPasien.trim() !== ''
-              ? null
-              : onReadCodeHandler(code.nativeEvent.codeStringValue.toString());
-          }}
-        />
-        <Image
-          source={require('../../../assets/images/scanner_frame.png')}
-          style={styles.qrScannerImage}
-        />
+      <CustomStatusBar translucent />
+      <Camera
+        style={styles.scannerCamera}
+        cameraType={CameraType.Back}
+        scanBarcode={true}
+        onReadCode={(code: any) => {
+          idPasien.trim() !== ''
+            ? null
+            : onReadCodeHandler(code.nativeEvent.codeStringValue.toString());
+        }}
+      />
+      <Image
+        source={require('../../../assets/images/scanner_frame.png')}
+        style={styles.qrScannerImage}
+      />
+      <View style={styles.scannerHeaderIcon}>
+        <TouchableHighlight onPress={() => logoutHandler()}>
+          <FontAwesomeIcon icon={faXmark} size={25} color="#FFFFFF" />
+        </TouchableHighlight>
       </View>
-      <Gap height={70} />
-      <View style={styles.manualInputWrapper}>
-        <Text style={styles.label}>Input manual ID pasien</Text>
-        <Gap height={10} />
-        <CustomInput
-          placeholder="ID pasien . . ."
-          onChangeText={(value: string) => setIdPasien(value)}
-          value={idPasien}
-          inputWithDeleteValue={true}
-          deleteValue={() => setIdPasien('')}
-          keyboardType="numeric"
-        />
-        <Gap height={20} />
-        <CustomButton
-          buttonText="Submit"
-          onClick={() => onReadCodeHandler(idPasien)}
-        />
-      </View>
-      <Gap height={50} />
-      <View style={styles.logoutWrapper}>
-        <CustomButton
-          bgColor="#c0392b"
-          buttonText="Logout"
-          onClick={() => logoutHandler()}
-        />
+      <Text style={styles.scannerHeaderText}>Pindai Kartu Pasien</Text>
+      <View style={styles.actionWrapper}>
+        <Text style={styles.title}>Result Scanner</Text>
+        <Text style={styles.label}>ID Pasien</Text>
+        <View style={styles.manualInputWrapper}>
+          <View style={styles.idPasienWrapper}>
+            <TextInput
+              style={styles.idPasien}
+              keyboardType="numeric"
+              onChangeText={(value: string) => {
+                setIdPasien(value);
+                if (value.length === 12) {
+                  onReadCodeHandler(value);
+                }
+              }}
+              maxLength={12}
+            />
+          </View>
+          <View style={styles.gap} />
+          {pasienStatus ? (
+            <View style={styles.buttonWrapper}>
+              <TouchableHighlight onPress={() => submit()}>
+                <FontAwesomeIcon icon={faCheck} size={24} color="#FFFFFF" />
+              </TouchableHighlight>
+            </View>
+          ) : (
+            <View style={styles.buttonDisableWrapper}>
+              <TouchableHighlight onPress={() => submit()} disabled>
+                <FontAwesomeIcon icon={faCheck} size={24} color="#FFFFFF" />
+              </TouchableHighlight>
+            </View>
+          )}
+        </View>
       </View>
       <LoadingModal visible={loading} />
     </View>

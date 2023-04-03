@@ -28,7 +28,7 @@ const CustomInput = (props: CustomInputProps) => {
     inputWithDeleteValue = false,
     deleteValue,
   } = props;
-  const [borderColor, setBorderColor] = useState('#A4B0BE80');
+  const [borderColor, setBorderColor] = useState('#FFFFFF');
   const [hide, setHide] = useState(true);
   return (
     <View style={[styles.wrapper, {borderColor: borderColor}]}>
@@ -36,8 +36,8 @@ const CustomInput = (props: CustomInputProps) => {
         style={styles.input}
         secureTextEntry={inputPassword ? hide : false}
         autoCorrect={false}
-        onFocus={() => setBorderColor('#2F3542')}
-        onBlur={() => setBorderColor('#A4B0BE80')}
+        onFocus={() => setBorderColor('#5352ED')}
+        onBlur={() => setBorderColor('#FFFFFF')}
         onChangeText={item => onChangeText(item)}
         value={value}
         placeholder={placeholder}
@@ -47,7 +47,11 @@ const CustomInput = (props: CustomInputProps) => {
       />
       {inputPassword ? (
         <Pressable onPress={() => setHide(!hide)}>
-          <FontAwesomeIcon icon={hide ? faEyeSlash : faEye} size={22} />
+          <FontAwesomeIcon
+            color="#b5b5b5"
+            icon={hide ? faEyeSlash : faEye}
+            size={22}
+          />
         </Pressable>
       ) : null}
       {inputWithDeleteValue ? (

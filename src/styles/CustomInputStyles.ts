@@ -8,13 +8,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingRight: 18,
+    backgroundColor: '#FFF',
+    elevation: 1,
   },
   input: {
     paddingHorizontal: 18,
-    paddingVertical: 10,
+    paddingVertical: 15,
+    flex: 1,
     fontFamily: 'Poppins-Reguler',
     fontSize: 16,
-    flex: 1,
   },
 });
 

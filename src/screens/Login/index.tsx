@@ -1,95 +1,84 @@
-import {CommonActions} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
-import {Alert, Image, Text, View} from 'react-native';
+import * as React from 'react';
+import {Image, Text, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import {DatabaseCheck, LoginService} from '../../services';
+import {IsLogedInContext} from '../../context/AuthContext';
+import {LoginService} from '../../services';
 import styles from '../../styles/LoginScreenStyles';
-import {AutoLoginCheck, InputCheck} from '../../utils';
+import {DayGenerator, InputCheck} from '../../utils';
 import {storeDataAsyncStorage} from '../../utils/AsyncStorage';
-import {CustomButton, CustomInput, Gap, LoadingModal} from './../../components';
+import {
+  CustomButton,
+  CustomInput,
+  CustomStatusBar,
+  Gap,
+  LoadingModal,
+} from './../../components';
 
-const Login = ({navigation}: any) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [saveLogin, setSaveLogin] = useState(false);
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    DatabaseCheck.then(() => {
-      AutoLoginCheck.then(() => {
-        setLoading(false);
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 1,
-            routes: [{name: 'Scanner'}],
-          }),
-        );
-      }).catch(() => {
-        setLoading(false);
-      });
-    }).catch((err: string) => {
-      setLoading(false);
-      Alert.alert(err);
-    });
-  }, [navigation]);
+const Login = () => {
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [saveLogin, setSaveLogin] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
+  const {setLoggedInUsername, setLoggedInRole} =
+    React.useContext(IsLogedInContext);
 
   const loginHandler = () => {
     InputCheck(username, password)
       .then(() => {
-        storeDataAsyncStorage('autoLogin', saveLogin).catch(err =>
-          Alert.alert(err),
-        );
+        setIsLoading(true);
         LoginService(username, password)
-          .then(() => {
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Scanner'}],
-              }),
-            );
+          .then((res: any) => {
+            if (saveLogin) {
+              storeDataAsyncStorage('@loggedUser', {
+                loggedUsername: res.username,
+                loggedRole: res.role,
+              });
+            }
+            setLoggedInUsername(res.username);
+            setLoggedInRole(res.role);
             setPassword('');
             setUsername('');
             setError(false);
-            setLoading(false);
           })
           .catch(err => {
             setError(true);
-            setLoading(false);
             setErrorMessage(err);
+          })
+          .finally(() => {
+            setIsLoading(false);
           });
       })
       .catch(err => {
         setError(true);
-        setLoading(false);
         setErrorMessage(err);
       });
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.wrapper}>
-        <Image
-          source={require('../../../assets/images/header_img.png')}
-          style={styles.image}
-        />
-      </View>
-      <Text style={styles.heading}>Silahkan Masuk</Text>
-      {error ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+      <CustomStatusBar translucent />
+      <Text style={styles.heading}>{`Selamat ${DayGenerator()}`}</Text>
+      <Text style={styles.description}>Selamat Datang Kembali</Text>
+      <Text style={styles.description}>Selamat Bekerja</Text>
       <View style={styles.loginWrapper}>
-        <Text style={styles.label}>Username</Text>
+        {error ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
         <CustomInput
           placeholder="Enter your username . . ."
-          onChangeText={(item: string) => setUsername(item)}
+          onChangeText={(item: string) => {
+            setError(false);
+            setUsername(item);
+          }}
           value={username}
         />
         <Gap height={20} />
-        <Text style={styles.label}>Password</Text>
         <CustomInput
           placeholder="Enter your password . . ."
-          onChangeText={(item: string) => setPassword(item)}
+          onChangeText={(item: string) => {
+            setError(false);
+            setPassword(item);
+          }}
           value={password}
           inputPassword
         />
@@ -104,15 +93,21 @@ const Login = ({navigation}: any) => {
           textStyle={styles.checkBoxTextStyle}
           onPress={() => setSaveLogin(!saveLogin)}
         />
+        <Gap height={40} />
+        <CustomButton buttonText={'Masuk'} onClick={() => loginHandler()} />
       </View>
-      <CustomButton
-        buttonText={'Masuk'}
-        onClick={() => {
-          setLoading(true);
-          loginHandler();
-        }}
-      />
-      <LoadingModal visible={loading} />
+      <View style={styles.wrapper}>
+        <Text style={styles.made}>Dibuat dan disiapkan oleh:</Text>
+        <Image
+          source={require('../../../assets/images/sahbrifarma_logo.png')}
+          style={styles.image}
+        />
+        <Image
+          source={require('../../../assets/images/sahbrifarma_logoname.png')}
+          style={styles.imagename}
+        />
+      </View>
+      <LoadingModal visible={isLoading} />
     </View>
   );
 };

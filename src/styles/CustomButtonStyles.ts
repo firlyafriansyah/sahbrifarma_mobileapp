@@ -12,7 +12,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Poppins-Bold',
   },
-  touchable: {borderRadius: 15},
+  touchable: {
+    borderRadius: 15,
+    elevation: 1,
+  },
 });
 
 export default styles;
