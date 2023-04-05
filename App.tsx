@@ -71,7 +71,7 @@ const App = () => {
     <IsLogedInContext.Provider value={isLoggedInValue}>
       <SafeAreaProvider>
         <NavigationContainer>
-          {/* {isLoading ? (
+          {isLoading ? (
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="SplashScreen" component={SplashScreen} />
             </Stack.Navigator>
@@ -79,25 +79,31 @@ const App = () => {
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="Login" component={LoginScreen} />
             </Stack.Navigator>
-          ) : loggedInRole === 0 ? ( */}
-          <Stack.Navigator
-            initialRouteName="ListKonsultasi"
-            screenOptions={{headerShown: false}}>
-            <Stack.Screen name="ListPeriksa" component={ListPeriksaScreen} />
-            <Stack.Screen
-              name="ListKonsultasi"
-              component={ListKonsultasiScreen}
-            />
-            <Stack.Screen name="Home" component={HomeScreen} />
-          </Stack.Navigator>
-          {/* ) : (
+          ) : loggedInRole === 0 ? (
+            <Stack.Navigator
+              initialRouteName="ListKonsultasi"
+              screenOptions={{headerShown: false}}>
+              <Stack.Screen
+                name="ListKonsultasi"
+                component={ListKonsultasiScreen}
+              />
+              <Stack.Screen name="Home" component={HomeScreen} />
+            </Stack.Navigator>
+          ) : loggedInRole === 1 ? (
             <Stack.Navigator
               initialRouteName="Scanner"
               screenOptions={{headerShown: false}}>
               <Stack.Screen name="Scanner" component={ScannerScreen} />
               <Stack.Screen name="Home" component={HomeScreen} />
             </Stack.Navigator>
-          )} */}
+          ) : (
+            <Stack.Navigator
+              initialRouteName="ListPeriksa"
+              screenOptions={{headerShown: false}}>
+              <Stack.Screen name="ListPeriksa" component={ListPeriksaScreen} />
+              <Stack.Screen name="Home" component={HomeScreen} />
+            </Stack.Navigator>
+          )}
         </NavigationContainer>
       </SafeAreaProvider>
     </IsLogedInContext.Provider>
