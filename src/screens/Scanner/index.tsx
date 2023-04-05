@@ -3,8 +3,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import * as React from 'react';
 import {Alert, BackHandler, Image, Text, View} from 'react-native';
 import {Camera, CameraType} from 'react-native-camera-kit';
-import {TextInput, TouchableHighlight} from 'react-native-gesture-handler';
-import {CustomStatusBar, LoadingModal} from '../../components';
+import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
+import {CustomStatusBar, Header, LoadingModal} from '../../components';
 import {IsLogedInContext} from '../../context/AuthContext';
 import {PasienCheck} from '../../services';
 import styles from '../../styles/ScannerScreenStyles';
@@ -103,12 +103,13 @@ const Scanner = ({navigation}: any) => {
         source={require('../../../assets/images/scanner_frame.png')}
         style={styles.qrScannerImage}
       />
-      <View style={styles.scannerHeaderIcon}>
-        <TouchableHighlight onPress={() => logoutHandler()}>
-          <FontAwesomeIcon icon={faXmark} size={25} color="#FFFFFF" />
-        </TouchableHighlight>
+      <View style={styles.headerWrapper}>
+        <Header
+          color="#FFFFFF"
+          action={() => logoutHandler()}
+          title="Pindai Kartu Pasien"
+        />
       </View>
-      <Text style={styles.scannerHeaderText}>Pindai Kartu Pasien</Text>
       <View style={styles.actionWrapper}>
         <Text style={styles.title}>Result Scanner</Text>
         <Text style={styles.label}>ID Pasien</Text>
@@ -129,15 +130,15 @@ const Scanner = ({navigation}: any) => {
           <View style={styles.gap} />
           {pasienStatus ? (
             <View style={styles.buttonWrapper}>
-              <TouchableHighlight onPress={() => submit()}>
+              <TouchableOpacity onPress={() => submit()}>
                 <FontAwesomeIcon icon={faCheck} size={24} color="#FFFFFF" />
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.buttonDisableWrapper}>
-              <TouchableHighlight onPress={() => submit()} disabled>
-                <FontAwesomeIcon icon={faCheck} size={24} color="#FFFFFF" />
-              </TouchableHighlight>
+              <TouchableOpacity onPress={() => submit()} disabled>
+                <FontAwesomeIcon icon={faXmark} size={24} color="#FFFFFF" />
+              </TouchableOpacity>
             </View>
           )}
         </View>

@@ -6,7 +6,7 @@ interface CustomStatusBarProps {
   translucent: boolean;
 }
 
-export const CustomStatusBar = (props: CustomStatusBarProps) => {
+const CustomStatusBar = (props: CustomStatusBarProps) => {
   const {bgColor = 'transparent', translucent} = props;
 
   return (
@@ -20,3 +20,5 @@ export const CustomStatusBar = (props: CustomStatusBarProps) => {
     />
   );
 };
+
+export default CustomStatusBar;

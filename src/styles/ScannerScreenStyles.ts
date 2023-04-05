@@ -14,19 +14,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 220,
   },
-  scannerHeaderIcon: {
+  headerWrapper: {
     position: 'absolute',
-    display: 'flex',
-    width: 100,
-    height: 100,
-    top: 70,
-    left: 25,
-  },
-  scannerHeaderText: {
-    position: 'absolute',
-    fontFamily: 'Poppins-Medium',
-    fontSize: 22,
-    color: '#FFFFFF',
     top: 70,
   },
   actionWrapper: {
@@ -44,23 +33,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     color: '#000000',
     fontSize: 24,
-    marginBottom: 30,
+    marginBottom: 10,
   },
   label: {
     fontFamily: 'Poppins-Regular',
     fontSize: 16,
-    marginBottom: 10,
   },
   manualInputWrapper: {
     display: 'flex',
-    flexDirection: 'row',
     width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   idPasienWrapper: {
     borderBottomWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: '80%',
+    marginBottom: 20,
   },
   idPasien: {
     borderColor: '#FFFFFF',
