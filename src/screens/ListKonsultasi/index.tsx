@@ -3,10 +3,10 @@ import {View, Text} from 'react-native';
 import {RefreshControl, ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {CustomStatusBar, Header, ListCard} from '../../components';
-import {styles} from '../../styles/ListScreenStyles';
+import styles from '../../styles/ListScreenStyles';
 import data from './data';
 
-const ListKonsultasi = () => {
+const ListKonsultasi = ({navigation}: any) => {
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
@@ -27,16 +27,23 @@ const ListKonsultasi = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
         <View style={styles.listWrapper}>
-          {data.map((res, index) => (
-            <ListCard
-              key={index}
-              name={res.name}
-              id={res.id}
-              gender={res.gender}
-              sequence={index + 1}
-            />
-          ))}
-          <Text style={styles.endText}>End of list</Text>
+          {data.length <= 0 ? (
+            <Text style={styles.endText}>Tidak ada antrean konsultasi</Text>
+          ) : (
+            <>
+              {data.map((res, index) => (
+                <ListCard
+                  key={index}
+                  name={res.name}
+                  id={res.id}
+                  gender={res.gender}
+                  sequence={index + 1}
+                  onPress={() => navigation.replace('Home')}
+                />
+              ))}
+              <Text style={styles.endText}>End of list</Text>
+            </>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

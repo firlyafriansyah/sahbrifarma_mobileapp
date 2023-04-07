@@ -15,7 +15,6 @@ import {IsLogedInContext} from './src/context/AuthContext';
 import {
   HomeScreen,
   ListKonsultasiScreen,
-  ListPeriksaScreen,
   LoginScreen,
   ScannerScreen,
   SplashScreen,
@@ -100,7 +99,6 @@ const App = () => {
             <Stack.Navigator
               initialRouteName="ListPeriksa"
               screenOptions={{headerShown: false}}>
-              <Stack.Screen name="ListPeriksa" component={ListPeriksaScreen} />
               <Stack.Screen name="Home" component={HomeScreen} />
             </Stack.Navigator>
           )}

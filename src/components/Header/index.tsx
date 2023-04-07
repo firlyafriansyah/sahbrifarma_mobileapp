@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import * as React from 'react';
 import {Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {styles} from '../../styles/HeaderStyles';
+import styles from '../../styles/HeaderStyles';
 
 interface HeaderProps {
   color?: string;

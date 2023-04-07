@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   headerWrapper: {
     marginVertical: 25,
   },
@@ -15,3 +15,5 @@ export const styles = StyleSheet.create({
     marginVertical: 5,
   },
 });
+
+export default styles;

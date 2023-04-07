@@ -1,10 +1,11 @@
 import {StyleSheet} from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
+    alignItems: 'center',
   },
   scannerHeaderIcon: {
     display: 'flex',
@@ -22,3 +23,5 @@ export const styles = StyleSheet.create({
     width: '20%',
   },
 });
+
+export default styles;

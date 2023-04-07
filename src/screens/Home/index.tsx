@@ -1,48 +1,28 @@
-import {CommonActions} from '@react-navigation/native';
-import React, {useEffect} from 'react';
-import {Alert, BackHandler, Text, View} from 'react-native';
+import * as React from 'react';
+import {View, Text} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {Card, CustomStatusBar, Gap, Header, ListAction} from '../../components';
+import styles from '../../styles/HomeScreenStyles';
 
 const Home = ({navigation}: any) => {
-  useEffect(() => {
-    const backAction = () => {
-      Alert.alert(
-        'Hold on!',
-        'Are you sure you want to exit from this patient account?',
-        [
-          {
-            text: 'Cancel',
-            onPress: () => null,
-            style: 'cancel',
-          },
-          {
-            text: 'YES',
-            onPress: () => {
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 1,
-                  routes: [{name: 'Scanner'}],
-                }),
-              );
-            },
-          },
-        ],
-      );
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-
-    return () => backHandler.remove();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const backHandler = () => {
+    navigation.replace('ListKonsultasi');
+  };
 
   return (
-    <View>
-      <Text>Home</Text>
-    </View>
+    <SafeAreaView>
+      <CustomStatusBar translucent />
+      <View style={styles.headerWrapper}>
+        <Header title="Pasien Dashboard" action={() => backHandler()} />
+      </View>
+      <View style={styles.container}>
+        <Card />
+        <Gap height={20} />
+        <ListAction />
+        <Gap height={20} />
+        <Text style={styles.subTitle}>History</Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
