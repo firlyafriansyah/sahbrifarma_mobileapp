@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
   input: {
     paddingHorizontal: 18,
-    paddingVertical: 15,
+    paddingVertical: 13,
     flex: 1,
     fontFamily: 'Poppins-Reguler',
     fontSize: 16,

@@ -16,9 +16,9 @@ import {
   HomeScreen,
   ListKonsultasiScreen,
   LoginScreen,
-  ScannerScreen,
   SplashScreen,
 } from './src/screens';
+import Profile from './src/screens/Profile';
 import {DatabaseCheck} from './src/services';
 import {getDataAsyncStorage} from './src/utils/AsyncStorage';
 
@@ -78,7 +78,7 @@ const App = () => {
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="Login" component={LoginScreen} />
             </Stack.Navigator>
-          ) : loggedInRole === 0 ? (
+          ) : (
             <Stack.Navigator
               initialRouteName="ListKonsultasi"
               screenOptions={{headerShown: false}}>
@@ -87,19 +87,7 @@ const App = () => {
                 component={ListKonsultasiScreen}
               />
               <Stack.Screen name="Home" component={HomeScreen} />
-            </Stack.Navigator>
-          ) : loggedInRole === 1 ? (
-            <Stack.Navigator
-              initialRouteName="Scanner"
-              screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Scanner" component={ScannerScreen} />
-              <Stack.Screen name="Home" component={HomeScreen} />
-            </Stack.Navigator>
-          ) : (
-            <Stack.Navigator
-              initialRouteName="ListPeriksa"
-              screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Profile" component={Profile} />
             </Stack.Navigator>
           )}
         </NavigationContainer>

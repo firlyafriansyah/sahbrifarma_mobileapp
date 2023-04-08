@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   submitBtn: {
-    paddingVertical: 18,
+    paddingVertical: 15,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 12,

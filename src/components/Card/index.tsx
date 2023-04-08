@@ -9,9 +9,19 @@ import {
 import QRCode from 'react-native-qrcode-svg';
 import styles from '../../styles/CardStyles';
 
-const Card = (props: any) => {
+interface CardProps {
+  name: string;
+  id: string;
+  birthday: string;
+  gender: string;
+  onPress: any;
+}
+
+const Card = (props: CardProps) => {
+  const {name, id, birthday, gender, onPress} = props;
+
   return (
-    <TouchableOpacity onPress={props.press}>
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.cardWrapper}>
         <ImageBackground
           source={require('../../../assets/images/card_bg.png')}
@@ -26,23 +36,23 @@ const Card = (props: any) => {
               />
               <View>
                 <View>
-                  <Text style={styles.name}>FIRLY AFRIANSYAH</Text>
-                  <Text style={styles.id}>202324032345</Text>
+                  <Text style={styles.name}>{name?.toUpperCase()}</Text>
+                  <Text style={styles.id}>{id}</Text>
                 </View>
               </View>
               <View style={styles.additionalInformationWrapper}>
                 <View style={styles.birthdayWrapper}>
                   <Text style={styles.birthdayLabel}>Birthday</Text>
-                  <Text style={styles.birthday}>20 / 04 / 2023</Text>
+                  <Text style={styles.birthday}>{birthday}</Text>
                 </View>
                 <View>
                   <Text style={styles.genderLabel}>Gender</Text>
-                  <Text style={styles.gender}>Laki - Laki</Text>
+                  <Text style={styles.gender}>{gender}</Text>
                 </View>
               </View>
             </View>
             <View style={styles.qrWrapper}>
-              <QRCode value="202324032345" size={95} />
+              <QRCode value={id} size={95} />
             </View>
           </View>
         </ImageBackground>

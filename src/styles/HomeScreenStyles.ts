@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     color: '#000000',
     fontSize: 24,
+    marginBottom: 10,
   },
 });
 
