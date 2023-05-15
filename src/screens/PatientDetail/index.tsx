@@ -11,7 +11,7 @@ import {
 import {CustomButton, CustomInput, Header} from '../../components';
 import styles from '../../styles/ProfileScreenStyles';
 
-const Profile = ({navigation}: any) => {
+const PatientDetail = ({navigation}: any) => {
   const [editable, setEditable] = React.useState(false);
 
   React.useEffect(() => {
@@ -142,4 +142,4 @@ const Profile = ({navigation}: any) => {
   );
 };
 
-export default Profile;
+export default PatientDetail;

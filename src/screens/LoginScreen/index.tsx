@@ -1,48 +1,52 @@
 import * as React from 'react';
 import {Image, Text, View} from 'react-native';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {IsLogedInContext} from '../../context/AuthContext';
-import {LoginService} from '../../services';
+import {Login} from '../../services';
 import styles from '../../styles/LoginScreenStyles';
 import {DayGenerator, InputCheck} from '../../utils';
-import {storeDataAsyncStorage} from '../../utils/AsyncStorage';
+import {
+  clearAsyncStorage,
+  storeDataAsyncStorage,
+} from '../../utils/AsyncStorage';
 import {
   CustomButton,
   CustomInput,
   CustomStatusBar,
   Gap,
   LoadingModal,
-} from './../../components';
+} from '../../components';
 
-const Login = () => {
+const LoginScreen = () => {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [saveLogin, setSaveLogin] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const {setLoggedInUsername, setLoggedInRole} =
+  const {setLoggedInRole, setLoggedInToken} =
     React.useContext(IsLogedInContext);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    clearAsyncStorage().finally(() => setIsLoading(false));
+  }, []);
 
   const loginHandler = () => {
     InputCheck(username, password)
       .then(() => {
         setIsLoading(true);
-        LoginService(username, password)
+        Login(username, password)
           .then((res: any) => {
-            if (saveLogin) {
-              storeDataAsyncStorage('@loggedUser', {
-                loggedUsername: res.username,
-                loggedRole: res.role,
-              });
-            }
-            setLoggedInUsername(res.username);
+            storeDataAsyncStorage('@loggedUser', {
+              loggedInRole: res.role,
+              loggedInToken: res.token,
+            });
             setLoggedInRole(res.role);
+            setLoggedInToken(res.token);
             setPassword('');
             setUsername('');
             setError(false);
           })
-          .catch(err => {
+          .catch((err: any) => {
             setError(true);
             setErrorMessage(err);
           })
@@ -82,18 +86,7 @@ const Login = () => {
           value={password}
           inputPassword
         />
-        <Gap height={30} />
-        <BouncyCheckbox
-          style={styles.checkBoxStyle}
-          size={20}
-          fillColor="#5352ED"
-          unfillColor="#FFFFFF"
-          text="Aktifkan Login Otomatis"
-          iconStyle={styles.checkBoxIconStyle}
-          textStyle={styles.checkBoxTextStyle}
-          onPress={() => setSaveLogin(!saveLogin)}
-        />
-        <Gap height={40} />
+        <Gap height={60} />
         <CustomButton buttonText={'Masuk'} onClick={() => loginHandler()} />
       </View>
       <View style={styles.wrapper}>
@@ -112,4 +105,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginScreen;

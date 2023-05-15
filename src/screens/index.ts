@@ -1,15 +1,19 @@
 import Home from './Home';
-import Login from './Login';
+import LoginScreen from './LoginScreen';
 import Scanner from './Scanner';
 import Splashscreen from './Splashscreen';
-import ListKonsultasi from './ListKonsultasi';
-import Profile from './Profile';
+import ListAntre from './ListAntre';
+import PatientDetail from './PatientDetail';
+import AdministrationProfile from './AdministrationProfile';
+import AdministrationProfileUpdate from './AdministrationProfileUpdate';
 
 export {
-  Login as LoginScreen,
+  LoginScreen,
   Scanner as ScannerScreen,
   Home as HomeScreen,
   Splashscreen as SplashScreen,
-  ListKonsultasi as ListKonsultasiScreen,
-  Profile as ProfileScreen,
+  ListAntre as ListAntreScreen,
+  PatientDetail as PatientDetailScreen,
+  AdministrationProfile as AdministrationProfileScreen,
+  AdministrationProfileUpdate as AdministrationProfileUpdateScreen,
 };

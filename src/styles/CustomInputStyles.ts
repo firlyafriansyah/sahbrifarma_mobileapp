@@ -11,12 +11,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     elevation: 1,
   },
+  label: {
+    color: '#000000',
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    marginBottom: 5,
+  },
   input: {
     paddingHorizontal: 18,
-    paddingVertical: 13,
+    paddingVertical: 10,
     flex: 1,
-    fontFamily: 'Poppins-Reguler',
+    fontFamily: 'Poppins-Regular',
     fontSize: 16,
+  },
+  inputWrapper: {
+    width: '80%',
+  },
+  iconWrapper: {
+    width: '20%',
   },
 });
 

@@ -6,7 +6,7 @@ const storeDataAsyncStorage = async (key: string, value: any) => {
     await AsyncStorage.setItem(key, jsonValue);
     return 'Success store data!';
   } catch (e) {
-    return 'Error store data!';
+    return `Error store data! - ${e}`;
   }
 };
 
@@ -24,7 +24,7 @@ const removeDataAsyncStorage = async (key: string) => {
     await AsyncStorage.removeItem(key);
     return {status: 'success'};
   } catch (e) {
-    return {status: 'error remove data from async storage!'};
+    return {status: `error remove data from async storage! - ${e}`};
   }
 };
 
@@ -33,7 +33,7 @@ const multiRemoveDataAsyncStorage = async (key1: string, key2: string) => {
     await AsyncStorage.multiRemove([key1, key2]);
     return {status: 'success'};
   } catch (e) {
-    return {status: 'error remove data from async storage!'};
+    return {status: `error remove data from async storage! - ${e}`};
   }
 };
 
@@ -42,7 +42,7 @@ const clearAsyncStorage = async () => {
     await AsyncStorage.clear();
     return 'Success clear data!';
   } catch (e) {
-    return 'Error clear data!';
+    return `Error clear data! - ${e}`;
   }
 };
 

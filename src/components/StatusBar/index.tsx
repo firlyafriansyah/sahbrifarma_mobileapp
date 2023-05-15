@@ -2,19 +2,24 @@ import * as React from 'react';
 import {StatusBar} from 'react-native';
 
 interface CustomStatusBarProps {
-  bgColor?: string;
   translucent: boolean;
+  bgColor?: string;
+  barStyle?: any;
 }
 
 const CustomStatusBar = (props: CustomStatusBarProps) => {
-  const {bgColor = 'transparent', translucent} = props;
+  const {
+    translucent,
+    bgColor = 'transparent',
+    barStyle = 'dark-content',
+  } = props;
 
   return (
     <StatusBar
       translucent={translucent}
-      animated={true}
+      animated
       backgroundColor={bgColor}
-      barStyle="default"
+      barStyle={barStyle}
       showHideTransition="fade"
       hidden={false}
     />

@@ -6,56 +6,57 @@
  * @flow strict-local
  */
 
+import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import * as React from 'react';
-import {Alert, DevSettings} from 'react-native';
+import {Alert, BackHandler, DevSettings} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {IsLogedInContext} from './src/context/AuthContext';
 import {
-  HomeScreen,
-  ListKonsultasiScreen,
+  AdministrationProfileScreen,
+  AdministrationProfileUpdateScreen,
   LoginScreen,
   SplashScreen,
 } from './src/screens';
-import Profile from './src/screens/Profile';
-import {DatabaseCheck} from './src/services';
+import {AutoLogin, DatabaseCheck} from './src/services';
 import {getDataAsyncStorage} from './src/utils/AsyncStorage';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [loggedInUsername, setLoggedInUsername] = React.useState('');
-  const [loggedInRole, setLoggedInRole] = React.useState(0);
+  const [loggedInRole, setLoggedInRole] = React.useState('');
+  const [loggedInToken, setLoggedInToken] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const isLoggedInValue = React.useMemo(
     () => ({
-      loggedInUsername,
-      setLoggedInUsername,
       loggedInRole,
       setLoggedInRole,
+      loggedInToken,
+      setLoggedInToken,
     }),
-    [loggedInUsername, loggedInRole],
+    [loggedInRole, loggedInToken],
   );
 
   React.useEffect(() => {
     setIsLoading(true);
     DatabaseCheck.then(() => {
-      getDataAsyncStorage('@loggedUser')
-        .then(res => {
-          if (res) {
-            setLoggedInUsername(res.loggedUsername);
-            setLoggedInRole(res.loggedRole);
-          }
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+      getDataAsyncStorage('@loggedUser').then(res => {
+        if (res) {
+          AutoLogin(res.loggedInToken.split('~')[0])
+            .then(() => {
+              setLoggedInRole(res.loggedInRole);
+              setLoggedInToken(res.loggedInToken);
+            })
+            .finally(() => {
+              setIsLoading(false);
+            });
+        }
+      });
     }).catch((err: string) => {
       Alert.alert('Error!', err, [
         {
           text: 'Close',
-          onPress: () => null,
+          onPress: () => BackHandler.exitApp(),
           style: 'cancel',
         },
         {
@@ -74,20 +75,62 @@ const App = () => {
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="SplashScreen" component={SplashScreen} />
             </Stack.Navigator>
-          ) : loggedInUsername === '' ? (
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Login" component={LoginScreen} />
-            </Stack.Navigator>
-          ) : (
+          ) : loggedInRole === 'frontdesk' ? (
             <Stack.Navigator
-              initialRouteName="ListKonsultasi"
+              initialRouteName="AdministrationProfile"
               screenOptions={{headerShown: false}}>
               <Stack.Screen
-                name="ListKonsultasi"
-                component={ListKonsultasiScreen}
+                name="AdministrationProfile"
+                component={AdministrationProfileScreen}
               />
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen
+                name="AdministrationProfileUpdate"
+                component={AdministrationProfileUpdateScreen}
+              />
+              {/* <Stack.Screen name="PatientCardScanner" component={PatientCardScanner} /> */}
+              {/* <Stack.Screen name="PatientDashboard" component={PatientDashboard} /> */}
+              {/* <Stack.Screen name="EditPatientInformation" component={EditPatientInformationScreen} /> */}
+            </Stack.Navigator>
+          ) : loggedInRole === 'nurse' ? (
+            <Stack.Navigator
+              initialRouteName="AdministrationProfile"
+              screenOptions={{headerShown: false}}>
+              <Stack.Screen
+                name="AdministrationProfileScreen"
+                component={AdministrationProfileScreen}
+              />
+              <Stack.Screen
+                name="AdministrationProfileUpdate"
+                component={AdministrationProfileUpdateScreen}
+              />
+              {/* <Stack.Screen name="PatientQueue" component={PatientQueueScreen} /> */}
+              {/* <Stack.Screen name="MedicalTestHistory" component={MedicalTestHistoryScreen} /> */}
+              {/* <Stack.Screen name="InputMedicalTest" component={InputMedicalTestScreen} /> */}
+              {/* <Stack.Screen name="MedicalTestResult" component={MedicalTestResultScreen} /> */}
+            </Stack.Navigator>
+          ) : loggedInRole === 'doctor' ? (
+            <Stack.Navigator
+              initialRouteName="AdministrationProfile"
+              screenOptions={{headerShown: false}}>
+              {/* <Stack.Screen name="AdministrationProfile" component={AdminstrationProfileScreen} /> */}
+              {/* <Stack.Screen name="PatientQueue" component={PatientQueueScreen} /> */}
+              {/* <Stack.Screen name="DoctoralConsultationHistory" component={DoctoralConsultationHistoryScreen} /> */}
+              {/* <Stack.Screen name="InputDoctoralConsultation" component={InputDoctoralConsultationScreen} /> */}
+              {/* <Stack.Screen name="DoctoralConsultationResult" component={DoctoralConsultationResultScreen} /> */}
+              {/* <Stack.Screen name="InputMedicine" component={InputMedicineScreen} /> */}
+              {/* <Stack.Screen name="MedicineResult" component={MedicineResultScreen} /> */}
+            </Stack.Navigator>
+          ) : loggedInRole === 'pharmacist' ? (
+            <Stack.Navigator
+              initialRouteName="AdministrationProfile"
+              screenOptions={{headerShown: false}}>
+              {/* <Stack.Screen name="AdministrationProfile" component={AdminstrationProfileScreen} /> */}
+              {/* <Stack.Screen name="PatientQueue" component={PatientQueueScreen} /> */}
+              {/* <Stack.Screen name="MedicineRequested" component={MedicineRequestedScreen} /> */}
+            </Stack.Navigator>
+          ) : (
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen name="Login" component={LoginScreen} />
             </Stack.Navigator>
           )}
         </NavigationContainer>

@@ -4,23 +4,28 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    width: '100%',
+    width: '90%',
     alignItems: 'center',
+    marginTop: 50,
   },
-  scannerHeaderIcon: {
+  actionOne: {
     display: 'flex',
     width: '20%',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
-  scannerHeaderText: {
+  title: {
     width: '60%',
     textAlign: 'center',
-    fontFamily: 'Poppins-Medium',
     fontSize: 24,
     color: '#FFFFFF',
+    fontFamily: 'Poppins-Medium',
   },
-  gap: {
+  actionTwo: {
+    fontSize: 22,
+    fontFamily: 'Poppins-Medium',
     width: '20%',
+    textAlign: 'right',
+    color: '#5783FC',
   },
 });
 

@@ -1,4 +1,4 @@
-import {DB_HOST} from '../../database/config';
+import {DB_HOST} from '../../../database/config';
 
 const LoginService = (username: string, password: string) => {
   const optionsRequest = {
@@ -14,17 +14,17 @@ const LoginService = (username: string, password: string) => {
   };
 
   return new Promise((resolve, reject) => {
-    fetch(`${DB_HOST}/admin/login`, optionsRequest)
+    fetch(`${DB_HOST}/administration/login`, optionsRequest)
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
           resolve(res.data);
         } else {
-          reject('Nama dan Kata Sandi salah. Periksa Kembali!');
+          reject(res.message);
         }
       })
-      .catch(() => {
-        reject('Kesalahan pada sistem. Silahkan coba lagi!');
+      .catch(err => {
+        reject(err);
       });
   });
 };

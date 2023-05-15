@@ -6,7 +6,7 @@ import {CustomStatusBar, Header, ListCard} from '../../components';
 import styles from '../../styles/ListScreenStyles';
 import data from './data';
 
-const ListKonsultasi = ({navigation}: any) => {
+const ListAntre = ({navigation}: any) => {
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
@@ -50,4 +50,4 @@ const ListKonsultasi = ({navigation}: any) => {
   );
 };
 
-export default ListKonsultasi;
+export default ListAntre;
