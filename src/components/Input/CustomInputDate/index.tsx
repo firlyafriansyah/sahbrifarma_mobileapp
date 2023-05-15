@@ -1,12 +1,12 @@
-import {faCalendar} from '@fortawesome/free-solid-svg-icons';
+import {faCalendarDays} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Pressable, Text, TextInput, View} from 'react-native';
-import styles from '../../../styles/CustomInputStyles';
+import styles from '../../../styles/Components/CustomInputStyles';
 import Gap from '../../Gap';
 
 interface CustomInputDateProps {
-  label: string;
+  label?: string;
   date: string;
   setDate: any;
   month: string;
@@ -35,11 +35,12 @@ const CustomInputDate = (props: CustomInputDateProps) => {
 
   return (
     <>
-      <Text style={styles.label}>{label}</Text>
+      {label !== '' && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
-        <View style={styles.inputWrapper}>
+        <View style={styles.inputDateWrapper}>
+          <Gap width={2} />
           <TextInput
-            style={styles.input}
+            style={styles.inputDate}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -51,11 +52,9 @@ const CustomInputDate = (props: CustomInputDateProps) => {
             selectTextOnFocus={selectTextOnFocus}
             maxLength={2}
           />
-          <Gap width={10} />
-          <Text>/</Text>
-          <Gap width={10} />
+          <Text style={styles.slash}>/</Text>
           <TextInput
-            style={styles.input}
+            style={styles.inputDate}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -67,11 +66,9 @@ const CustomInputDate = (props: CustomInputDateProps) => {
             selectTextOnFocus={selectTextOnFocus}
             maxLength={2}
           />
-          <Gap width={10} />
-          <Text>/</Text>
-          <Gap width={10} />
+          <Text style={styles.slash}>/</Text>
           <TextInput
-            style={styles.input}
+            style={styles.inputDate}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -85,7 +82,7 @@ const CustomInputDate = (props: CustomInputDateProps) => {
           />
         </View>
         <Pressable style={styles.iconWrapper} onPress={() => iconAction()}>
-          <FontAwesomeIcon icon={faCalendar} />
+          <FontAwesomeIcon icon={faCalendarDays} size={20} />
         </Pressable>
       </View>
     </>

@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
   headerWrapper: {
-    marginVertical: 50,
+    marginBottom: 40,
   },
   inputWrapper: {
     width: '90%',

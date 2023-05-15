@@ -40,7 +40,6 @@ const multiRemoveDataAsyncStorage = async (key1: string, key2: string) => {
 const clearAsyncStorage = async () => {
   try {
     await AsyncStorage.clear();
-    return 'Success clear data!';
   } catch (e) {
     return `Error clear data! - ${e}`;
   }

@@ -1,4 +1,5 @@
 import AutoLogin from './AutoLogin';
-import Login from './Login';
+import LoginService from './Login';
+import LogoutService from './Logout';
 
-export {AutoLogin, Login};
+export {AutoLogin, LoginService, LogoutService};

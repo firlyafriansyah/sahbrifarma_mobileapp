@@ -2,17 +2,17 @@ import {faCalendar} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Pressable, Text, TextInput, View} from 'react-native';
-import styles from '../../../styles/CustomInputStyles';
+import styles from '../../../styles/Components/CustomInputStyles';
 import Gap from '../../Gap';
 
 interface CustomInputBloodPressureProps {
-  label: string;
-  date: string;
-  setDate: any;
-  month: string;
-  setMonth: any;
-  year: string;
-  setYear: any;
+  label?: string;
+  systole: string;
+  setSystole: any;
+  diastole: string;
+  setDiastole: any;
+  pulse: string;
+  setPulse: any;
   editable?: boolean;
   selectTextOnFocus?: boolean;
   iconAction?: any;
@@ -21,12 +21,12 @@ interface CustomInputBloodPressureProps {
 const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
   const {
     label,
-    date,
-    setDate,
-    month,
-    setMonth,
-    year,
-    setYear,
+    systole,
+    setSystole,
+    diastole,
+    setDiastole,
+    pulse,
+    setPulse,
     editable = true,
     selectTextOnFocus = false,
     iconAction = null,
@@ -35,7 +35,7 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
 
   return (
     <>
-      <Text style={styles.label}>{label}</Text>
+      {label !== '' && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
         <View style={styles.inputWrapper}>
           <TextInput
@@ -43,9 +43,9 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
-            onChangeText={item => setDate(item)}
-            value={date}
-            placeholder="000"
+            onChangeText={item => setSystole(item)}
+            value={systole}
+            placeholder="---"
             keyboardType="numeric"
             editable={editable}
             selectTextOnFocus={selectTextOnFocus}
@@ -59,9 +59,9 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
-            onChangeText={item => setMonth(item)}
-            value={month}
-            placeholder="00"
+            onChangeText={item => setDiastole(item)}
+            value={diastole}
+            placeholder="--"
             keyboardType="numeric"
             editable={editable}
             selectTextOnFocus={selectTextOnFocus}
@@ -75,9 +75,9 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
-            onChangeText={item => setYear(item)}
-            value={year}
-            placeholder="00"
+            onChangeText={item => setPulse(item)}
+            value={pulse}
+            placeholder="--"
             keyboardType="numeric"
             editable={editable}
             selectTextOnFocus={selectTextOnFocus}

@@ -1,12 +1,15 @@
+import {faEdit} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {useIsFocused} from '@react-navigation/native';
 import React from 'react';
 import {
+  Alert,
+  Image,
   SafeAreaView,
   Text,
-  Alert,
-  DevSettings,
-  Image,
-  View,
   TouchableHighlight,
+  View,
+  DevSettings,
 } from 'react-native';
 import {
   CustomButton,
@@ -14,19 +17,21 @@ import {
   Gap,
   LoadingModal,
 } from '../../components';
-import {DayGenerator} from '../../utils';
-import styles from '../../styles/Screen/AdministrationProfile';
 import {IsLogedInContext} from '../../context/AuthContext';
+import {LogoutService} from '../../services';
 import {GetAdministrationAccountDetail} from '../../services/Administration';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faEdit} from '@fortawesome/free-solid-svg-icons';
+import styles from '../../styles/Screen/AdministrationProfile';
+import {DayGenerator} from '../../utils';
+import {getDataAsyncStorage} from '../../utils/AsyncStorage';
 
 const AdministrationProfile = ({navigation}: any) => {
-  const {loggedInToken, loggedInRole} = React.useContext(IsLogedInContext);
+  const {setLoggedInToken, setLoggedInRole, loggedInToken, loggedInRole} =
+    React.useContext(IsLogedInContext);
   const [fullname, setFullname] = React.useState('');
   const [username, setUsername] = React.useState('');
   const [data, setData] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
+  const isFocused = useIsFocused();
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -35,17 +40,56 @@ const AdministrationProfile = ({navigation}: any) => {
         setFullname(res.fullname);
         setUsername(res.username);
         setData(res);
+        setIsLoading(false);
       })
-      .catch(err => {
-        Alert.alert('Error!', err, [
-          {
-            text: 'Try Again',
-            onPress: () => DevSettings.reload(),
-          },
-        ]);
+      .catch(() => null);
+  }, [loggedInToken, isFocused]);
+
+  const logoutHandler = () => {
+    setIsLoading(true);
+    getDataAsyncStorage('@loggedUser')
+      .then(res => {
+        Alert.alert(
+          'Logout!',
+          'Are you sure want to logout from this account?',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Yes',
+              onPress: () => {
+                LogoutService(res.loggedInToken)
+                  .then(() => {
+                    setLoggedInRole('');
+                    setLoggedInToken('');
+                  })
+                  .catch(err => {
+                    Alert.alert('Error!', err, [
+                      {
+                        text: err.includes('re-login') ? 'Oke' : 'Try Again',
+                        onPress: () => {
+                          if (err.includes('re-login')) {
+                            setLoggedInRole('');
+                            setLoggedInToken('');
+                          } else {
+                            DevSettings.reload();
+                          }
+                        },
+                      },
+                    ]);
+                  })
+                  .finally(() => setIsLoading(false));
+              },
+            },
+          ],
+        );
       })
-      .finally(() => setIsLoading(false));
-  }, [loggedInToken]);
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,7 +110,11 @@ const AdministrationProfile = ({navigation}: any) => {
       <Gap height={20} />
       <View style={styles.actionContainer}>
         <View style={styles.logoutButton}>
-          <CustomButton buttonText="Logout" bgColor="#e84118" />
+          <CustomButton
+            buttonText="Logout"
+            bgColor="#e84118"
+            onClick={() => logoutHandler()}
+          />
         </View>
         <TouchableHighlight
           style={styles.updateButton}
@@ -78,7 +126,10 @@ const AdministrationProfile = ({navigation}: any) => {
       </View>
       <Gap height={150} />
       <View style={styles.startWorkButton}>
-        <CustomButton buttonText="Mulai Bekerja 🔥" />
+        <CustomButton
+          buttonText="Mulai Bekerja 🔥"
+          onClick={() => navigation.navigate('PatientCardScanner')}
+        />
       </View>
       <LoadingModal visible={isLoading} />
     </SafeAreaView>

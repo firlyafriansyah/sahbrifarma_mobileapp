@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Image, Text, View} from 'react-native';
 import {IsLogedInContext} from '../../context/AuthContext';
-import {Login} from '../../services';
+import {LoginService} from '../../services';
 import styles from '../../styles/LoginScreenStyles';
 import {DayGenerator, InputCheck} from '../../utils';
 import {
@@ -11,6 +11,7 @@ import {
 import {
   CustomButton,
   CustomInput,
+  CustomInputPassword,
   CustomStatusBar,
   Gap,
   LoadingModal,
@@ -34,7 +35,7 @@ const LoginScreen = () => {
     InputCheck(username, password)
       .then(() => {
         setIsLoading(true);
-        Login(username, password)
+        LoginService(username, password)
           .then((res: any) => {
             storeDataAsyncStorage('@loggedUser', {
               loggedInRole: res.role,
@@ -69,6 +70,7 @@ const LoginScreen = () => {
       <View style={styles.loginWrapper}>
         {error ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
         <CustomInput
+          label="Username"
           placeholder="Enter your username . . ."
           onChangeText={(item: string) => {
             setError(false);
@@ -77,14 +79,14 @@ const LoginScreen = () => {
           value={username}
         />
         <Gap height={20} />
-        <CustomInput
+        <CustomInputPassword
+          label="Password"
           placeholder="Enter your password . . ."
           onChangeText={(item: string) => {
             setError(false);
             setPassword(item);
           }}
           value={password}
-          inputPassword
         />
         <Gap height={60} />
         <CustomButton buttonText={'Masuk'} onClick={() => loginHandler()} />

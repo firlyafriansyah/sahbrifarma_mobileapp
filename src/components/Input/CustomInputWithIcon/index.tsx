@@ -1,10 +1,10 @@
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Pressable, TextInput, View, Text} from 'react-native';
-import styles from '../../../styles/CustomInputStyles';
+import styles from '../../../styles/Components/CustomInputStyles';
 
 interface CustomInputProps {
-  label: string;
+  label?: string;
   placeholder: string;
   onChangeText: any;
   value: string;
@@ -31,7 +31,7 @@ const CustomInputWithIcon = (props: CustomInputProps) => {
 
   return (
     <>
-      <Text style={styles.label}>{label}</Text>
+      {label !== '' && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
         <TextInput
           style={styles.input}

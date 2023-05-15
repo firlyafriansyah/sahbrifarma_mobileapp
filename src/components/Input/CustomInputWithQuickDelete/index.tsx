@@ -2,14 +2,14 @@ import {faXmark} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Pressable, TextInput, View, Text} from 'react-native';
-import styles from '../../../styles/CustomInputStyles';
+import styles from '../../../styles/Components/CustomInputStyles';
 
 interface CustomInputProps {
-  label: string;
+  label?: string;
   placeholder: string;
   value: string;
   onChangeText: any;
-  deleteValue: any;
+  deleteIconAction: any;
   keyboardType?: any;
   editable?: boolean;
   selectTextOnFocus?: boolean;
@@ -21,7 +21,7 @@ const CustomInputWithQuickDelete = (props: CustomInputProps) => {
     placeholder,
     value,
     onChangeText,
-    deleteValue,
+    deleteIconAction,
     keyboardType = 'default',
     editable = true,
     selectTextOnFocus = false,
@@ -30,7 +30,7 @@ const CustomInputWithQuickDelete = (props: CustomInputProps) => {
 
   return (
     <>
-      <Text style={styles.label}>{label}</Text>
+      {label !== '' && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
         <TextInput
           style={styles.input}
@@ -44,7 +44,7 @@ const CustomInputWithQuickDelete = (props: CustomInputProps) => {
           editable={editable}
           selectTextOnFocus={selectTextOnFocus}
         />
-        <Pressable onPress={() => deleteValue()}>
+        <Pressable onPress={() => deleteIconAction()}>
           <FontAwesomeIcon icon={faXmark} size={22} />
         </Pressable>
       </View>

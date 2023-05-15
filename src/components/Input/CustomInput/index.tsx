@@ -1,9 +1,9 @@
 import React from 'react';
 import {TextInput, View, Text} from 'react-native';
-import styles from '../../../styles/CustomInputStyles';
+import styles from '../../../styles/Components/CustomInputStyles';
 
 interface CustomInputProps {
-  label: string;
+  label?: string;
   placeholder: string;
   onChangeText: any;
   value: string;
@@ -14,7 +14,7 @@ interface CustomInputProps {
 
 const CustomInput = (props: CustomInputProps) => {
   const {
-    label,
+    label = '',
     placeholder,
     onChangeText,
     value,
@@ -26,7 +26,7 @@ const CustomInput = (props: CustomInputProps) => {
 
   return (
     <>
-      <Text style={styles.label}>{label}</Text>
+      {label !== '' && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
         <TextInput
           style={styles.input}

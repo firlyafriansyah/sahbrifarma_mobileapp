@@ -16,6 +16,7 @@ import {
   AdministrationProfileScreen,
   AdministrationProfileUpdateScreen,
   LoginScreen,
+  PatientCardScannerScreen,
   SplashScreen,
 } from './src/screens';
 import {AutoLogin, DatabaseCheck} from './src/services';
@@ -47,9 +48,24 @@ const App = () => {
               setLoggedInRole(res.loggedInRole);
               setLoggedInToken(res.loggedInToken);
             })
-            .finally(() => {
-              setIsLoading(false);
-            });
+            .catch(err => {
+              Alert.alert('Error!', err, [
+                {
+                  text: err.includes('re-login') ? 'Oke' : 'Try Again',
+                  onPress: () => {
+                    if (err.includes('re-login')) {
+                      setLoggedInRole('');
+                      setLoggedInToken('');
+                    } else {
+                      DevSettings.reload();
+                    }
+                  },
+                },
+              ]);
+            })
+            .finally(() => setIsLoading(false));
+        } else {
+          setIsLoading(false);
         }
       });
     }).catch((err: string) => {
@@ -87,7 +103,10 @@ const App = () => {
                 name="AdministrationProfileUpdate"
                 component={AdministrationProfileUpdateScreen}
               />
-              {/* <Stack.Screen name="PatientCardScanner" component={PatientCardScanner} /> */}
+              <Stack.Screen
+                name="PatientCardScanner"
+                component={PatientCardScannerScreen}
+              />
               {/* <Stack.Screen name="PatientDashboard" component={PatientDashboard} /> */}
               {/* <Stack.Screen name="EditPatientInformation" component={EditPatientInformationScreen} /> */}
             </Stack.Navigator>
@@ -130,7 +149,7 @@ const App = () => {
             </Stack.Navigator>
           ) : (
             <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="LoginScreen" component={LoginScreen} />
             </Stack.Navigator>
           )}
         </NavigationContainer>

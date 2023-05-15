@@ -1,5 +1,5 @@
 export * from './Authentication';
 import DatabaseCheck from './DatabaseCheck';
-import PasienCheck from './PasienCheck';
+import PatientCheck from './PatientCheck';
 
-export {DatabaseCheck, PasienCheck};
+export {DatabaseCheck, PatientCheck};

@@ -1,6 +1,6 @@
 import Home from './Home';
 import LoginScreen from './LoginScreen';
-import Scanner from './Scanner';
+import PatientCardScanner from './PatientCardScanner';
 import Splashscreen from './Splashscreen';
 import ListAntre from './ListAntre';
 import PatientDetail from './PatientDetail';
@@ -9,7 +9,7 @@ import AdministrationProfileUpdate from './AdministrationProfileUpdate';
 
 export {
   LoginScreen,
-  Scanner as ScannerScreen,
+  PatientCardScanner as PatientCardScannerScreen,
   Home as HomeScreen,
   Splashscreen as SplashScreen,
   ListAntre as ListAntreScreen,

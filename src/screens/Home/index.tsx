@@ -18,7 +18,7 @@ const Home = ({navigation}: any) => {
     <SafeAreaView>
       <CustomStatusBar translucent />
       <View style={styles.headerWrapper}>
-        <Header title="Pasien Dashboard" action={() => backHandler()} />
+        <Header title="Pasien Dashboard" actionOne={() => backHandler()} />
       </View>
       <View style={styles.container}>
         <Card
