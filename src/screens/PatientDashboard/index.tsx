@@ -1,4 +1,5 @@
 import {
+  faMedkit,
   faPen,
   faStethoscope,
   faUserDoctor,
@@ -6,22 +7,27 @@ import {
 import * as React from 'react';
 import {View, Text} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Card, CustomStatusBar, Gap, Header, ListAction} from '../../components';
-import styles from '../../styles/HomeScreenStyles';
+import {
+  PatientCard,
+  CustomStatusBar,
+  Gap,
+  Header,
+  ListAction,
+} from '../../components';
+import styles from '../../styles/Screen/PatientDashboard';
 
 const Home = ({navigation}: any) => {
-  const backHandler = () => {
-    navigation.replace('ListKonsultasi');
-  };
-
   return (
     <SafeAreaView>
       <CustomStatusBar translucent />
       <View style={styles.headerWrapper}>
-        <Header title="Pasien Dashboard" actionOne={() => backHandler()} />
+        <Header
+          title="Patient Dashboard"
+          actionOne={() => navigation.goBack()}
+        />
       </View>
       <View style={styles.container}>
-        <Card
+        <PatientCard
           name="Firly Afriansyah"
           id="234387569387"
           birthday="20/04/2000"
@@ -48,6 +54,13 @@ const Home = ({navigation}: any) => {
           title="Riwayat Periksa"
           subtitle="Riwayat pemeriksaan kesehatan pasien"
           icon={faStethoscope}
+          onPress={() => null}
+        />
+        <Gap height={10} />
+        <ListAction
+          title="Riwayat Obat"
+          subtitle="Riwayat pemberian obat pasien"
+          icon={faMedkit}
           onPress={() => null}
         />
       </View>

@@ -13,7 +13,7 @@ import {
 } from '../../components';
 import {IsLogedInContext} from '../../context/AuthContext';
 import PatientCheck from '../../services/PatientCheck';
-import styles from '../../styles/ScannerScreenStyles';
+import styles from '../../styles/Screen/PatientCardScanner';
 
 const PatientCardScanner = ({navigation}: any) => {
   const {loggedInToken} = React.useContext(IsLogedInContext);

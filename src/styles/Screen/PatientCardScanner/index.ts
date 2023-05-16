@@ -17,8 +17,8 @@ const styles = StyleSheet.create({
   headerWrapper: {
     position: 'absolute',
     top: 0,
-    left: 25,
     width: '100%',
+    marginTop: 30,
   },
   actionWrapper: {
     position: 'absolute',

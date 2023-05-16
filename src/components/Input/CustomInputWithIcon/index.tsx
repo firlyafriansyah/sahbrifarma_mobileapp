@@ -1,7 +1,7 @@
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Pressable, TextInput, View, Text} from 'react-native';
-import styles from '../../../styles/Components/CustomInputStyles';
+import styles from '../../../styles/Components/Input';
 
 interface CustomInputProps {
   label?: string;

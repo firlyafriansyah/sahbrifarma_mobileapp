@@ -2,7 +2,7 @@ import {faCalendar} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {Pressable, Text, TextInput, View} from 'react-native';
-import styles from '../../../styles/Components/CustomInputStyles';
+import styles from '../../../styles/Components/Input';
 import Gap from '../../Gap';
 
 interface CustomInputBloodPressureProps {

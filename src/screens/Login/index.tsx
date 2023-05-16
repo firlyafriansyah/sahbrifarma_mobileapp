@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Image, Text, View} from 'react-native';
 import {IsLogedInContext} from '../../context/AuthContext';
 import {LoginService} from '../../services';
-import styles from '../../styles/LoginScreenStyles';
+import styles from '../../styles/Screen/Login';
 import {DayGenerator, InputCheck} from '../../utils';
 import {
   clearAsyncStorage,
@@ -17,7 +17,7 @@ import {
   LoadingModal,
 } from '../../components';
 
-const LoginScreen = () => {
+const Login = () => {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState(false);
@@ -107,4 +107,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default Login;

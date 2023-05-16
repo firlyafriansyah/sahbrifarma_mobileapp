@@ -5,7 +5,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import * as React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
-import styles from '../../styles/ListActionStyles';
+import styles from '../../../styles/ListActionStyles';
 
 interface ListActionProps {
   title: string;

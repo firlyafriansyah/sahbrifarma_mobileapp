@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import styles from '../../../styles/Components/CustomInputStyles';
+import styles from '../../../styles/Components/Input';
 
 interface CustomInputProps {
   label?: string;

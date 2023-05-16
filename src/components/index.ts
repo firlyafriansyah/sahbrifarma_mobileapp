@@ -4,10 +4,10 @@ import LoadingModal from './Loading';
 import CustomStatusBar from './StatusBar';
 import Header from './Header';
 import ListCard from './ListCard';
-import Card from './Card';
-import ListAction from './ListAction';
+import PatientCard from './PatientCard';
 
 export * from './Input';
+export * from './List';
 export {
   CustomButton,
   Gap,
@@ -15,6 +15,5 @@ export {
   CustomStatusBar,
   Header,
   ListCard,
-  Card,
-  ListAction,
+  PatientCard,
 };

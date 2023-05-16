@@ -2,7 +2,6 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   headerWrapper: {
-    marginTop: 25,
     marginBottom: 5,
   },
   container: {

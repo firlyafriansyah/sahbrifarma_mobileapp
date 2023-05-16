@@ -4,9 +4,9 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    width: '90%',
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 20,
+    marginHorizontal: 20,
   },
   actionOne: {
     display: 'flex',

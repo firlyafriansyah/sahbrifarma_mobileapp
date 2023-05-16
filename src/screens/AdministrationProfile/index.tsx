@@ -128,7 +128,8 @@ const AdministrationProfile = ({navigation}: any) => {
       <View style={styles.startWorkButton}>
         <CustomButton
           buttonText="Mulai Bekerja 🔥"
-          onClick={() => navigation.navigate('PatientCardScanner')}
+          // onClick={() => navigation.navigate('PatientCardScanner')}
+          onClick={() => navigation.navigate('PatientDashboard')}
         />
       </View>
       <LoadingModal visible={isLoading} />

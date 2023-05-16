@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import styles from '../../styles/CardStyles';
+import styles from '../../styles/Components/PatientCard';
 
 interface CardProps {
   name: string;
@@ -17,7 +17,7 @@ interface CardProps {
   onPress: any;
 }
 
-const Card = (props: CardProps) => {
+const PatientCard = (props: CardProps) => {
   const {name, id, birthday, gender, onPress} = props;
 
   return (
@@ -61,4 +61,4 @@ const Card = (props: CardProps) => {
   );
 };
 
-export default Card;
+export default PatientCard;

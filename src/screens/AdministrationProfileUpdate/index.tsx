@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View, Alert} from 'react-native';
+import {View, Alert} from 'react-native';
 import {
   CustomInput,
   CustomInputDate,
@@ -13,6 +13,7 @@ import styles from '../../styles/Screen/AdministrationProfileUpdate';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import {UpdateAdministrationAccount} from '../../services/Administration';
 import {IsLogedInContext} from '../../context/AuthContext';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const AdministrationProfileUpdate = ({route, navigation}: any) => {
   const {loggedInToken} = React.useContext(IsLogedInContext);

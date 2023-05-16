@@ -17,6 +17,7 @@ import {
   AdministrationProfileUpdateScreen,
   LoginScreen,
   PatientCardScannerScreen,
+  PatientDashboardScreen,
   SplashScreen,
 } from './src/screens';
 import {AutoLogin, DatabaseCheck} from './src/services';
@@ -107,7 +108,10 @@ const App = () => {
                 name="PatientCardScanner"
                 component={PatientCardScannerScreen}
               />
-              {/* <Stack.Screen name="PatientDashboard" component={PatientDashboard} /> */}
+              <Stack.Screen
+                name="PatientDashboard"
+                component={PatientDashboardScreen}
+              />
               {/* <Stack.Screen name="EditPatientInformation" component={EditPatientInformationScreen} /> */}
             </Stack.Navigator>
           ) : loggedInRole === 'nurse' ? (
