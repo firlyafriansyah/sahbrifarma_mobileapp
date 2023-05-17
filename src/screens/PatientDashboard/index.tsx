@@ -1,46 +1,63 @@
 import {
+  faHeartPulse,
+  faKitMedical,
   faMedkit,
-  faPen,
   faStethoscope,
   faUserDoctor,
 } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import * as React from 'react';
-import {View, Text} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
-  PatientCard,
   CustomStatusBar,
   Gap,
   Header,
   ListAction,
+  PatientCard,
 } from '../../components';
 import styles from '../../styles/Screen/PatientDashboard';
 
-const Home = ({navigation}: any) => {
+const PatientDashboard = ({route, navigation}: any) => {
+  const [data, setData] = React.useState({});
+
+  React.useEffect(() => {
+    setData(route.params.data);
+  }, [route.params.data]);
+
   return (
     <SafeAreaView>
       <CustomStatusBar translucent />
       <View style={styles.headerWrapper}>
         <Header
           title="Patient Dashboard"
-          actionOne={() => navigation.goBack()}
+          actionOne={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'PatientCardScanner'}],
+            })
+          }
         />
       </View>
       <View style={styles.container}>
         <PatientCard
-          name="Firly Afriansyah"
-          id="234387569387"
-          birthday="20/04/2000"
-          gender="Laki - Laki"
+          name={data.name}
+          id={data.uidPatient}
+          birthday={`${data.dateOfBirth.split('-')[2]}/${data.dateOfBirth.split('-')[1]}/${data.dateOfBirth.split('-')[0]}`}
+          gender={data.sex}
           onPress={() => navigation.navigate('Profile')}
         />
         <Gap height={20} />
-        <ListAction
-          title="Input Hasil Konsultasi"
-          subtitle="Lakukan konsultasi dan lengkapi data pada form"
-          icon={faPen}
-          onPress={() => null}
-        />
+        <View style={styles.buttonActionContainer}>
+          <TouchableOpacity style={styles.buttonActionWrapper}>
+            <FontAwesomeIcon icon={faKitMedical} size={35} color="#6c5ce7" />
+            <Text style={styles.buttonActionText}>Beli Obat</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonActionWrapper}>
+            <FontAwesomeIcon icon={faHeartPulse} size={35} color="#6c5ce7" />
+            <Text style={styles.buttonActionText}>Periksa Kesehatan</Text>
+          </TouchableOpacity>
+        </View>
         <Gap height={20} />
         <Text style={styles.subTitle}>History</Text>
         <ListAction
@@ -68,4 +85,4 @@ const Home = ({navigation}: any) => {
   );
 };
 
-export default Home;
+export default PatientDashboard;

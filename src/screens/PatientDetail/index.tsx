@@ -1,75 +1,22 @@
 import * as React from 'react';
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-  Alert,
-  BackHandler,
-} from 'react-native';
+import {Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {CustomButton, CustomInput, Header} from '../../components';
 import styles from '../../styles/ProfileScreenStyles';
 
 const PatientDetail = ({navigation}: any) => {
   const [editable, setEditable] = React.useState(false);
 
-  React.useEffect(() => {
-    const backAction = () => {
-      if (editable) {
-        Alert.alert(
-          'Hold on!',
-          'Are you sure want to leave from this screen without save the changes?',
-          [
-            {
-              text: 'Cancel',
-              onPress: () => null,
-              style: 'cancel',
-            },
-            {
-              text: 'YES',
-              onPress: () => navigation.goBack(),
-            },
-          ],
-        );
-        return true;
-      }
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-
-    return () => backHandler.remove();
-  }, [editable, navigation]);
+  const saveHandler = () => {
+    console.log('test1');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerWrapper}>
         <Header
-          title="Profile Pasien"
-          action={() => {
-            if (editable) {
-              Alert.alert(
-                'Hold on!',
-                'Are you sure want to leave from this screen without save the changes?',
-                [
-                  {
-                    text: 'Cancel',
-                    onPress: () => null,
-                    style: 'cancel',
-                  },
-                  {
-                    text: 'YES',
-                    onPress: () => navigation.goBack(),
-                  },
-                ],
-              );
-            } else {
-              navigation.goBack();
-            }
-          }}
+          title="Patient Information"
+          actionOne={() => navigation.goBack()}
+          actionTwo={() => saveHandler()}
         />
       </View>
       <ScrollView contentContainerStyle={styles.contentWrapper}>

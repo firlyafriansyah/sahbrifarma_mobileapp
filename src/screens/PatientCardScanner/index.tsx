@@ -12,20 +12,22 @@ import {
   LoadingModal,
 } from '../../components';
 import {IsLogedInContext} from '../../context/AuthContext';
-import PatientCheck from '../../services/PatientCheck';
+import {GetPatientDetail} from '../../services';
 import styles from '../../styles/Screen/PatientCardScanner';
 
 const PatientCardScanner = ({navigation}: any) => {
   const {loggedInToken} = React.useContext(IsLogedInContext);
-  const [idPasien, setIdPasien] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [pasienStatus, setPasienStatus] = React.useState(false);
+  const [idPasien, setIdPasien] = React.useState('');
+  const [data, setData] = React.useState({});
 
   const onReadCodeHandler = (code: string) => {
     setLoading(true);
-    PatientCheck(code, loggedInToken)
-      .then(() => {
+    GetPatientDetail(code, loggedInToken)
+      .then((res: any) => {
         setPasienStatus(true);
+        setData(res);
       })
       .catch(() => {
         Alert.alert('Not Found!', 'Pasien with this id not found?', [
@@ -41,7 +43,7 @@ const PatientCardScanner = ({navigation}: any) => {
   };
 
   const submit = () => {
-    navigation.navigate({name: 'Home'});
+    navigation.navigate('PatientDashboard', {data});
   };
 
   return (
@@ -75,7 +77,10 @@ const PatientCardScanner = ({navigation}: any) => {
         <Text style={styles.title}>Result Scanner</Text>
         <CustomInputWithQuickDelete
           placeholder="ID Pasien . . ."
-          deleteIconAction={() => setIdPasien('')}
+          deleteIconAction={() => {
+            setIdPasien('');
+            setPasienStatus(false);
+          }}
           value={idPasien}
           onChangeText={(value: string) => {
             setIdPasien(value);
@@ -88,16 +93,16 @@ const PatientCardScanner = ({navigation}: any) => {
         <Gap height={30} />
         <View style={styles.manualInputWrapper}>
           {pasienStatus ? (
-            <View style={styles.buttonWrapper}>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={() => submit()}>
               <Text style={styles.buttonText}>ID Verify</Text>
-              <TouchableOpacity onPress={() => submit()}>
-                <FontAwesomeIcon icon={faCheck} size={24} color="#FFFFFF" />
-              </TouchableOpacity>
-            </View>
+              <FontAwesomeIcon icon={faCheck} size={24} color="#FFFFFF" />
+            </TouchableOpacity>
           ) : (
             <View style={styles.buttonDisableWrapper}>
               <Text style={styles.buttonText}>ID Not Found</Text>
-              <TouchableOpacity onPress={() => submit()} disabled>
+              <TouchableOpacity disabled>
                 <FontAwesomeIcon icon={faXmark} size={24} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
