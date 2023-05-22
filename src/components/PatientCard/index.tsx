@@ -42,11 +42,11 @@ const PatientCard = (props: CardProps) => {
               </View>
               <View style={styles.additionalInformationWrapper}>
                 <View style={styles.birthdayWrapper}>
-                  <Text style={styles.birthdayLabel}>Birthday</Text>
+                  <Text style={styles.birthdayLabel}>Umur</Text>
                   <Text style={styles.birthday}>{birthday}</Text>
                 </View>
                 <View>
-                  <Text style={styles.genderLabel}>Gender</Text>
+                  <Text style={styles.genderLabel}>Jenis Kelamin</Text>
                   <Text style={styles.gender}>{gender}</Text>
                 </View>
               </View>

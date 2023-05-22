@@ -7,10 +7,12 @@ interface CustomInputProps {
   label?: string;
   onSelect: any;
   value: string;
+  item: any;
+  editable?: boolean;
 }
 
 const CustomSelect = (props: CustomInputProps) => {
-  const {label = '', onSelect, value} = props;
+  const {label = '', onSelect, value, item, editable = true} = props;
   const [borderColor, setBorderColor] = React.useState('#FFFFFF');
 
   return (
@@ -18,13 +20,15 @@ const CustomSelect = (props: CustomInputProps) => {
       {label !== '' && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
         <Picker
+          enabled={editable}
           style={styles.input}
           onFocus={() => setBorderColor('#5352ED')}
           onBlur={() => setBorderColor('#FFFFFF')}
           selectedValue={value}
           onValueChange={itemValue => onSelect(itemValue)}>
-          <Picker.Item label="Laki - Laki" value="Laki - Laki" />
-          <Picker.Item label="Perempuan" value="Perempuan" />
+          {item.reverse().map((itemValue: any, index: any) => (
+            <Picker.Item key={index} label={itemValue} value={itemValue} />
+          ))}
         </Picker>
       </View>
     </>

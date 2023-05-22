@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Alert} from 'react-native';
+import {View, Alert, KeyboardAvoidingView, ScrollView} from 'react-native';
 import {
   CustomInput,
   CustomInputDate,
@@ -92,73 +92,77 @@ const AdministrationProfileUpdate = ({route, navigation}: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <CustomStatusBar translucent />
-      <View style={styles.headerWrapper}>
-        <Header
-          actionOne={() => navigation.goBack()}
-          actionTwo={() => updateHandler()}
-          actionTwoText="Save"
-          title="Profile Update"
-        />
-      </View>
-      <View style={styles.inputWrapper}>
-        <CustomInput
-          label="UID Administration Account"
-          placeholder="UID . . ."
-          value={data.uidAdministrationAccount.toString()}
-          editable={false}
-          onChangeText={() => null}
-        />
-        <Gap height={20} />
-        <CustomInput
-          label="Username"
-          placeholder="Username . . ."
-          value={data.username}
-          editable={false}
-          onChangeText={() => null}
-        />
-        <Gap height={20} />
-        <CustomInput
-          label="Role"
-          placeholder="Role . . ."
-          value={data.role.charAt(0).toUpperCase() + data.role.slice(1)}
-          editable={false}
-          onChangeText={() => null}
-        />
-        <Gap height={20} />
-        <CustomInput
-          label="Nama Lengkap"
-          placeholder="Fullname . . ."
-          value={fullname}
-          onChangeText={(e: any) => setFullname(e)}
-        />
-        <Gap height={20} />
-        <CustomInputDate
-          label="Tanggal Lahir"
-          date={date}
-          setDate={(e: any) => setDate(e)}
-          month={month}
-          setMonth={(e: any) => setMonth(e)}
-          year={year}
-          setYear={(e: any) => setYear(e)}
-          iconAction={() => dateHandler()}
-        />
-        <Gap height={20} />
-        <CustomSelect
-          label="Jenis Kelamin"
-          onSelect={(e: any) => setSex(e)}
-          value={sex}
-        />
-        <Gap height={20} />
-        <CustomInput
-          label="Status"
-          value={data.status.toUpperCase()}
-          editable={false}
-          placeholder="Status . . ."
-          onChangeText={() => null}
-        />
-      </View>
-      <LoadingModal visible={isLoading} />
+      <KeyboardAvoidingView>
+        <CustomStatusBar translucent />
+        <View style={styles.headerWrapper}>
+          <Header
+            actionOne={() => navigation.goBack()}
+            actionTwo={() => updateHandler()}
+            actionTwoText="Save"
+            title="Profile Update"
+          />
+        </View>
+        <ScrollView style={styles.inputWrapper}>
+          <CustomInput
+            label="UID Administration Account"
+            placeholder="UID . . ."
+            value={data.uidAdministrationAccount.toString()}
+            editable={false}
+            onChangeText={() => null}
+          />
+          <Gap height={20} />
+          <CustomInput
+            label="Username"
+            placeholder="Username . . ."
+            value={data.username}
+            editable={false}
+            onChangeText={() => null}
+          />
+          <Gap height={20} />
+          <CustomInput
+            label="Role"
+            placeholder="Role . . ."
+            value={data.role.charAt(0).toUpperCase() + data.role.slice(1)}
+            editable={false}
+            onChangeText={() => null}
+          />
+          <Gap height={20} />
+          <CustomInput
+            label="Nama Lengkap"
+            placeholder="Fullname . . ."
+            value={fullname}
+            onChangeText={(e: any) => setFullname(e)}
+          />
+          <Gap height={20} />
+          <CustomInputDate
+            label="Tanggal Lahir"
+            date={date}
+            setDate={(e: any) => setDate(e)}
+            month={month}
+            setMonth={(e: any) => setMonth(e)}
+            year={year}
+            setYear={(e: any) => setYear(e)}
+            iconAction={() => dateHandler()}
+          />
+          <Gap height={20} />
+          <CustomSelect
+            label="Jenis Kelamin"
+            onSelect={(e: any) => setSex(e)}
+            value={sex}
+            item={['Laki - laki', 'Perempuan']}
+          />
+          <Gap height={20} />
+          <CustomInput
+            label="Status"
+            value={data.status.toUpperCase()}
+            editable={false}
+            placeholder="Status . . ."
+            onChangeText={() => null}
+          />
+          <Gap height={20} />
+        </ScrollView>
+        <LoadingModal visible={isLoading} />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

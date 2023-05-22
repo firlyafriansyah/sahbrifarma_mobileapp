@@ -15,9 +15,14 @@ import {IsLogedInContext} from './src/context/AuthContext';
 import {
   AdministrationProfileScreen,
   AdministrationProfileUpdateScreen,
+  DoctoralConsultationInputScreen,
   LoginScreen,
+  MedicalTestHistoryScreen,
+  MedicalTestInputScreen,
   PatientCardScannerScreen,
   PatientDashboardScreen,
+  PatientInformationUpdateScreen,
+  PatientQueueScreen,
   SplashScreen,
 } from './src/screens';
 import {AutoLogin, DatabaseCheck} from './src/services';
@@ -112,34 +117,81 @@ const App = () => {
                 name="PatientDashboard"
                 component={PatientDashboardScreen}
               />
-              {/* <Stack.Screen name="EditPatientInformation" component={EditPatientInformationScreen} /> */}
+              <Stack.Screen
+                name="PatientInformationUpdate"
+                component={PatientInformationUpdateScreen}
+              />
+              <Stack.Screen
+                name="MedicalTestHistory"
+                component={MedicalTestHistoryScreen}
+              />
             </Stack.Navigator>
           ) : loggedInRole === 'nurse' ? (
             <Stack.Navigator
               initialRouteName="AdministrationProfile"
               screenOptions={{headerShown: false}}>
               <Stack.Screen
-                name="AdministrationProfileScreen"
+                name="AdministrationProfile"
                 component={AdministrationProfileScreen}
               />
               <Stack.Screen
                 name="AdministrationProfileUpdate"
                 component={AdministrationProfileUpdateScreen}
               />
-              {/* <Stack.Screen name="PatientQueue" component={PatientQueueScreen} /> */}
-              {/* <Stack.Screen name="MedicalTestHistory" component={MedicalTestHistoryScreen} /> */}
-              {/* <Stack.Screen name="InputMedicalTest" component={InputMedicalTestScreen} /> */}
-              {/* <Stack.Screen name="MedicalTestResult" component={MedicalTestResultScreen} /> */}
+              <Stack.Screen
+                name="PatientQueue"
+                component={PatientQueueScreen}
+              />
+              <Stack.Screen
+                name="PatientDashboard"
+                component={PatientDashboardScreen}
+              />
+              <Stack.Screen
+                name="PatientInformationUpdate"
+                component={PatientInformationUpdateScreen}
+              />
+              <Stack.Screen
+                name="MedicalTestInput"
+                component={MedicalTestInputScreen}
+              />
+              <Stack.Screen
+                name="MedicalTestHistory"
+                component={MedicalTestHistoryScreen}
+              />
             </Stack.Navigator>
           ) : loggedInRole === 'doctor' ? (
             <Stack.Navigator
               initialRouteName="AdministrationProfile"
               screenOptions={{headerShown: false}}>
-              {/* <Stack.Screen name="AdministrationProfile" component={AdminstrationProfileScreen} /> */}
-              {/* <Stack.Screen name="PatientQueue" component={PatientQueueScreen} /> */}
+              <Stack.Screen
+                name="AdministrationProfile"
+                component={AdministrationProfileScreen}
+              />
+              <Stack.Screen
+                name="AdministrationProfileUpdate"
+                component={AdministrationProfileUpdateScreen}
+              />
+              <Stack.Screen
+                name="PatientQueue"
+                component={PatientQueueScreen}
+              />
+              <Stack.Screen
+                name="PatientDashboard"
+                component={PatientDashboardScreen}
+              />
+              <Stack.Screen
+                name="PatientInformationUpdate"
+                component={PatientInformationUpdateScreen}
+              />
+              <Stack.Screen
+                name="MedicalTestHistory"
+                component={MedicalTestHistoryScreen}
+              />
               {/* <Stack.Screen name="DoctoralConsultationHistory" component={DoctoralConsultationHistoryScreen} /> */}
-              {/* <Stack.Screen name="InputDoctoralConsultation" component={InputDoctoralConsultationScreen} /> */}
-              {/* <Stack.Screen name="DoctoralConsultationResult" component={DoctoralConsultationResultScreen} /> */}
+              <Stack.Screen
+                name="DoctoralConsultationInput"
+                component={DoctoralConsultationInputScreen}
+              />
               {/* <Stack.Screen name="InputMedicine" component={InputMedicineScreen} /> */}
               {/* <Stack.Screen name="MedicineResult" component={MedicineResultScreen} /> */}
             </Stack.Navigator>

@@ -2,8 +2,6 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    display: 'flex',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
@@ -11,7 +9,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   inputWrapper: {
-    width: '90%',
+    paddingHorizontal: 20,
   },
   label: {
     color: '#000000',

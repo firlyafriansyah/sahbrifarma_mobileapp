@@ -27,7 +27,7 @@ const ListCard = (props: ListCardProps) => {
         <Text style={styles.sequence}>{sequence}</Text>
       </View>
       <View style={styles.informationWrapper}>
-        <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+        <Text style={styles.name}>
           {`${gender === 'Laki - Laki' ? 'TN.' : 'NY.'} ${name}`}
         </Text>
         <Text style={styles.idpasien}>ID. {id}</Text>

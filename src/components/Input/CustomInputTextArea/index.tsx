@@ -9,6 +9,8 @@ interface CustomInputProps {
   value: string;
   editable?: boolean;
   selectTextOnFocus?: boolean;
+  ref?: any;
+  onSubmitEditing?: any;
 }
 
 const CustomInputTextArea = (props: CustomInputProps) => {
@@ -19,6 +21,8 @@ const CustomInputTextArea = (props: CustomInputProps) => {
     value,
     editable = true,
     selectTextOnFocus = false,
+    ref = null,
+    onSubmitEditing = () => null,
   } = props;
   const [borderColor, setBorderColor] = React.useState('#FFFFFF');
   const [height, setHeight] = React.useState(0);
@@ -39,6 +43,8 @@ const CustomInputTextArea = (props: CustomInputProps) => {
           placeholder={placeholder}
           editable={editable}
           selectTextOnFocus={selectTextOnFocus}
+          ref={ref}
+          onSubmitEditing={() => onSubmitEditing()}
         />
       </View>
     </>

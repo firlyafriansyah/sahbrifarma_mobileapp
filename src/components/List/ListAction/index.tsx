@@ -9,7 +9,7 @@ import styles from '../../../styles/ListActionStyles';
 
 interface ListActionProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   icon?: any;
   onPress: any;
 }
@@ -26,7 +26,7 @@ const ListAction = (props: ListActionProps) => {
       </View>
       <View style={styles.contentWrapper}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subTitle}>{subtitle}</Text>
+        {subtitle && <Text style={styles.subTitle}>{subtitle}</Text>}
       </View>
       <View style={styles.arrowWrapper}>
         <FontAwesomeIcon icon={faAngleRight} size={25} color="#00000066" />

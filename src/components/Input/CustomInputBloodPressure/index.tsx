@@ -1,7 +1,5 @@
-import {faCalendar} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
-import {Pressable, Text, TextInput, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 import styles from '../../../styles/Components/Input';
 import Gap from '../../Gap';
 
@@ -15,7 +13,6 @@ interface CustomInputBloodPressureProps {
   setPulse: any;
   editable?: boolean;
   selectTextOnFocus?: boolean;
-  iconAction?: any;
 }
 
 const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
@@ -29,7 +26,6 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
     setPulse,
     editable = true,
     selectTextOnFocus = false,
-    iconAction = null,
   } = props;
   const [borderColor, setBorderColor] = React.useState('#FFFFFF');
 
@@ -37,9 +33,9 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
     <>
       {label !== '' && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
-        <View style={styles.inputWrapper}>
+        <View style={styles.inputDateWrapper}>
           <TextInput
-            style={styles.input}
+            style={styles.inputDate}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -55,7 +51,7 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
           <Text>/</Text>
           <Gap width={10} />
           <TextInput
-            style={styles.input}
+            style={styles.inputDate}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -71,7 +67,7 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
           <Text>/</Text>
           <Gap width={10} />
           <TextInput
-            style={styles.input}
+            style={styles.inputDate}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -84,9 +80,6 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
             maxLength={2}
           />
         </View>
-        <Pressable style={styles.iconWrapper} onPress={() => iconAction()}>
-          <FontAwesomeIcon icon={faCalendar} />
-        </Pressable>
       </View>
     </>
   );

@@ -1,4 +1,3 @@
-import CustomButton from './CustomButton';
 import Gap from './Gap';
 import LoadingModal from './Loading';
 import CustomStatusBar from './StatusBar';
@@ -8,12 +7,5 @@ import PatientCard from './PatientCard';
 
 export * from './Input';
 export * from './List';
-export {
-  CustomButton,
-  Gap,
-  LoadingModal,
-  CustomStatusBar,
-  Header,
-  ListCard,
-  PatientCard,
-};
+export * from './Button';
+export {Gap, LoadingModal, CustomStatusBar, Header, ListCard, PatientCard};

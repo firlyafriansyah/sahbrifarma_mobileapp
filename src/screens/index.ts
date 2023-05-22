@@ -2,10 +2,14 @@ import PatientDashboard from './PatientDashboard';
 import Login from './Login';
 import PatientCardScanner from './PatientCardScanner';
 import Splashscreen from './Splashscreen';
-import ListAntre from './ListAntre';
-import PatientDetail from './PatientDetail';
+import ListAntre from './PatientQueue';
 import AdministrationProfile from './AdministrationProfile';
 import AdministrationProfileUpdate from './AdministrationProfileUpdate';
+import PatientInformationUpdate from './PatientInformationUpdate';
+import MedicalTestHistory from './MedicalTestHistory';
+import PatientQueue from './PatientQueue';
+import MedicalTestInput from './MedicalTestInput';
+import DoctoralConsultationInput from './DoctoralConsultationInput';
 
 export {
   Login as LoginScreen,
@@ -13,7 +17,11 @@ export {
   PatientDashboard as PatientDashboardScreen,
   Splashscreen as SplashScreen,
   ListAntre as ListAntreScreen,
-  PatientDetail as PatientDetailScreen,
   AdministrationProfile as AdministrationProfileScreen,
   AdministrationProfileUpdate as AdministrationProfileUpdateScreen,
+  PatientInformationUpdate as PatientInformationUpdateScreen,
+  MedicalTestHistory as MedicalTestHistoryScreen,
+  PatientQueue as PatientQueueScreen,
+  MedicalTestInput as MedicalTestInputScreen,
+  DoctoralConsultationInput as DoctoralConsultationInputScreen,
 };

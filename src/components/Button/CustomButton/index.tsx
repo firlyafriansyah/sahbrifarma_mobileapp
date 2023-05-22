@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../styles/CustomButtonStyles';
+import styles from '../../../styles/CustomButtonStyles';
 import {TouchableHighlight, View, Text} from 'react-native';
 
 interface CustomButtonProps {

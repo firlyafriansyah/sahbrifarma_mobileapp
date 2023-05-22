@@ -10,6 +10,8 @@ interface CustomInputProps {
   keyboardType?: any;
   editable?: boolean;
   selectTextOnFocus?: boolean;
+  ref?: any;
+  onSubmitEditing?: any;
 }
 
 const CustomInput = (props: CustomInputProps) => {
@@ -21,6 +23,8 @@ const CustomInput = (props: CustomInputProps) => {
     keyboardType = 'default',
     editable = true,
     selectTextOnFocus = false,
+    ref = null,
+    onSubmitEditing = () => null,
   } = props;
   const [borderColor, setBorderColor] = React.useState('#FFFFFF');
 
@@ -39,6 +43,9 @@ const CustomInput = (props: CustomInputProps) => {
           keyboardType={keyboardType}
           editable={editable}
           selectTextOnFocus={selectTextOnFocus}
+          autoFocus={true}
+          ref={ref}
+          onSubmitEditing={() => onSubmitEditing()}
         />
       </View>
     </>

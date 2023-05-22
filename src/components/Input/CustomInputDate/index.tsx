@@ -81,7 +81,9 @@ const CustomInputDate = (props: CustomInputDateProps) => {
             maxLength={4}
           />
         </View>
-        <Pressable style={styles.iconWrapper} onPress={() => iconAction()}>
+        <Pressable
+          style={styles.iconWrapper}
+          onPress={() => (editable ? iconAction() : null)}>
           <FontAwesomeIcon icon={faCalendarDays} size={20} />
         </Pressable>
       </View>

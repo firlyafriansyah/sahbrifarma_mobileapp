@@ -1,5 +1,6 @@
 import {faCheck, faXmark} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {useIsFocused} from '@react-navigation/native';
 import * as React from 'react';
 import {Alert, Image, Text, View} from 'react-native';
 import {Camera, CameraType} from 'react-native-camera-kit';
@@ -12,22 +13,26 @@ import {
   LoadingModal,
 } from '../../components';
 import {IsLogedInContext} from '../../context/AuthContext';
-import {GetPatientDetail} from '../../services';
+import {CheckPatient} from '../../services';
 import styles from '../../styles/Screen/PatientCardScanner';
 
 const PatientCardScanner = ({navigation}: any) => {
   const {loggedInToken} = React.useContext(IsLogedInContext);
-  const [loading, setLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [pasienStatus, setPasienStatus] = React.useState(false);
   const [idPasien, setIdPasien] = React.useState('');
-  const [data, setData] = React.useState({});
+  const isFocused = useIsFocused();
+
+  React.useEffect(() => {
+    setIdPasien('');
+    setPasienStatus(false);
+  }, [isFocused]);
 
   const onReadCodeHandler = (code: string) => {
-    setLoading(true);
-    GetPatientDetail(code, loggedInToken)
-      .then((res: any) => {
+    setIsLoading(true);
+    CheckPatient(code, loggedInToken)
+      .then(() => {
         setPasienStatus(true);
-        setData(res);
       })
       .catch(() => {
         Alert.alert('Not Found!', 'Pasien with this id not found?', [
@@ -39,29 +44,33 @@ const PatientCardScanner = ({navigation}: any) => {
           },
         ]);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   };
 
   const submit = () => {
-    navigation.navigate('PatientDashboard', {data});
+    navigation.navigate('PatientDashboard', {idPasien});
   };
 
   return (
     <View style={styles.container}>
       <CustomStatusBar translucent barStyle="white-content" />
-      <Camera
-        style={styles.scannerCamera}
-        cameraType={CameraType.Back}
-        scanBarcode={true}
-        onReadCode={(code: any) => {
-          setIdPasien(code.nativeEvent.codeStringValue.toString());
-          if (idPasien === '') {
-            idPasien.trim() !== ''
-              ? null
-              : onReadCodeHandler(code.nativeEvent.codeStringValue.toString());
-          }
-        }}
-      />
+      {isFocused && (
+        <Camera
+          style={styles.scannerCamera}
+          cameraType={CameraType.Back}
+          scanBarcode={true}
+          onReadCode={(code: any) => {
+            setIdPasien(code.nativeEvent.codeStringValue.toString());
+            if (idPasien === '') {
+              idPasien.trim() !== ''
+                ? null
+                : onReadCodeHandler(
+                    code.nativeEvent.codeStringValue.toString(),
+                  );
+            }
+          }}
+        />
+      )}
       <Image
         source={require('../../../assets/images/scanner_frame.png')}
         style={styles.qrScannerImage}
@@ -109,7 +118,7 @@ const PatientCardScanner = ({navigation}: any) => {
           )}
         </View>
       </View>
-      <LoadingModal visible={loading} />
+      <LoadingModal visible={isLoading} />
     </View>
   );
 };
