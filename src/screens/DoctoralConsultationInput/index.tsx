@@ -1,17 +1,27 @@
+import {faPlus, faTrashCan, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
-import {Alert, KeyboardAvoidingView, Text} from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Modal,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   CustomInput,
   CustomInputTextArea,
+  CustomSelect,
   CustomStatusBar,
   Gap,
   Header,
   LoadingModal,
 } from '../../components';
 import {IsLogedInContext} from '../../context/AuthContext';
-import {AddMedicalTest} from '../../services';
+import {AddDoctoralAndMedicine} from '../../services';
 import styles from '../../styles/Screen/InputTest';
 
 const DoctoralConsultationInput = ({route, navigation}: any) => {
@@ -20,10 +30,19 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
   const [anamnesis, setAnamensis] = React.useState('');
   const [diagnosis, setDiagnosis] = React.useState('');
   const [notes, setNotes] = React.useState('');
+  const [medicine, setMedicine] = React.useState('');
+  const [preparation, setPreparation] = React.useState('Injections');
+  const [dosage, setDosage] = React.useState('');
+  const [rules, setRules] = React.useState('');
+  const [medicineList, setMedicineList] = React.useState<string[]>([]);
+  const [preparationList, setPreparationList] = React.useState<string[]>([]);
+  const [dosageList, setDosageList] = React.useState<string[]>([]);
+  const [rulesList, setRulesList] = React.useState<string[]>([]);
   const [isLaoding, setIsLoading] = React.useState(false);
+  const [modalMedicineRequest, setModalMedicineRequest] = React.useState(false);
+  const [error, setError] = React.useState('');
+  const [indexMedicine, setIndexMedicine] = React.useState<number>(-1);
   const {idPasien} = route.params;
-  const input1 = React.useRef(null);
-  const input2 = React.useRef(null);
 
   const saveHandler = () => {
     if (anamnesis === '' || diagnosis === '') {
@@ -32,12 +51,6 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
         'Anamnesis dan diagnosis harus di isi sesaui dengan kondisi pasien!',
       );
     } else {
-      const data = {
-        allergies,
-        anamnesis,
-        diagnosis,
-        notes,
-      };
       Alert.alert(
         'Konfirmasi Hasil Konsultasi Pasien!',
         'Semua data yang saya masukan sudah sesuai dengan kondisi pasien!',
@@ -46,7 +59,17 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
             text: 'Ya',
             onPress: () => {
               setIsLoading(true);
-              AddMedicalTest(data, idPasien, loggedInToken)
+              const data = {
+                allergies,
+                anamnesis,
+                diagnosis,
+                notes,
+                medicine: medicineList.join('|'),
+                preparation: preparationList.join('|'),
+                dosage: dosageList.join('|'),
+                rules: rulesList.join('|'),
+              };
+              AddDoctoralAndMedicine(data, idPasien, loggedInToken)
                 .then(() =>
                   navigation.reset({
                     index: 0,
@@ -66,10 +89,82 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
     }
   };
 
+  const closeModalHandler = () => {
+    setMedicine('');
+    setPreparation('');
+    setDosage('');
+    setRules('');
+    setError('');
+    setModalMedicineRequest(false);
+  };
+
+  const saveMedicineRequestHandler = () => {
+    if (!medicine || !dosage) {
+      setError('Masukan resep obat!');
+    } else {
+      if (indexMedicine >= 0) {
+        setMedicineList([
+          ...medicineList.slice(0, indexMedicine),
+          ...medicineList.slice(indexMedicine + 1, medicineList.length),
+        ]);
+        setPreparationList([
+          ...preparationList.slice(0, indexMedicine),
+          ...preparationList.slice(indexMedicine + 1, preparationList.length),
+        ]);
+        setDosageList([
+          ...dosageList.slice(0, indexMedicine),
+          ...dosageList.slice(indexMedicine + 1, dosageList.length),
+        ]);
+        setRulesList([
+          ...rulesList.slice(0, indexMedicine),
+          ...rulesList.slice(indexMedicine + 1, rulesList.length),
+        ]);
+      }
+      setMedicineList(oldData => [...oldData, medicine]);
+      setPreparationList(oldData => [...oldData, preparation]);
+      setDosageList(oldData => [...oldData, dosage]);
+      setRulesList(oldData => [...oldData, rules || '-']);
+      closeModalHandler();
+    }
+  };
+
+  const clickMedicineListHandler = (index: number) => {
+    setIndexMedicine(index);
+    setMedicine(medicineList[index]);
+    setPreparation(preparationList[index]);
+    setDosage(dosageList[index]);
+    setRules(rulesList[index]);
+    setModalMedicineRequest(true);
+  };
+
+  const deleteMedicineRequestHandler = (index: number) => {
+    setMedicineList([
+      ...medicineList.slice(0, index),
+      ...medicineList.slice(index + 1, medicineList.length),
+    ]);
+    setPreparationList([
+      ...preparationList.slice(0, index),
+      ...preparationList.slice(index + 1, preparationList.length),
+    ]);
+    setDosageList([
+      ...dosageList.slice(0, index),
+      ...dosageList.slice(index + 1, dosageList.length),
+    ]);
+    setRulesList([
+      ...rulesList.slice(0, index),
+      ...rulesList.slice(index + 1, rulesList.length),
+    ]);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.wrapper}>
-        <CustomStatusBar translucent />
+        <CustomStatusBar
+          translucent
+          bgColor={
+            modalMedicineRequest ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0)'
+          }
+        />
         <Header
           title="Konsultasi & Obat"
           actionOne={() => navigation.goBack()}
@@ -86,7 +181,6 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
             placeholder="Alergi . . ."
             value={allergies}
             onChangeText={(e: any) => setAllergies(e)}
-            onSubmitEditing={() => input1.current.focus()}
           />
           <Gap height={5} />
           <Text>Pisahkan setiap alergi dengan koma (,)</Text>
@@ -96,7 +190,6 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
             placeholder="Anamnesis . . ."
             value={anamnesis}
             onChangeText={(e: any) => setAnamensis(e)}
-            ref={input1}
           />
           <Gap height={20} />
           <CustomInputTextArea
@@ -113,10 +206,116 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
             onChangeText={(e: any) => setNotes(e)}
           />
           <Gap height={40} />
-          <Text style={styles.title}>Request Obat Apoteker</Text>
+          <View style={styles.requestMedicineWrapper}>
+            <Text style={styles.title}>Request Obat Apoteker</Text>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => setModalMedicineRequest(true)}>
+              <FontAwesomeIcon icon={faPlus} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+          <Gap height={20} />
+          {medicineList.length <= 0 ? (
+            <Text>Belum ada list obat yang akan diminta.</Text>
+          ) : (
+            medicineList.map((med, index) => (
+              <>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.listMedicineRequestCard}
+                  onPress={() => clickMedicineListHandler(index)}>
+                  <View>
+                    <Text style={styles.medicineRequest}>
+                      {med} - {preparationList[index]} - {dosageList[index]}gr
+                    </Text>
+                    <Text style={styles.medicineRequest}>
+                      {rulesList[index]}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.deleteButtonWrapper}
+                    onPress={() => deleteMedicineRequestHandler(index)}>
+                    <FontAwesomeIcon
+                      icon={faTrashCan}
+                      size={22}
+                      color="#e84118"
+                    />
+                  </TouchableOpacity>
+                </TouchableOpacity>
+                <Gap height={10} />
+              </>
+            ))
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
       <LoadingModal visible={isLaoding} />
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalMedicineRequest}>
+        <View style={styles.modalRequestContainer}>
+          <View style={styles.modalRequestWrapper}>
+            <View style={styles.modalRequestHeaderWrapper}>
+              <Text style={styles.modalRequestTitle}>Tambah Obat</Text>
+              <TouchableOpacity onPress={() => closeModalHandler()}>
+                <FontAwesomeIcon icon={faXmark} size={23} />
+              </TouchableOpacity>
+            </View>
+            <Gap height={20} />
+            {error && (
+              <>
+                <Text style={styles.error}>{error}</Text>
+                <Gap height={10} />
+              </>
+            )}
+            <CustomInput
+              label="Medicine"
+              placeholder="Medicine . . ."
+              onChangeText={(e: any) => setMedicine(e)}
+              value={medicine}
+            />
+            <Gap height={10} />
+            <CustomSelect
+              label="Preparation"
+              onSelect={(e: any) => setPreparation(e)}
+              value={preparation}
+              item={[
+                'Liquid',
+                'Tablet',
+                'Capsules',
+                'Topical',
+                'Drops',
+                'Inhalers',
+                'Injections',
+              ]}
+            />
+            <Gap height={10} />
+            <CustomInput
+              label="Dosage (gr)"
+              placeholder="Dosage . . ."
+              keyboardType="numeric"
+              onChangeText={(e: any) => setDosage(e)}
+              value={dosage}
+            />
+            <Gap height={10} />
+            <CustomInput
+              label="Rules"
+              placeholder="Rules . . ."
+              onChangeText={(e: any) => setRules(e)}
+              value={rules}
+            />
+            <Gap height={40} />
+            <View style={styles.modalRequestButtonWrapper}>
+              <TouchableOpacity onPress={() => saveMedicineRequestHandler()}>
+                <Text style={styles.modalRequestButtonText}>
+                  {indexMedicine >= 0 ? 'Update' : 'Save'}
+                </Text>
+              </TouchableOpacity>
+              <Gap width={5} />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

@@ -13,6 +13,43 @@ const styles = StyleSheet.create({
   inputWrapper: {
     paddingHorizontal: 20,
   },
+  requestMedicineWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  addButton: {
+    backgroundColor: '#5352ED',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+    borderRadius: 7,
+  },
+  listMedicineRequestCard: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#FFFFFF',
+    elevation: 1,
+    borderWidth: 1,
+    borderRadius: 15,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  medicineRequest: {
+    fontSize: 18,
+    fontFamily: 'Poppins-Regular',
+    color: '#000000',
+  },
+  deleteButtonWrapper: {
+    width: '10%',
+    height: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
     fontFamily: 'Poppins-Medium',
     fontSize: 22,
@@ -27,6 +64,45 @@ const styles = StyleSheet.create({
   },
   tempWrapper: {
     width: '20%',
+  },
+  modalRequestContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  modalRequestWrapper: {
+    display: 'flex',
+    backgroundColor: '#FFFFFF',
+    width: '80%',
+    padding: 20,
+    borderRadius: 15,
+  },
+  modalRequestHeaderWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  modalRequestTitle: {
+    fontSize: 20,
+    fontFamily: 'Poppins-Medium',
+    color: '#000000',
+  },
+  error: {
+    textAlign: 'center',
+    color: '#e84118',
+  },
+  modalRequestButtonWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'flex-end',
+  },
+  modalRequestButtonText: {
+    fontSize: 18,
+    fontFamily: 'Poppins-Regular',
+    color: '#5783FC',
   },
 });
 
