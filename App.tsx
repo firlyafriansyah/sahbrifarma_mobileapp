@@ -184,21 +184,39 @@ const App = () => {
                 component={PatientInformationUpdateScreen}
               />
               <Stack.Screen
+                name="DoctoralConsultationInput"
+                component={DoctoralConsultationInputScreen}
+              />
+              <Stack.Screen
                 name="MedicalTestHistory"
                 component={MedicalTestHistoryScreen}
               />
               {/* <Stack.Screen name="DoctoralConsultationHistory" component={DoctoralConsultationHistoryScreen} /> */}
-              <Stack.Screen
-                name="DoctoralConsultationInput"
-                component={DoctoralConsultationInputScreen}
-              />
-              {/* <Stack.Screen name="InputMedicine" component={InputMedicineScreen} /> */}
-              {/* <Stack.Screen name="MedicineResult" component={MedicineResultScreen} /> */}
             </Stack.Navigator>
           ) : loggedInRole === 'pharmacist' ? (
             <Stack.Navigator
               initialRouteName="AdministrationProfile"
               screenOptions={{headerShown: false}}>
+              <Stack.Screen
+                name="AdministrationProfile"
+                component={AdministrationProfileScreen}
+              />
+              <Stack.Screen
+                name="AdministrationProfileUpdate"
+                component={AdministrationProfileUpdateScreen}
+              />
+              <Stack.Screen
+                name="PatientQueue"
+                component={PatientQueueScreen}
+              />
+              <Stack.Screen
+                name="PatientDashboard"
+                component={PatientDashboardScreen}
+              />
+              <Stack.Screen
+                name="PatientInformationUpdate"
+                component={PatientInformationUpdateScreen}
+              />
               {/* <Stack.Screen name="AdministrationProfile" component={AdminstrationProfileScreen} /> */}
               {/* <Stack.Screen name="PatientQueue" component={PatientQueueScreen} /> */}
               {/* <Stack.Screen name="MedicineRequested" component={MedicineRequestedScreen} /> */}

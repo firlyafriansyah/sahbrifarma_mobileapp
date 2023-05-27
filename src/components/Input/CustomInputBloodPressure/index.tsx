@@ -46,9 +46,10 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
             editable={editable}
             selectTextOnFocus={selectTextOnFocus}
             maxLength={3}
+            placeholderTextColor="#a9abb0"
           />
           <Gap width={10} />
-          <Text>/</Text>
+          <Text style={styles.slash}>/</Text>
           <Gap width={10} />
           <TextInput
             style={styles.inputDate}
@@ -62,9 +63,10 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
             editable={editable}
             selectTextOnFocus={selectTextOnFocus}
             maxLength={2}
+            placeholderTextColor="#a9abb0"
           />
           <Gap width={10} />
-          <Text>/</Text>
+          <Text style={styles.slash}>/</Text>
           <Gap width={10} />
           <TextInput
             style={styles.inputDate}
@@ -78,6 +80,7 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
             editable={editable}
             selectTextOnFocus={selectTextOnFocus}
             maxLength={2}
+            placeholderTextColor="#a9abb0"
           />
         </View>
       </View>

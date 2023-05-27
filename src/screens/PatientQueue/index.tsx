@@ -50,7 +50,7 @@ const PatientQueue = ({navigation}: any) => {
         }>
         <View style={styles.listWrapper}>
           {data.length <= 0 ? (
-            <Text style={styles.endText}>Tidak ada antrean konsultasi</Text>
+            <Text style={styles.endText}>Tidak ada antrean</Text>
           ) : (
             <>
               {data.map((res, index) => (

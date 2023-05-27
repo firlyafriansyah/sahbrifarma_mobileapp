@@ -51,6 +51,7 @@ const CustomInputDate = (props: CustomInputDateProps) => {
             editable={editable}
             selectTextOnFocus={selectTextOnFocus}
             maxLength={2}
+            placeholderTextColor="#a9abb0"
           />
           <Text style={styles.slash}>/</Text>
           <TextInput
@@ -65,6 +66,7 @@ const CustomInputDate = (props: CustomInputDateProps) => {
             editable={editable}
             selectTextOnFocus={selectTextOnFocus}
             maxLength={2}
+            placeholderTextColor="#a9abb0"
           />
           <Text style={styles.slash}>/</Text>
           <TextInput
@@ -79,6 +81,7 @@ const CustomInputDate = (props: CustomInputDateProps) => {
             editable={editable}
             selectTextOnFocus={selectTextOnFocus}
             maxLength={4}
+            placeholderTextColor="#a9abb0"
           />
         </View>
         <Pressable

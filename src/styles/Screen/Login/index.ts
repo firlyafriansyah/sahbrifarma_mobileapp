@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 24,
+    color: '#2F3542',
     fontFamily: 'Poppins-Light',
     textAlign: 'center',
   },

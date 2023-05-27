@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   subTitle: {
+    color: '#000000',
     fontFamily: 'Poppins-Light',
   },
   arrowWrapper: {

@@ -43,6 +43,7 @@ const CustomInputWithQuickDelete = (props: CustomInputProps) => {
           keyboardType={keyboardType}
           editable={editable}
           selectTextOnFocus={selectTextOnFocus}
+          placeholderTextColor="#a9abb0"
         />
         <Pressable onPress={() => deleteIconAction()}>
           <FontAwesomeIcon icon={faXmark} size={22} />

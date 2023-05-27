@@ -31,7 +31,7 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
   const [diagnosis, setDiagnosis] = React.useState('');
   const [notes, setNotes] = React.useState('');
   const [medicine, setMedicine] = React.useState('');
-  const [preparation, setPreparation] = React.useState('Injections');
+  const [preparation, setPreparation] = React.useState('Tablet');
   const [dosage, setDosage] = React.useState('');
   const [rules, setRules] = React.useState('');
   const [medicineList, setMedicineList] = React.useState<string[]>([]);
@@ -91,7 +91,7 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
 
   const closeModalHandler = () => {
     setMedicine('');
-    setPreparation('');
+    setPreparation('Tablet');
     setDosage('');
     setRules('');
     setError('');
@@ -210,7 +210,10 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
             <Text style={styles.title}>Request Obat Apoteker</Text>
             <TouchableOpacity
               style={styles.addButton}
-              onPress={() => setModalMedicineRequest(true)}>
+              onPress={() => {
+                setIndexMedicine(-1);
+                setModalMedicineRequest(true);
+              }}>
               <FontAwesomeIcon icon={faPlus} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
@@ -242,7 +245,6 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
                     />
                   </TouchableOpacity>
                 </TouchableOpacity>
-                <Gap height={10} />
               </>
             ))
           )}

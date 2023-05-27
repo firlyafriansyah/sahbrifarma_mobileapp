@@ -39,6 +39,7 @@ const CustomInputTextArea = (props: CustomInputProps) => {
           placeholder={placeholder}
           editable={editable}
           selectTextOnFocus={selectTextOnFocus}
+          placeholderTextColor="#a9abb0"
         />
       </View>
     </>

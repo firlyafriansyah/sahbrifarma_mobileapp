@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: '#FFFFFF',
     elevation: 1,
+    color: '#000000',
   },
   label: {
     color: '#000000',
@@ -18,10 +19,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   slash: {
+    color: '#a9abb0',
     fontFamily: 'Poppins-Regular',
     fontSize: 16,
   },
   input: {
+    color: '#2F3542',
     paddingVertical: 10,
     flex: 1,
     fontFamily: 'Poppins-Regular',
@@ -31,6 +34,7 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   inputDate: {
+    color: '#2F3542',
     paddingVertical: 10,
     fontFamily: 'Poppins-Regular',
     fontSize: 16,

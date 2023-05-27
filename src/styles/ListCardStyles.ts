@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     marginVertical: 1,
   },
   idpasien: {
+    color: '#000000',
     fontSize: 16,
     fontFamily: 'Poppins-Light',
   },

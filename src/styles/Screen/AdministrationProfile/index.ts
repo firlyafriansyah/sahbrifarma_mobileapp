@@ -16,12 +16,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: 'Poppins-Light',
     textAlign: 'center',
+    color: '#2F3542',
   },
   descriptionTitle: {
     fontSize: 20,
     fontFamily: 'Poppins-Light',
     textAlign: 'center',
     textTransform: 'capitalize',
+    color: '#2F3542',
   },
   logo: {
     width: '40%',

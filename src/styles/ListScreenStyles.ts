@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     marginBottom: 80,
   },
   endText: {
+    color: '#000000',
     fontFamily: 'Poppins-Regular',
     marginVertical: 5,
   },

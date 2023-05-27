@@ -25,6 +25,8 @@ const CustomSelect = (props: CustomInputProps) => {
           onFocus={() => setBorderColor('#5352ED')}
           onBlur={() => setBorderColor('#FFFFFF')}
           selectedValue={value}
+          selectionColor="#000000"
+          dropdownIconColor="#000000"
           onValueChange={itemValue => onSelect(itemValue)}>
           {item.reverse().map((itemValue: any, index: any) => (
             <Picker.Item key={index} label={itemValue} value={itemValue} />

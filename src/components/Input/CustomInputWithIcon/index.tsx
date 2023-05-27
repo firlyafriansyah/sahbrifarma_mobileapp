@@ -44,6 +44,7 @@ const CustomInputWithIcon = (props: CustomInputProps) => {
           keyboardType={keyboardType}
           editable={editable}
           selectTextOnFocus={selectTextOnFocus}
+          placeholderTextColor="#a9abb0"
         />
         <Pressable onPress={() => onPressIcon()}>
           <FontAwesomeIcon icon={icon} size={22} />

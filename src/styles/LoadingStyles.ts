@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
     textAlign: 'center',
+    color: '#000000',
   },
 });
 

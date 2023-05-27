@@ -40,6 +40,9 @@ const Login = () => {
             storeDataAsyncStorage('@loggedUser', {
               loggedInRole: res.role,
               loggedInToken: res.token,
+            }).catch((err: any) => {
+              setError(true);
+              setErrorMessage(err);
             });
             setLoggedInRole(res.role);
             setLoggedInToken(res.token);

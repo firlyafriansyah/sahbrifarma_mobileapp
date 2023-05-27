@@ -149,7 +149,7 @@ const AdministrationProfileUpdate = ({route, navigation}: any) => {
             label="Jenis Kelamin"
             onSelect={(e: any) => setSex(e)}
             value={sex}
-            item={['Laki - laki', 'Perempuan']}
+            item={['Laki - Laki', 'Perempuan']}
           />
           <Gap height={20} />
           <CustomInput

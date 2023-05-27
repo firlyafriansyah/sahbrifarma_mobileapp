@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
   },
   id: {
+    color: '#000000',
     fontSize: 18,
     fontFamily: 'Poppins-Light',
     letterSpacing: 2,
@@ -49,6 +50,7 @@ const styles = StyleSheet.create({
     marginRight: 30,
   },
   birthdayLabel: {
+    color: '#000000',
     fontFamily: 'Poppins-Light',
   },
   birthday: {
@@ -56,6 +58,7 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   genderLabel: {
+    color: '#000000',
     fontFamily: 'Poppins-Light',
   },
   gender: {
