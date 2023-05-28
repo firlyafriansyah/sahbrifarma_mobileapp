@@ -23,6 +23,7 @@ import {
   PatientDashboardScreen,
   PatientInformationUpdateScreen,
   PatientQueueScreen,
+  RequestedMedicineScreen,
   SplashScreen,
 } from './src/screens';
 import {AutoLogin, DatabaseCheck} from './src/services';
@@ -34,6 +35,7 @@ const App = () => {
   const [loggedInRole, setLoggedInRole] = React.useState('');
   const [loggedInToken, setLoggedInToken] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
+  const [reload, setReload] = React.useState(false);
   const isLoggedInValue = React.useMemo(
     () => ({
       loggedInRole,
@@ -46,6 +48,7 @@ const App = () => {
 
   React.useEffect(() => {
     setIsLoading(true);
+    setReload(false);
     DatabaseCheck.then(() => {
       getDataAsyncStorage('@loggedUser').then(res => {
         if (res) {
@@ -83,11 +86,11 @@ const App = () => {
         },
         {
           text: 'Try Again',
-          onPress: () => DevSettings.reload(),
+          onPress: () => setReload(true),
         },
       ]);
     });
-  }, []);
+  }, [reload]);
 
   return (
     <IsLogedInContext.Provider value={isLoggedInValue}>
@@ -216,6 +219,10 @@ const App = () => {
               <Stack.Screen
                 name="PatientInformationUpdate"
                 component={PatientInformationUpdateScreen}
+              />
+              <Stack.Screen
+                name="RequestedMedicine"
+                component={RequestedMedicineScreen}
               />
               {/* <Stack.Screen name="AdministrationProfile" component={AdminstrationProfileScreen} /> */}
               {/* <Stack.Screen name="PatientQueue" component={PatientQueueScreen} /> */}

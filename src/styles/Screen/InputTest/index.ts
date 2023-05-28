@@ -10,6 +10,9 @@ const styles = StyleSheet.create({
   wrapper: {
     display: 'flex',
   },
+  allergiesText: {
+    color: '#000000',
+  },
   inputWrapper: {
     paddingHorizontal: 20,
   },

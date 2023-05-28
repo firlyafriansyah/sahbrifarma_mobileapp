@@ -10,6 +10,7 @@ import MedicalTestHistory from './MedicalTestHistory';
 import PatientQueue from './PatientQueue';
 import MedicalTestInput from './MedicalTestInput';
 import DoctoralConsultationInput from './DoctoralConsultationInput';
+import RequestedMedicine from './RequestedMedicine';
 
 export {
   Login as LoginScreen,
@@ -24,4 +25,5 @@ export {
   PatientQueue as PatientQueueScreen,
   MedicalTestInput as MedicalTestInputScreen,
   DoctoralConsultationInput as DoctoralConsultationInputScreen,
+  RequestedMedicine as RequestedMedicineScreen,
 };

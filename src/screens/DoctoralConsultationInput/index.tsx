@@ -1,4 +1,4 @@
-import {faPlus, faTrashCan, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {faPlus, faXmark} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {
@@ -18,6 +18,7 @@ import {
   CustomStatusBar,
   Gap,
   Header,
+  ListMedicineRequest,
   LoadingModal,
 } from '../../components';
 import {IsLogedInContext} from '../../context/AuthContext';
@@ -183,7 +184,9 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
             onChangeText={(e: any) => setAllergies(e)}
           />
           <Gap height={5} />
-          <Text>Pisahkan setiap alergi dengan koma (,)</Text>
+          <Text style={styles.allergiesText}>
+            Pisahkan setiap alergi dengan koma (,)
+          </Text>
           <Gap height={20} />
           <CustomInputTextArea
             label="Anamnesis"
@@ -222,30 +225,16 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
             <Text>Belum ada list obat yang akan diminta.</Text>
           ) : (
             medicineList.map((med, index) => (
-              <>
-                <TouchableOpacity
-                  key={index}
-                  style={styles.listMedicineRequestCard}
-                  onPress={() => clickMedicineListHandler(index)}>
-                  <View>
-                    <Text style={styles.medicineRequest}>
-                      {med} - {preparationList[index]} - {dosageList[index]}gr
-                    </Text>
-                    <Text style={styles.medicineRequest}>
-                      {rulesList[index]}
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    style={styles.deleteButtonWrapper}
-                    onPress={() => deleteMedicineRequestHandler(index)}>
-                    <FontAwesomeIcon
-                      icon={faTrashCan}
-                      size={22}
-                      color="#e84118"
-                    />
-                  </TouchableOpacity>
-                </TouchableOpacity>
-              </>
+              <ListMedicineRequest
+                key={index}
+                index={index}
+                medicine={med}
+                preparation={preparationList[index]}
+                dosage={parseInt(dosageList[index], 10)}
+                rules={rulesList[index]}
+                onPress={() => clickMedicineListHandler(index)}
+                deleteAction={() => deleteMedicineRequestHandler(index)}
+              />
             ))
           )}
         </ScrollView>

@@ -14,7 +14,7 @@ import {GetQueueList} from '../../services';
 import styles from '../../styles/ListScreenStyles';
 
 const PatientQueue = ({navigation}: any) => {
-  const {loggedInToken} = React.useContext(IsLogedInContext);
+  const {loggedInToken, loggedInRole} = React.useContext(IsLogedInContext);
   const [data, setData] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -36,7 +36,11 @@ const PatientQueue = ({navigation}: any) => {
   }, [loggedInToken]);
 
   const navigationHandler = (idPasien: string) => {
-    navigation.navigate('PatientDashboard', {idPasien});
+    if (loggedInRole === 'pharmacist') {
+      navigation.navigate('RequestedMedicine', {idPasien});
+    } else {
+      navigation.navigate('PatientDashboard', {idPasien});
+    }
   };
 
   return (
