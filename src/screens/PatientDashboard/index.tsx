@@ -1,12 +1,15 @@
 import {
   faHeartPulse,
   faKitMedical,
+  faMedkit,
   faStethoscope,
 } from '@fortawesome/free-solid-svg-icons';
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import {useIsFocused} from '@react-navigation/native';
 import * as React from 'react';
-import {Alert, ScrollView, Text, View} from 'react-native';
+import {Alert, ScrollView, Text, View, PermissionsAndroid} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import ViewShot from 'react-native-view-shot';
 import {
   ActionButton,
   CustomButton,
@@ -19,9 +22,14 @@ import {
   PatientCard,
 } from '../../components';
 import {IsLogedInContext} from '../../context/AuthContext';
-import {CheckQueue, GetPatientDetail, UpdateQueue} from '../../services';
+import {
+  CheckQueue,
+  GetPatientDetail,
+  GetVisitHistory,
+  GetVisitHistoryDate,
+  UpdateQueue,
+} from '../../services';
 import styles from '../../styles/Screen/PatientDashboard';
-import {AgeCalculator} from '../../utils';
 
 const PatientDashboard = ({route, navigation}: any) => {
   const {loggedInToken, loggedInRole} = React.useContext(IsLogedInContext);
@@ -30,8 +38,12 @@ const PatientDashboard = ({route, navigation}: any) => {
   const [dateOfBirth, setDateOfBirth] = React.useState('');
   const [sex, setSex] = React.useState('');
   const [isLaoding, setIsLoading] = React.useState(false);
+  const [visitDate, setVisitDate] = React.useState<string[]>([]);
+  const [visitHistory, setVisitHistory] = React.useState<string[]>([]);
+  const [selectedVisitDate, setSelectedVisitDate] = React.useState('');
   const {idPasien} = route.params;
   const isFocused = useIsFocused();
+  const viewShotRef = React.useRef(null);
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -44,12 +56,39 @@ const PatientDashboard = ({route, navigation}: any) => {
       })
       .catch((err: any) => Alert.alert('Error', err))
       .finally(() => setIsLoading(false));
-  }, [idPasien, loggedInToken, isFocused]);
+  }, [idPasien, loggedInToken]);
+
+  React.useEffect(() => {
+    setVisitDate([]);
+    setIsLoading(true);
+    GetVisitHistoryDate(idPasien, loggedInToken)
+      .then((res: any) => {
+        setSelectedVisitDate(res[0].visitDate);
+        res.map((resMap: any) => {
+          setVisitDate(oldData => [...oldData, resMap.visitDate]);
+        });
+      })
+      .catch(err => Alert.alert('Error', err))
+      .finally(() => setIsLoading(false));
+  }, [idPasien, loggedInToken]);
+
+  React.useEffect(() => {
+    setVisitHistory([]);
+    setIsLoading(true);
+    if (selectedVisitDate) {
+      GetVisitHistory(idPasien, selectedVisitDate, loggedInToken)
+        .then((res: any) => {
+          setVisitHistory(old => [...old, res]);
+        })
+        .catch(err => Alert.alert('Error', err))
+        .finally(() => setIsLoading(false));
+    }
+  }, [idPasien, loggedInToken, selectedVisitDate]);
 
   const actionButtonHandler = (type: string) => {
     Alert.alert(
-      'Konfirmasi Tindakan',
-      `Pasien ini akan dimasukan kedalam list antrean ${type}!`,
+      'Konfirmasi Tindakan!',
+      `Pasien ini akan dimasukan kedalam list antrean ${type}.`,
       [
         {
           text: 'Oke',
@@ -73,11 +112,11 @@ const PatientDashboard = ({route, navigation}: any) => {
                       routes: [{name: 'AdministrationProfile'}],
                     }),
                   )
-                  .catch((err: any) => Alert.alert('Error', err))
+                  .catch((err: any) => Alert.alert('Error!', err))
                   .finally(() => setIsLoading(false));
               })
               .catch((err: any) => {
-                Alert.alert('Error', err);
+                Alert.alert('Error!', err);
               })
               .finally(() => setIsLoading(false));
           },
@@ -90,29 +129,87 @@ const PatientDashboard = ({route, navigation}: any) => {
     );
   };
 
+  const onCapture = () => {
+    viewShotRef.current.capture().then(res => {
+      if (Platform.OS === 'android') {
+        if (!getPermissionAndroid()) {
+          return;
+        }
+      }
+
+      const image = CameraRoll.save(res, {type: 'photo'});
+      if (image) {
+        Alert.alert(
+          'Gambar berhasil disimpan',
+          'Gambar telah tersimpan di gallery.',
+          [{text: 'OK', onPress: () => {}}],
+          {cancelable: false},
+        );
+      }
+    });
+  };
+
+  const getPermissionAndroid = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Izin Unduh Gambar',
+          message: 'Izinkan aplikasi ini untuk menyimpan gambar di galery!',
+          buttonNegative: 'Tidak',
+          buttonPositive: 'Izinkan',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      }
+    } catch (err) {
+      Alert.alert(
+        'Simpan gambar',
+        'Gagal menyimpan gambar: ' + err.message,
+        [{text: 'OK', onPress: () => {}}],
+        {cancelable: false},
+      );
+    }
+  };
+
   return (
     <SafeAreaView>
       <CustomStatusBar translucent />
       <View style={styles.headerWrapper}>
         <Header
-          title="Patient Dashboard"
+          title="Rekam Medis Pasien"
           actionOne={() => navigation.goBack()}
         />
       </View>
       <ScrollView style={styles.container}>
-        <PatientCard
-          name={name}
-          id={idPasien}
-          birthday={AgeCalculator(dateOfBirth)}
-          gender={sex}
-          onPress={() =>
-            navigation.navigate('PatientInformationUpdate', {data})
-          }
-        />
+        <ViewShot
+          ref={viewShotRef}
+          options={{
+            format: 'png',
+            quality: 1,
+            fileName: `${idPasien}-${name}`,
+          }}>
+          <PatientCard
+            name={name}
+            id={idPasien}
+            birthday={
+              dateOfBirth
+                ? `${dateOfBirth.split('-')[2]}-${dateOfBirth.split('-')[1]}-${
+                    dateOfBirth.split('-')[0]
+                  }`
+                : ''
+            }
+            gender={sex}
+            onPress={() =>
+              navigation.navigate('PatientInformationUpdate', {data})
+            }
+          />
+        </ViewShot>
         <Gap height={20} />
         {loggedInRole === 'frontdesk' && (
           <>
-            <CustomButton buttonText="Download Kartu Pasien" />
+            <CustomButton onClick={onCapture} buttonText="Unduh Kartu Pasien" />
             <Gap height={20} />
           </>
         )}
@@ -151,39 +248,104 @@ const PatientDashboard = ({route, navigation}: any) => {
           ) : null}
         </View>
         <Gap height={20} />
-        <Text style={styles.subTitle}>History</Text>
+        <Text style={styles.subTitle}>Riwayat</Text>
         <View>
-          {loggedInRole === 'frontdesk' && (
-            <CustomSelect
-              label="Pilih Tanggal Riwayat Kunjungan"
-              value="2023-05-12"
-              item={['2023-05-12', '2023-05-05', '2023-03-10']}
-              onSelect={() => null}
-            />
-          )}
-          <Gap height={10} />
-          {loggedInRole === 'nurse' ||
-            (loggedInRole === 'doctor' && (
-              <ListAction
-                title="Periksa Kesehatan"
-                subtitle="Riwayat hasil periksa kesehatan pasien"
-                onPress={() =>
-                  navigation.navigate('MedicalTestHistory', {idPasien})
-                }
-                icon={faHeartPulse}
-              />
+          {loggedInRole === 'frontdesk' &&
+            (visitDate.length <= 0 ? (
+              <Text style={styles.historyEmpty}>
+                Belum Ada Riwayat Kunjungan
+              </Text>
+            ) : (
+              <>
+                <CustomSelect
+                  label="Pilih Tanggal Riwayat Kunjungan"
+                  value={selectedVisitDate}
+                  item={visitDate}
+                  onSelect={(e: any) => setSelectedVisitDate(e)}
+                />
+                {visitHistory.map(visit => {
+                  if (visit.visitDate === selectedVisitDate) {
+                    visit.medicalType.split(',').map((medtype: any) => {
+                      <View>
+                        <Text>{medtype}</Text>
+                      </View>;
+                    });
+                  }
+                })}
+              </>
             ))}
-          <Gap height={10} />
-          {loggedInRole === 'doctor' && (
-            <ListAction
-              title="Konsultasi Dokter"
-              subtitle="Riwayat hasil konsultasi pasien dengan dokter"
-              onPress={() =>
-                navigation.navigate('MedicalTestHistory', {idPasien})
-              }
-              icon={faStethoscope}
-            />
-          )}
+          {loggedInRole === 'nurse' &&
+            (visitDate.length <= 0 ? (
+              <Text style={styles.historyEmpty}>
+                Belum Ada Riwayat Kunjungan
+              </Text>
+            ) : (
+              <>
+                <CustomSelect
+                  label="Pilih Tanggal Riwayat Kunjungan"
+                  value={selectedVisitDate}
+                  item={visitDate}
+                  onSelect={(e: any) => setSelectedVisitDate(e)}
+                />
+                {visitHistory.map(visit => {
+                  if (visit.visit_history === selectedVisitDate) {
+                    visit.medical_type.split(',').map((medtype: any) => {
+                      <View>
+                        <Text>{medtype}</Text>
+                      </View>;
+                    });
+                  }
+                })}
+              </>
+            ))}
+          {loggedInRole === 'doctor' &&
+            (visitDate.length <= 0 ? (
+              <Text style={styles.historyEmpty}>
+                Belum Ada Riwayat Kunjungan
+              </Text>
+            ) : (
+              <>
+                <CustomSelect
+                  label="Pilih Tanggal Riwayat Kunjungan"
+                  value={selectedVisitDate}
+                  item={[...new Set(visitDate)]}
+                  onSelect={(e: any) => {
+                    setSelectedVisitDate(e);
+                  }}
+                />
+                <Gap height={10} />
+                {console.log(visitHistory)}
+                {visitHistory[0].length > 0
+                  ? visitHistory[0].map((visit: any) => (
+                      <>
+                        <ListAction
+                          key={visit.uidVisitHistory}
+                          title={visit.medicalType}
+                          onPress={() => {
+                            if (visit.includes('Lanjutan')) {
+                              navigation.navigate(
+                                'DoctoralConsultationHistory',
+                                {
+                                  idPasien,
+                                },
+                              );
+                            } else {
+                              navigation.navigate('MedicalTestHistory', {
+                                idPasien,
+                              });
+                            }
+                          }}
+                          icon={
+                            visit.includes('Lanjutan')
+                              ? faStethoscope
+                              : faMedkit
+                          }
+                        />
+                      </>
+                    ))
+                  : null}
+              </>
+            ))}
           <Gap height={100} />
         </View>
       </ScrollView>

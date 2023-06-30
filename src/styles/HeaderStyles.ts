@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
   },
   actionTwo: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: 'Poppins-Medium',
     width: '20%',
     textAlign: 'right',

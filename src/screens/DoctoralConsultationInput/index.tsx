@@ -31,6 +31,7 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
   const [anamnesis, setAnamensis] = React.useState('');
   const [diagnosis, setDiagnosis] = React.useState('');
   const [notes, setNotes] = React.useState('');
+  const [medicalTreatment, setMedicalTreatment] = React.useState('');
   const [medicine, setMedicine] = React.useState('');
   const [preparation, setPreparation] = React.useState('Tablet');
   const [dosage, setDosage] = React.useState('');
@@ -64,6 +65,7 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
                 allergies,
                 anamnesis,
                 diagnosis,
+                medicalTreatment,
                 notes,
                 medicine: medicineList.join('|'),
                 preparation: preparationList.join('|'),
@@ -200,6 +202,13 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
             placeholder="Diagnosis . . ."
             value={diagnosis}
             onChangeText={(e: any) => setDiagnosis(e)}
+          />
+          <Gap height={20} />
+          <CustomInputTextArea
+            label="Medical Treatment"
+            placeholder="Medical Treatment . . ."
+            value={medicalTreatment}
+            onChangeText={(e: any) => setMedicalTreatment(e)}
           />
           <Gap height={20} />
           <CustomInputTextArea

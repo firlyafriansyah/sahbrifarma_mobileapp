@@ -34,7 +34,8 @@ const CustomInputWithIcon = (props: CustomInputProps) => {
       {label !== '' && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
         <TextInput
-          style={styles.input}
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={[styles.input, {color: editable ? '#000000' : '#a1a1a1'}]}
           autoCorrect={false}
           onFocus={() => setBorderColor('#5352ED')}
           onBlur={() => setBorderColor('#FFFFFF')}

@@ -40,7 +40,11 @@ const CustomInputDate = (props: CustomInputDateProps) => {
         <View style={styles.inputDateWrapper}>
           <Gap width={2} />
           <TextInput
-            style={styles.inputDate}
+            style={[
+              styles.inputDate,
+              // eslint-disable-next-line react-native/no-inline-styles
+              {color: editable ? '#000000' : '#a1a1a1'},
+            ]}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -55,7 +59,11 @@ const CustomInputDate = (props: CustomInputDateProps) => {
           />
           <Text style={styles.slash}>/</Text>
           <TextInput
-            style={styles.inputDate}
+            style={[
+              styles.inputDate,
+              // eslint-disable-next-line react-native/no-inline-styles
+              {color: editable ? '#000000' : '#a1a1a1'},
+            ]}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -70,7 +78,11 @@ const CustomInputDate = (props: CustomInputDateProps) => {
           />
           <Text style={styles.slash}>/</Text>
           <TextInput
-            style={styles.inputDate}
+            style={[
+              styles.inputDate,
+              // eslint-disable-next-line react-native/no-inline-styles
+              {color: editable ? '#000000' : '#a1a1a1'},
+            ]}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}

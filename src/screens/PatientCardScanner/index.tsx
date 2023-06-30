@@ -79,11 +79,13 @@ const PatientCardScanner = ({navigation}: any) => {
         <Header
           color="#FFFFFF"
           actionOne={() => navigation.goBack()}
+          actionTwoText="Buat"
+          actionTwo={() => navigation.push('PatientRegistration')}
           title="Pindai Kartu Pasien"
         />
       </View>
       <View style={styles.actionWrapper}>
-        <Text style={styles.title}>Result Scanner</Text>
+        <Text style={styles.title}>Hasil Pindai</Text>
         <CustomInputWithQuickDelete
           placeholder="ID Pasien . . ."
           deleteIconAction={() => {
@@ -105,12 +107,12 @@ const PatientCardScanner = ({navigation}: any) => {
             <TouchableOpacity
               style={styles.buttonWrapper}
               onPress={() => submit()}>
-              <Text style={styles.buttonText}>ID Verify</Text>
+              <Text style={styles.buttonText}>ID Dikenali</Text>
               <FontAwesomeIcon icon={faCheck} size={24} color="#FFFFFF" />
             </TouchableOpacity>
           ) : (
             <View style={styles.buttonDisableWrapper}>
-              <Text style={styles.buttonText}>ID Not Found</Text>
+              <Text style={styles.buttonText}>ID Tidak Dikenali</Text>
               <TouchableOpacity disabled>
                 <FontAwesomeIcon icon={faXmark} size={24} color="#FFFFFF" />
               </TouchableOpacity>

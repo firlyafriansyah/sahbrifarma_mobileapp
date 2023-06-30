@@ -1,15 +1,9 @@
 import React from 'react';
+import {View, Alert, KeyboardAvoidingView, ScrollView} from 'react-native';
 import {
-  View,
-  Alert,
-  KeyboardAvoidingView,
-  ScrollView,
-  Text,
-} from 'react-native';
-import {
-  CustomButton,
   CustomInput,
   CustomInputDate,
+  CustomInputPassword,
   CustomSelect,
   CustomStatusBar,
   Gap,
@@ -18,33 +12,27 @@ import {
 } from '../../components';
 import styles from '../../styles/Screen/AdministrationProfileUpdate';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
-import {UpdateAdministrationAccount} from '../../services/Administration';
+import {RegisterAdministration} from '../../services/Administration';
 import {IsLogedInContext} from '../../context/AuthContext';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-const AdministrationProfileUpdate = ({route, navigation}: any) => {
+const AdministrationRegistration = ({navigation}: any) => {
   const {loggedInToken} = React.useContext(IsLogedInContext);
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [role, setRole] = React.useState('frontdesk');
   const [fullname, setFullname] = React.useState('');
   const [dateOfBirth, setDateOfBirth] = React.useState('');
   const [date, setDate] = React.useState('');
   const [month, setMonth] = React.useState('');
   const [year, setYear] = React.useState('');
-  const [sex, setSex] = React.useState('');
+  const [sex, setSex] = React.useState('Laki - Laki');
+  const [status, setStatus] = React.useState('active');
   const [isLoading, setIsLoading] = React.useState(false);
-  const {data} = route.params;
-
-  React.useEffect(() => {
-    setFullname(data.fullname);
-    setDateOfBirth(data.date_of_birth);
-    setDate(data.date_of_birth.split('-')[2]);
-    setMonth(data.date_of_birth.split('-')[1]);
-    setYear(data.date_of_birth.split('-')[0]);
-    setSex(data.sex);
-  }, [data]);
 
   const dateHandler = () => {
     DateTimePickerAndroid.open({
-      value: new Date(dateOfBirth),
+      value: new Date(),
       onChange: (e: any) => {
         setDateOfBirth(
           new Date(e.nativeEvent.timestamp).toISOString().split('T')[0],
@@ -73,36 +61,31 @@ const AdministrationProfileUpdate = ({route, navigation}: any) => {
     });
   };
 
-  const updateHandler = () => {
-    if (!fullname) {
-      Alert.alert('Error!', 'Nama Lengkap tidak boleh di kosongkan!', [
-        {
-          text: 'Oke',
-        },
-      ]);
-    } else {
-      setIsLoading(true);
-      const dataForUpdate = {
-        fullname,
-        dateOfBirth,
-        sex,
-      };
-      UpdateAdministrationAccount(dataForUpdate, loggedInToken)
-        .then(() => {
-          navigation.navigate('AdministrationProfile');
-        })
-        .catch((err: any) => {
-          Alert.alert('Error!', err, [
-            {
-              text: 'Oke',
-              onPress: () => {
-                navigation.navigate('AdministrationProfile');
-              },
+  const saveHandler = () => {
+    setIsLoading(true);
+    const dataForUpdate = {
+      username,
+      password,
+      role,
+      fullname,
+      dateOfBirth,
+      sex,
+    };
+    RegisterAdministration(dataForUpdate, loggedInToken)
+      .then(() => {
+        navigation.navigate('AdministrationManage');
+      })
+      .catch((err: any) => {
+        Alert.alert('Error!', err, [
+          {
+            text: 'Oke',
+            onPress: () => {
+              navigation.goBack();
             },
-          ]);
-        })
-        .finally(() => setIsLoading(false));
-    }
+          },
+        ]);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -112,34 +95,31 @@ const AdministrationProfileUpdate = ({route, navigation}: any) => {
         <View style={styles.headerWrapper}>
           <Header
             actionOne={() => navigation.goBack()}
-            actionTwo={() => updateHandler()}
-            actionTwoText="Simpan"
-            title="Informasi Akun"
+            actionTwo={() => saveHandler()}
+            actionTwoText="Save"
+            title="Profile Update"
           />
         </View>
         <ScrollView style={styles.inputWrapper}>
           <CustomInput
-            label="ID Account"
-            placeholder="UID . . ."
-            value={data.uidAdministrationAccount.toString()}
-            editable={false}
-            onChangeText={() => null}
-          />
-          <Gap height={20} />
-          <CustomInput
             label="Username"
             placeholder="Username . . ."
-            value={data.username}
-            editable={false}
-            onChangeText={() => null}
+            value={username}
+            onChangeText={(e: any) => setUsername(e.trim())}
           />
           <Gap height={20} />
-          <CustomInput
+          <CustomInputPassword
+            label="Password"
+            placeholder="Password . . ."
+            value={password}
+            onChangeText={(e: any) => setPassword(e)}
+          />
+          <Gap height={20} />
+          <CustomSelect
             label="Role"
-            placeholder="Role . . ."
-            value={data.role.charAt(0).toUpperCase() + data.role.slice(1)}
-            editable={false}
-            onChangeText={() => null}
+            onSelect={(e: any) => setRole(e)}
+            value={role}
+            item={['frontdesk', 'nurse', 'doctor', 'pharmacist']}
           />
           <Gap height={20} />
           <CustomInput
@@ -167,11 +147,11 @@ const AdministrationProfileUpdate = ({route, navigation}: any) => {
             item={['Laki - Laki', 'Perempuan']}
           />
           <Gap height={20} />
-          <Text style={styles.statusLabel}>Status:</Text>
-          <CustomButton
-            buttonText={data.status}
-            bgColor={data.status === 'active' ? '#27ae60' : '#c0392b'}
-            onClick={() => null}
+          <CustomSelect
+            label="Status"
+            onSelect={(e: any) => setStatus(e)}
+            value={status}
+            item={['active', 'inactive']}
           />
           <Gap height={20} />
         </ScrollView>
@@ -181,4 +161,4 @@ const AdministrationProfileUpdate = ({route, navigation}: any) => {
   );
 };
 
-export default AdministrationProfileUpdate;
+export default AdministrationRegistration;

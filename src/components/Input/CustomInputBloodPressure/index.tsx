@@ -35,7 +35,11 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
         <View style={styles.inputDateWrapper}>
           <TextInput
-            style={styles.inputDate}
+            style={[
+              styles.inputDate,
+              // eslint-disable-next-line react-native/no-inline-styles
+              {color: editable ? '#000000' : '#a1a1a1'},
+            ]}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -52,7 +56,11 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
           <Text style={styles.slash}>/</Text>
           <Gap width={10} />
           <TextInput
-            style={styles.inputDate}
+            style={[
+              styles.inputDate,
+              // eslint-disable-next-line react-native/no-inline-styles
+              {color: editable ? '#000000' : '#a1a1a1'},
+            ]}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}
@@ -69,7 +77,13 @@ const CustomInputBloodPressure = (props: CustomInputBloodPressureProps) => {
           <Text style={styles.slash}>/</Text>
           <Gap width={10} />
           <TextInput
-            style={styles.inputDate}
+            // eslint-disable-next-line no-sparse-arrays
+            style={[
+              styles.inputDate,
+              ,
+              // eslint-disable-next-line react-native/no-inline-styles
+              {color: editable ? '#000000' : '#a1a1a1'},
+            ]}
             autoCorrect={false}
             onFocus={() => setBorderColor('#5352ED')}
             onBlur={() => setBorderColor('#FFFFFF')}

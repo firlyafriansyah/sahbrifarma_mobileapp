@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     backgroundColor: '#FFFFFF',
-    elevation: 1,
+    elevation: 0.8,
     color: '#000000',
   },
   label: {

@@ -127,10 +127,16 @@ const AdministrationProfile = ({navigation}: any) => {
       <Gap height={150} />
       <View style={styles.startWorkButton}>
         <CustomButton
-          buttonText="Mulai Bekerja 🔥"
+          buttonText={
+            loggedInRole === 'super-admin'
+              ? 'Kelola Akun Administrasi  💻'
+              : 'Mulai Bekerja 🔥'
+          }
           onClick={() => {
             loggedInRole === 'frontdesk'
               ? navigation.navigate('PatientCardScanner')
+              : loggedInRole === 'super-admin'
+              ? navigation.navigate('AdministrationManage')
               : navigation.navigate('PatientQueue');
           }}
         />

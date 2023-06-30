@@ -1,8 +1,6 @@
 import {DB_HOST} from '../../../database/config';
-import {Decryptor} from '../../../utils';
 
-const GetAdministrationAccountDetail = (token: string, uid: string = '') => {
-  const id = uid === '' ? Decryptor(token) : uid;
+const GetAdministrationAccountList = (token: string) => {
   const optionsRequest = {
     method: 'GET',
     headers: {
@@ -13,15 +11,11 @@ const GetAdministrationAccountDetail = (token: string, uid: string = '') => {
   };
 
   return new Promise((resolve, reject) => {
-    fetch(`${DB_HOST}/administration/detail/${id}`, optionsRequest)
+    fetch(`${DB_HOST}/administration`, optionsRequest)
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
-          const data = {
-            ...res.administrationAccount,
-            ...res.loginStatus,
-          };
-          resolve(data);
+          resolve(res.data);
         } else {
           reject(res.message);
         }
@@ -32,4 +26,4 @@ const GetAdministrationAccountDetail = (token: string, uid: string = '') => {
   });
 };
 
-export default GetAdministrationAccountDetail;
+export default GetAdministrationAccountList;

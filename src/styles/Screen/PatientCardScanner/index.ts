@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     paddingHorizontal: 20,
-    elevation: 2,
     backgroundColor: '#e84118',
     height: 50,
     justifyContent: 'center',

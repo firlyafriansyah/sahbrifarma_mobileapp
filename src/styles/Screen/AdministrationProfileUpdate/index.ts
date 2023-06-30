@@ -17,6 +17,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     marginBottom: 5,
   },
+  laoding: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium',
+    color: '#000000',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  statusLabel: {
+    color: '#000000',
+    marginBottom: 10,
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+  },
 });
 
 export default styles;

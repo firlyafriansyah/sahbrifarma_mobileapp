@@ -13,7 +13,7 @@ import {
 import {IsLogedInContext} from '../../context/AuthContext';
 import styles from '../../styles/Screen/InputTest';
 
-const DoctoralConsultationInput = ({route, navigation}: any) => {
+const DoctoralConsultationHistory = ({route, navigation}: any) => {
   const {loggedInToken} = React.useContext(IsLogedInContext);
   const [allergies, setAllergies] = React.useState('');
   const [anamnesis, setAnamensis] = React.useState('');
@@ -106,4 +106,4 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
   );
 };
 
-export default DoctoralConsultationInput;
+export default DoctoralConsultationHistory;

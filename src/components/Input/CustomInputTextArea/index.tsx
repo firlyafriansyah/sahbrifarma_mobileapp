@@ -28,7 +28,14 @@ const CustomInputTextArea = (props: CustomInputProps) => {
       {label !== '' && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.wrapper, {borderColor: borderColor}]}>
         <TextInput
-          style={[styles.input, {height: Math.max(35, height)}]}
+          style={[
+            styles.input,
+            // eslint-disable-next-line react-native/no-inline-styles
+            {
+              height: Math.max(35, height),
+              color: editable ? '#000000' : '#a1a1a1',
+            },
+          ]}
           autoCorrect={false}
           multiline={true}
           onFocus={() => setBorderColor('#5352ED')}

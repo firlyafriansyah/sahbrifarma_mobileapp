@@ -13,8 +13,12 @@ import {Alert, BackHandler, DevSettings} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {IsLogedInContext} from './src/context/AuthContext';
 import {
+  AdministrationEditScreen,
+  AdministrationManageScreen,
   AdministrationProfileScreen,
   AdministrationProfileUpdateScreen,
+  AdministrationRegistrationScreen,
+  DoctoralConsultationHistoryScreen,
   DoctoralConsultationInputScreen,
   LoginScreen,
   MedicalTestHistoryScreen,
@@ -23,6 +27,7 @@ import {
   PatientDashboardScreen,
   PatientInformationUpdateScreen,
   PatientQueueScreen,
+  PatientRegistrationScreen,
   RequestedMedicineScreen,
   SplashScreen,
 } from './src/screens';
@@ -86,7 +91,7 @@ const App = () => {
         },
         {
           text: 'Try Again',
-          onPress: () => setReload(true),
+          onPress: () => DevSettings.reload(),
         },
       ]);
     });
@@ -115,6 +120,10 @@ const App = () => {
               <Stack.Screen
                 name="PatientCardScanner"
                 component={PatientCardScannerScreen}
+              />
+              <Stack.Screen
+                name="PatientRegistration"
+                component={PatientRegistrationScreen}
               />
               <Stack.Screen
                 name="PatientDashboard"
@@ -194,7 +203,10 @@ const App = () => {
                 name="MedicalTestHistory"
                 component={MedicalTestHistoryScreen}
               />
-              {/* <Stack.Screen name="DoctoralConsultationHistory" component={DoctoralConsultationHistoryScreen} /> */}
+              <Stack.Screen
+                name="DoctoralConsultationHistory"
+                component={DoctoralConsultationHistoryScreen}
+              />
             </Stack.Navigator>
           ) : loggedInRole === 'pharmacist' ? (
             <Stack.Navigator
@@ -213,20 +225,34 @@ const App = () => {
                 component={PatientQueueScreen}
               />
               <Stack.Screen
-                name="PatientDashboard"
-                component={PatientDashboardScreen}
-              />
-              <Stack.Screen
-                name="PatientInformationUpdate"
-                component={PatientInformationUpdateScreen}
-              />
-              <Stack.Screen
                 name="RequestedMedicine"
                 component={RequestedMedicineScreen}
               />
-              {/* <Stack.Screen name="AdministrationProfile" component={AdminstrationProfileScreen} /> */}
-              {/* <Stack.Screen name="PatientQueue" component={PatientQueueScreen} /> */}
-              {/* <Stack.Screen name="MedicineRequested" component={MedicineRequestedScreen} /> */}
+            </Stack.Navigator>
+          ) : loggedInRole === 'super-admin' ? (
+            <Stack.Navigator
+              initialRouteName="AdministrationProfile"
+              screenOptions={{headerShown: false}}>
+              <Stack.Screen
+                name="AdministrationProfile"
+                component={AdministrationProfileScreen}
+              />
+              <Stack.Screen
+                name="AdministrationProfileUpdate"
+                component={AdministrationProfileUpdateScreen}
+              />
+              <Stack.Screen
+                name="AdministrationManage"
+                component={AdministrationManageScreen}
+              />
+              <Stack.Screen
+                name="AdministrationRegistration"
+                component={AdministrationRegistrationScreen}
+              />
+              <Stack.Screen
+                name="AdministrationEdit"
+                component={AdministrationEditScreen}
+              />
             </Stack.Navigator>
           ) : (
             <Stack.Navigator screenOptions={{headerShown: false}}>

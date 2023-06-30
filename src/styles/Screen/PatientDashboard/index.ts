@@ -19,7 +19,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     color: '#000000',
     fontSize: 24,
-    marginBottom: 10,
+  },
+  historyEmpty: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 18,
+    color: '#000000',
+    textAlign: 'center',
+  },
+  cardForDownload: {
+    display: 'none',
   },
 });
 

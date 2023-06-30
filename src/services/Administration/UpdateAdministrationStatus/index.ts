@@ -1,10 +1,8 @@
 import {DB_HOST} from '../../../database/config';
-import {Decryptor} from '../../../utils';
 
-const GetAdministrationAccountDetail = (token: string, uid: string = '') => {
-  const id = uid === '' ? Decryptor(token) : uid;
+const UpdateAdministrationStatus = (status: any, id: string, token: string) => {
   const optionsRequest = {
-    method: 'GET',
+    method: 'PUT',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -13,15 +11,14 @@ const GetAdministrationAccountDetail = (token: string, uid: string = '') => {
   };
 
   return new Promise((resolve, reject) => {
-    fetch(`${DB_HOST}/administration/detail/${id}`, optionsRequest)
+    fetch(
+      `${DB_HOST}/administration/update-status/${id}/${status}`,
+      optionsRequest,
+    )
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
-          const data = {
-            ...res.administrationAccount,
-            ...res.loginStatus,
-          };
-          resolve(data);
+          resolve(res.message);
         } else {
           reject(res.message);
         }
@@ -32,4 +29,4 @@ const GetAdministrationAccountDetail = (token: string, uid: string = '') => {
   });
 };
 
-export default GetAdministrationAccountDetail;
+export default UpdateAdministrationStatus;

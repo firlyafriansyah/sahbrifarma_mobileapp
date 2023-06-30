@@ -1,27 +1,33 @@
 import {DB_HOST} from '../../../database/config';
-import {Decryptor} from '../../../utils';
 
-const GetAdministrationAccountDetail = (token: string, uid: string = '') => {
-  const id = uid === '' ? Decryptor(token) : uid;
+const UpdateAdministrationAccountSuper = (
+  data: any,
+  id: any,
+  token: string,
+) => {
   const optionsRequest = {
-    method: 'GET',
+    method: 'PUT',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: token,
     },
+    body: JSON.stringify({
+      username: data.username,
+      role: data.role,
+      password: data.password,
+      fullname: data.fullname,
+      dateOfBirth: data.dateOfBirth,
+      sex: data.sex,
+    }),
   };
 
   return new Promise((resolve, reject) => {
-    fetch(`${DB_HOST}/administration/detail/${id}`, optionsRequest)
+    fetch(`${DB_HOST}/administration/update/${id}`, optionsRequest)
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
-          const data = {
-            ...res.administrationAccount,
-            ...res.loginStatus,
-          };
-          resolve(data);
+          resolve(res.data);
         } else {
           reject(res.message);
         }
@@ -32,4 +38,4 @@ const GetAdministrationAccountDetail = (token: string, uid: string = '') => {
   });
 };
 
-export default GetAdministrationAccountDetail;
+export default UpdateAdministrationAccountSuper;

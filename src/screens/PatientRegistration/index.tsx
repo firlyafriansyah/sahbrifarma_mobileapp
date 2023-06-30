@@ -1,5 +1,7 @@
+import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import React from 'react';
-import {View, Alert, KeyboardAvoidingView, ScrollView} from 'react-native';
+import {Alert, KeyboardAvoidingView, ScrollView, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   CustomInput,
   CustomInputDate,
@@ -10,41 +12,26 @@ import {
   Header,
   LoadingModal,
 } from '../../components';
-import styles from '../../styles/Screen/AdministrationProfileUpdate';
-import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import {IsLogedInContext} from '../../context/AuthContext';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {UpdatePatientInformation} from '../../services';
+import {PatientRegistrationService} from '../../services';
+import styles from '../../styles/Screen/AdministrationProfileUpdate';
 
-const PatientInformationUpdate = ({route, navigation}: any) => {
+const PatientRegistration = ({navigation}: any) => {
   const {loggedInToken, loggedInRole} = React.useContext(IsLogedInContext);
   const [name, setName] = React.useState('');
   const [address, setAddress] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [emergencyPhoneNumber, setEmergencyPhoneNumber] = React.useState('');
-  const [sex, setSex] = React.useState('');
+  const [sex, setSex] = React.useState('Laki - Laki');
   const [dateOfBirth, setDateOfBirth] = React.useState('');
   const [dateForDateOfBirth, setDateForDateOfBirth] = React.useState('');
   const [monthForDateOfBirth, setMonthForDateOfBirth] = React.useState('');
   const [yearForDateOfBirth, setYearForDateOfBirth] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const {data} = route.params;
-
-  React.useEffect(() => {
-    setName(data.name);
-    setAddress(data.address);
-    setPhoneNumber(data.phoneNumber || '');
-    setEmergencyPhoneNumber(data.emergencyPhoneNumber || '');
-    setSex(data.sex);
-    setDateOfBirth(data.dateOfBirth);
-    setDateForDateOfBirth(data.dateOfBirth.split('-')[2]);
-    setMonthForDateOfBirth(data.dateOfBirth.split('-')[1]);
-    setYearForDateOfBirth(data.dateOfBirth.split('-')[0]);
-  }, [data]);
 
   const dateHandler = () => {
     DateTimePickerAndroid.open({
-      value: new Date(dateOfBirth),
+      value: new Date(),
       onChange: (e: any) => {
         setDateOfBirth(
           new Date(e.nativeEvent.timestamp).toISOString().split('T')[0],
@@ -73,33 +60,44 @@ const PatientInformationUpdate = ({route, navigation}: any) => {
     });
   };
 
-  const updateHandler = () => {
-    setIsLoading(true);
-    const dataForUpdate = {
-      id: data.uidPatient,
-      name,
-      address,
-      dateOfBirth,
-      sex,
-      phoneNumber,
-      emergencyPhoneNumber,
-    };
-
-    UpdatePatientInformation(dataForUpdate, loggedInToken)
-      .then(() => {
-        navigation.goBack();
-      })
-      .catch((err: any) => {
-        Alert.alert('Error!', err, [
+  const saveHandler = () => {
+    if (!name || !address) {
+      Alert.alert(
+        'Error!',
+        'Nama Lengkap atau Alamat tidak boleh di kosongkan!',
+        [
           {
             text: 'Oke',
-            onPress: () => {
-              navigation.goBack();
-            },
           },
-        ]);
-      })
-      .finally(() => setIsLoading(false));
+        ],
+      );
+    } else {
+      setIsLoading(true);
+      const dataForUpdate = {
+        name,
+        address,
+        dateOfBirth,
+        sex,
+        phoneNumber,
+        emergencyPhoneNumber,
+      };
+
+      PatientRegistrationService(dataForUpdate, loggedInToken)
+        .then(res => {
+          navigation.navigate('PatientDashboard', {idPasien: res});
+        })
+        .catch((err: any) => {
+          Alert.alert('Error!', err, [
+            {
+              text: 'Oke',
+              onPress: () => {
+                navigation.goBack();
+              },
+            },
+          ]);
+        })
+        .finally(() => setIsLoading(false));
+    }
   };
 
   return (
@@ -107,29 +105,14 @@ const PatientInformationUpdate = ({route, navigation}: any) => {
       <KeyboardAvoidingView>
         <CustomStatusBar translucent />
         <View style={styles.headerWrapper}>
-          {loggedInRole === 'frontdesk' ? (
-            <Header
-              actionOne={() => navigation.goBack()}
-              actionTwo={() => updateHandler()}
-              actionTwoText="Save"
-              title="Informasi Pasien"
-            />
-          ) : (
-            <Header
-              actionOne={() => navigation.goBack()}
-              title="Informasi Pasien"
-            />
-          )}
+          <Header
+            actionOne={() => navigation.goBack()}
+            actionTwo={() => saveHandler()}
+            actionTwoText="Simpan"
+            title="Pendaftaran Pasien"
+          />
         </View>
         <ScrollView style={styles.inputWrapper}>
-          <CustomInput
-            label="ID Pasien"
-            placeholder="ID Pasien . . ."
-            value={data.uidPatient.toString()}
-            editable={false}
-            onChangeText={() => null}
-          />
-          <Gap height={20} />
           <CustomInput
             label="Nama Lengkap"
             placeholder="Nama Lengkap . . ."
@@ -191,4 +174,4 @@ const PatientInformationUpdate = ({route, navigation}: any) => {
   );
 };
 
-export default PatientInformationUpdate;
+export default PatientRegistration;

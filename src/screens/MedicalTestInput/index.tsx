@@ -86,7 +86,7 @@ const MedicalTestInput = ({route, navigation}: any) => {
         <Header
           title="Input Hasil Periksa"
           actionOne={() => navigation.goBack()}
-          actionTwoText="Save"
+          actionTwoText="Simpan"
           actionTwo={() => saveHandler()}
         />
         <Gap height={20} />
