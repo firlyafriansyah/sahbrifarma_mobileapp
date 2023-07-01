@@ -87,7 +87,9 @@ const PatientDashboard = ({route, navigation}: any) => {
   const actionButtonHandler = (type: string) => {
     Alert.alert(
       'Konfirmasi Tindakan!',
-      `Pasien ini akan dimasukan kedalam list antrean ${type}.`,
+      `Pasien ini akan dimasukan kedalam list antrean ${
+        type === 'pharmacist' ? 'apoteker' : 'perawat'
+      }.`,
       [
         {
           text: 'Oke',
@@ -235,7 +237,7 @@ const PatientDashboard = ({route, navigation}: any) => {
             />
           ) : loggedInRole === 'doctor' ? (
             <ActionButton
-              text="Konsultasi Dokter"
+              text="Konsultasi Dan Periksa Kesehatan Lanjutan"
               action={() =>
                 navigation.navigate('DoctoralConsultationInput', {idPasien})
               }

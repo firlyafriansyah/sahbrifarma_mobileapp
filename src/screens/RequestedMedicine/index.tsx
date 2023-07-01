@@ -82,9 +82,9 @@ const RequestedMedicine = ({route, navigation}: any) => {
     <SafeAreaView>
       <View style={styles.headerWrapper}>
         <Header
-          title="Patient Dashboard"
+          title="Rekam Medis"
           actionOne={() => navigation.goBack()}
-          actionTwoText="Finish"
+          actionTwoText="Selesai"
           actionTwo={() => finishHandler()}
         />
       </View>

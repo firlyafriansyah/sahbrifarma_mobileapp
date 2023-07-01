@@ -111,7 +111,7 @@ const PatientInformationUpdate = ({route, navigation}: any) => {
             <Header
               actionOne={() => navigation.goBack()}
               actionTwo={() => updateHandler()}
-              actionTwoText="Save"
+              actionTwoText="Simpan"
               title="Informasi Pasien"
             />
           ) : (

@@ -54,7 +54,7 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
       );
     } else {
       Alert.alert(
-        'Konfirmasi Hasil Konsultasi Pasien!',
+        'Konfirmasi Hasil Konsultasi Dan Periksa Kesehatan Lanjutan!',
         'Semua data yang saya masukan sudah sesuai dengan kondisi pasien!',
         [
           {

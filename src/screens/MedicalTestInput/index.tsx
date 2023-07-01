@@ -52,7 +52,7 @@ const MedicalTestInput = ({route, navigation}: any) => {
         cholesterol,
       };
       Alert.alert(
-        'Konfirmasi Hasil Medical Test!',
+        'Konfirmasi Hasil Periksa Kesehatan!',
         'Semua data yang saya masukan sudah sesuai dengan kondisi pasien!',
         [
           {
