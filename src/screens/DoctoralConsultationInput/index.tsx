@@ -169,9 +169,9 @@ const DoctoralConsultationInput = ({route, navigation}: any) => {
           }
         />
         <Header
-          title="Konsultasi & Obat"
+          title="Input Hasil Kons ..."
           actionOne={() => navigation.goBack()}
-          actionTwoText="Save"
+          actionTwoText="Simpan"
           actionTwo={() => saveHandler()}
         />
         <Gap height={20} />

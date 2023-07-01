@@ -1,24 +1,21 @@
 import {DB_HOST} from '../../../database/config';
 
-const LoginService = (username: string, password: string) => {
+const GetDoctoralConsultationDetail = (id: string, token: string) => {
   const optionsRequest = {
-    method: 'POST',
+    method: 'GET',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      Authorization: token,
     },
-    body: JSON.stringify({
-      username: username,
-      password: password,
-    }),
   };
 
   return new Promise((resolve, reject) => {
-    fetch(`${DB_HOST}/administration/login`, optionsRequest)
+    fetch(`${DB_HOST}/doctoral-consultation/detail/${id}`, optionsRequest)
       .then(resJson => resJson.json())
       .then(res => {
         if (res.status === 'success') {
-          resolve(res.data);
+          resolve(res.data.doctoralConsultation);
         } else {
           reject(res.message);
         }
@@ -29,4 +26,4 @@ const LoginService = (username: string, password: string) => {
   });
 };
 
-export default LoginService;
+export default GetDoctoralConsultationDetail;

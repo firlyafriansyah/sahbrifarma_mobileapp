@@ -9,6 +9,7 @@ interface CustomInputProps {
   value: string;
   editable?: boolean;
   selectTextOnFocus?: boolean;
+  heightDefault?: number;
 }
 
 const CustomInputTextArea = (props: CustomInputProps) => {
@@ -19,9 +20,10 @@ const CustomInputTextArea = (props: CustomInputProps) => {
     value,
     editable = true,
     selectTextOnFocus = false,
+    heightDefault = 0,
   } = props;
   const [borderColor, setBorderColor] = React.useState('#FFFFFF');
-  const [height, setHeight] = React.useState(0);
+  const [height, setHeight] = React.useState(heightDefault);
 
   return (
     <>
@@ -32,7 +34,7 @@ const CustomInputTextArea = (props: CustomInputProps) => {
             styles.input,
             // eslint-disable-next-line react-native/no-inline-styles
             {
-              height: Math.max(35, height),
+              height,
               color: editable ? '#000000' : '#a1a1a1',
             },
           ]}

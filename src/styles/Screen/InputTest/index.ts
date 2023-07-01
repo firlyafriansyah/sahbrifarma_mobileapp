@@ -108,6 +108,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     color: '#5783FC',
   },
+  medicineEmpty: {
+    color: '#000000',
+    fontFamily: 'Poppins-Regular',
+  },
 });
 
 export default styles;

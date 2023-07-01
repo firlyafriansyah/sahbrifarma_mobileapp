@@ -51,7 +51,6 @@ const AdministrationEdit = ({route, navigation}: any) => {
       param.uid_administration_account,
     )
       .then((res: any) => {
-        console.log(res);
         setId(res.uidAdministrationAccount.toString());
         setUsername(res.username);
         setRole(res.role);

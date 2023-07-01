@@ -5,9 +5,8 @@ import {
   faStethoscope,
 } from '@fortawesome/free-solid-svg-icons';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
-import {useIsFocused} from '@react-navigation/native';
 import * as React from 'react';
-import {Alert, ScrollView, Text, View, PermissionsAndroid} from 'react-native';
+import {Alert, PermissionsAndroid, ScrollView, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ViewShot from 'react-native-view-shot';
 import {
@@ -42,7 +41,6 @@ const PatientDashboard = ({route, navigation}: any) => {
   const [visitHistory, setVisitHistory] = React.useState<string[]>([]);
   const [selectedVisitDate, setSelectedVisitDate] = React.useState('');
   const {idPasien} = route.params;
-  const isFocused = useIsFocused();
   const viewShotRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -63,22 +61,23 @@ const PatientDashboard = ({route, navigation}: any) => {
     setIsLoading(true);
     GetVisitHistoryDate(idPasien, loggedInToken)
       .then((res: any) => {
-        setSelectedVisitDate(res[0].visitDate);
-        res.map((resMap: any) => {
-          setVisitDate(oldData => [...oldData, resMap.visitDate]);
-        });
+        if (res.length > 0) {
+          setSelectedVisitDate(res[0].visitDate);
+          res.map((resMap: any) => {
+            setVisitDate(oldData => [...oldData, resMap.visitDate]);
+          });
+        }
       })
       .catch(err => Alert.alert('Error', err))
       .finally(() => setIsLoading(false));
   }, [idPasien, loggedInToken]);
 
   React.useEffect(() => {
-    setVisitHistory([]);
     setIsLoading(true);
     if (selectedVisitDate) {
       GetVisitHistory(idPasien, selectedVisitDate, loggedInToken)
         .then((res: any) => {
-          setVisitHistory(old => [...old, res]);
+          setVisitHistory(res);
         })
         .catch(err => Alert.alert('Error', err))
         .finally(() => setIsLoading(false));
@@ -130,7 +129,7 @@ const PatientDashboard = ({route, navigation}: any) => {
   };
 
   const onCapture = () => {
-    viewShotRef.current.capture().then(res => {
+    viewShotRef.current.capture().then((res: any) => {
       if (Platform.OS === 'android') {
         if (!getPermissionAndroid()) {
           return;
@@ -163,7 +162,7 @@ const PatientDashboard = ({route, navigation}: any) => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         return true;
       }
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert(
         'Simpan gambar',
         'Gagal menyimpan gambar: ' + err.message,
@@ -177,10 +176,7 @@ const PatientDashboard = ({route, navigation}: any) => {
     <SafeAreaView>
       <CustomStatusBar translucent />
       <View style={styles.headerWrapper}>
-        <Header
-          title="Rekam Medis Pasien"
-          actionOne={() => navigation.goBack()}
-        />
+        <Header title="Rekam Medis" actionOne={() => navigation.goBack()} />
       </View>
       <ScrollView style={styles.container}>
         <ViewShot
@@ -248,7 +244,7 @@ const PatientDashboard = ({route, navigation}: any) => {
           ) : null}
         </View>
         <Gap height={20} />
-        <Text style={styles.subTitle}>Riwayat</Text>
+        <Text style={styles.subTitle}>Riwayat Kunjungan</Text>
         <View>
           {loggedInRole === 'frontdesk' &&
             (visitDate.length <= 0 ? (
@@ -260,18 +256,26 @@ const PatientDashboard = ({route, navigation}: any) => {
                 <CustomSelect
                   label="Pilih Tanggal Riwayat Kunjungan"
                   value={selectedVisitDate}
-                  item={visitDate}
-                  onSelect={(e: any) => setSelectedVisitDate(e)}
+                  item={[...new Set(visitDate)]}
+                  onSelect={(e: any) => {
+                    setSelectedVisitDate(e);
+                  }}
                 />
-                {visitHistory.map(visit => {
-                  if (visit.visitDate === selectedVisitDate) {
-                    visit.medicalType.split(',').map((medtype: any) => {
-                      <View>
-                        <Text>{medtype}</Text>
-                      </View>;
-                    });
-                  }
-                })}
+                {visitHistory.length > 0
+                  ? visitHistory.map((visit: any) => (
+                      <ListAction
+                        key={visit.uidVisitHistory}
+                        title={visit.medicalType}
+                        onPress={() => {}}
+                        icon={
+                          visit.medicalType.includes('Lanjutan')
+                            ? faStethoscope
+                            : faMedkit
+                        }
+                        mb={10}
+                      />
+                    ))
+                  : null}
               </>
             ))}
           {loggedInRole === 'nurse' &&
@@ -284,18 +288,34 @@ const PatientDashboard = ({route, navigation}: any) => {
                 <CustomSelect
                   label="Pilih Tanggal Riwayat Kunjungan"
                   value={selectedVisitDate}
-                  item={visitDate}
-                  onSelect={(e: any) => setSelectedVisitDate(e)}
+                  item={[...new Set(visitDate)]}
+                  onSelect={(e: any) => {
+                    setSelectedVisitDate(e);
+                  }}
                 />
-                {visitHistory.map(visit => {
-                  if (visit.visit_history === selectedVisitDate) {
-                    visit.medical_type.split(',').map((medtype: any) => {
-                      <View>
-                        <Text>{medtype}</Text>
-                      </View>;
-                    });
-                  }
-                })}
+                {visitHistory.length > 0
+                  ? visitHistory.map((visit: any) => {
+                      if (visit.medicalType === 'Periksa Kesehatan') {
+                        return (
+                          <ListAction
+                            key={visit.uidVisitHistory}
+                            title={visit.medicalType}
+                            onPress={() => {
+                              navigation.navigate('MedicalTestHistory', {
+                                id: visit.uidMedicalType,
+                              });
+                            }}
+                            icon={
+                              visit.medicalType.includes('Lanjutan')
+                                ? faStethoscope
+                                : faMedkit
+                            }
+                            mb={10}
+                          />
+                        );
+                      }
+                    })
+                  : null}
               </>
             ))}
           {loggedInRole === 'doctor' &&
@@ -313,35 +333,30 @@ const PatientDashboard = ({route, navigation}: any) => {
                     setSelectedVisitDate(e);
                   }}
                 />
-                <Gap height={10} />
-                {console.log(visitHistory)}
-                {visitHistory[0].length > 0
-                  ? visitHistory[0].map((visit: any) => (
-                      <>
-                        <ListAction
-                          key={visit.uidVisitHistory}
-                          title={visit.medicalType}
-                          onPress={() => {
-                            if (visit.includes('Lanjutan')) {
-                              navigation.navigate(
-                                'DoctoralConsultationHistory',
-                                {
-                                  idPasien,
-                                },
-                              );
-                            } else {
-                              navigation.navigate('MedicalTestHistory', {
-                                idPasien,
-                              });
-                            }
-                          }}
-                          icon={
-                            visit.includes('Lanjutan')
-                              ? faStethoscope
-                              : faMedkit
+                {visitHistory.length > 0
+                  ? visitHistory.map((visit: any) => (
+                      <ListAction
+                        key={visit.uidVisitHistory}
+                        title={visit.medicalType}
+                        onPress={() => {
+                          if (visit.medicalType.includes('Lanjutan')) {
+                            navigation.navigate('DoctoralConsultationHistory', {
+                              uidConsultation: visit.uidMedicalType,
+                              uidMedicine: visit.uidMedicineRequest,
+                            });
+                          } else {
+                            navigation.navigate('MedicalTestHistory', {
+                              id: visit.uidMedicalType,
+                            });
                           }
-                        />
-                      </>
+                        }}
+                        icon={
+                          visit.medicalType.includes('Lanjutan')
+                            ? faStethoscope
+                            : faMedkit
+                        }
+                        mb={10}
+                      />
                     ))
                   : null}
               </>

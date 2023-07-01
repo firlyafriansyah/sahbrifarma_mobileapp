@@ -1,5 +1,5 @@
 import React from 'react';
-import {KeyboardAvoidingView, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, KeyboardAvoidingView, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
@@ -8,9 +8,11 @@ import {
   CustomStatusBar,
   Gap,
   Header,
+  ListMedicineRequest,
   LoadingModal,
 } from '../../components';
 import {IsLogedInContext} from '../../context/AuthContext';
+import {GetDoctoralConsultationDetail, GetMedicineDetail} from '../../services';
 import styles from '../../styles/Screen/InputTest';
 
 const DoctoralConsultationHistory = ({route, navigation}: any) => {
@@ -19,84 +21,118 @@ const DoctoralConsultationHistory = ({route, navigation}: any) => {
   const [anamnesis, setAnamensis] = React.useState('');
   const [diagnosis, setDiagnosis] = React.useState('');
   const [notes, setNotes] = React.useState('');
-  const [medicine, setMedicine] = React.useState('');
-  const [preparation, setPreparation] = React.useState('Injections');
-  const [dosage, setDosage] = React.useState('');
-  const [rules, setRules] = React.useState('');
-  const [medicineList, setMedicineList] = React.useState<string[]>([]);
-  const [preparationList, setPreparationList] = React.useState<string[]>([]);
-  const [dosageList, setDosageList] = React.useState<string[]>([]);
-  const [rulesList, setRulesList] = React.useState<string[]>([]);
+  const [medicalTreatment, setMedicalTreatment] = React.useState('');
+  const [medicine, setMedicine] = React.useState<string[]>([]);
+  const [preparation, setPreparation] = React.useState<string[]>([]);
+  const [dosage, setDosage] = React.useState<string[]>([]);
+  const [rules, setRules] = React.useState<string[]>([]);
   const [isLaoding, setIsLoading] = React.useState(false);
-  const {idPasien} = route.params;
+  const {uidConsultation, uidMedicine} = route.params;
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    GetDoctoralConsultationDetail(uidConsultation, loggedInToken)
+      .then((res: any) => {
+        setAllergies(res.allergies);
+        setAnamensis(res.anamnesis);
+        setDiagnosis(res.diagnosis);
+        setNotes(res.notes);
+        setMedicalTreatment(res.medicalTreatment);
+      })
+      .catch(err => Alert.alert('Error', err))
+      .finally(() => setIsLoading(false));
+  }, [loggedInToken, uidConsultation]);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    GetMedicineDetail(uidMedicine, loggedInToken)
+      .then((res: any) => {
+        res.medicine.split('|').map((v: any) => {
+          setMedicine(oldData => [...oldData, v]);
+        });
+        res.preparation.split('|').map((v: any) => {
+          setPreparation(oldData => [...oldData, v]);
+        });
+        res.dosage.split('|').map((v: any) => {
+          setDosage(oldData => [...oldData, v]);
+        });
+        res.rules.split('|').map((v: any) => {
+          setRules(oldData => [...oldData, v]);
+        });
+      })
+      .catch(err => Alert.alert('Error', err))
+      .finally(() => setIsLoading(false));
+  }, [loggedInToken, uidMedicine]);
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.wrapper}>
         <CustomStatusBar translucent />
         <Header
-          title="Konsultasi & Obat"
+          title="Hasil Konsultasi ..."
           actionOne={() => navigation.goBack()}
         />
         <Gap height={20} />
         <ScrollView style={styles.inputWrapper}>
           <Gap height={10} />
-          <Text style={styles.title}>Hasil Konsultasi</Text>
-          <Gap height={10} />
           <CustomInput
             label="Alergi"
             placeholder="Alergi . . ."
             value={allergies}
-            onChangeText={(e: any) => setAllergies(e)}
+            onChangeText={() => {}}
           />
-          <Gap height={5} />
-          <Text>Pisahkan setiap alergi dengan koma (,)</Text>
           <Gap height={20} />
           <CustomInputTextArea
             label="Anamnesis"
             placeholder="Anamnesis . . ."
             value={anamnesis}
-            onChangeText={(e: any) => setAnamensis(e)}
+            heightDefault={35}
+            onChangeText={() => {}}
           />
           <Gap height={20} />
           <CustomInputTextArea
             label="Diagnosis"
             placeholder="Diagnosis . . ."
             value={diagnosis}
-            onChangeText={(e: any) => setDiagnosis(e)}
+            heightDefault={35}
+            onChangeText={() => {}}
+          />
+          <Gap height={20} />
+          <CustomInputTextArea
+            label="Medical Treatment"
+            placeholder="Medical Treatment . . ."
+            value={medicalTreatment}
+            heightDefault={35}
+            onChangeText={() => {}}
           />
           <Gap height={20} />
           <CustomInputTextArea
             label="Catatan Tamabahan"
             placeholder="Catatan . . ."
             value={notes}
-            onChangeText={(e: any) => setNotes(e)}
+            heightDefault={35}
+            onChangeText={() => {}}
           />
-          <Gap height={40} />
+          <Gap height={30} />
           <View style={styles.requestMedicineWrapper}>
-            <Text style={styles.title}>Request Obat Apoteker</Text>
+            <Text style={styles.title}>Resep Obat</Text>
           </View>
           <Gap height={20} />
-          {medicineList.length <= 0 ? (
-            <Text>Tidak ada permintaan obat pada pemeriksaan ini.</Text>
+          {medicine.length <= 0 ? (
+            <Text style={styles.medicineEmpty}>
+              Tidak ada permintaan obat pada pemeriksaan ini.
+            </Text>
           ) : (
-            medicineList.map((med, index) => (
-              <>
-                <TouchableOpacity
-                  key={index}
-                  style={styles.listMedicineRequestCard}
-                  onPress={() => null}>
-                  <View>
-                    <Text style={styles.medicineRequest}>
-                      {med} - {preparationList[index]} - {dosageList[index]}gr
-                    </Text>
-                    <Text style={styles.medicineRequest}>
-                      {rulesList[index]}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-                <Gap height={10} />
-              </>
+            medicine.map((v, index) => (
+              <ListMedicineRequest
+                key={index}
+                index={index}
+                medicine={v}
+                preparation={preparation[index]}
+                dosage={parseInt(dosage[index], 10)}
+                rules={rules[index]}
+                deleteMode={false}
+              />
             ))
           )}
         </ScrollView>

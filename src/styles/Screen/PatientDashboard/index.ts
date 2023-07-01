@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#000000',
     textAlign: 'center',
+    marginTop: 10,
   },
   cardForDownload: {
     display: 'none',

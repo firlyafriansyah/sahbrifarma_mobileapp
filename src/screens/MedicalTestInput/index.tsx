@@ -84,7 +84,7 @@ const MedicalTestInput = ({route, navigation}: any) => {
       <KeyboardAvoidingView style={styles.wrapper}>
         <CustomStatusBar translucent />
         <Header
-          title="Input Hasil Periksa"
+          title="Input Hasil Periksa ..."
           actionOne={() => navigation.goBack()}
           actionTwoText="Simpan"
           actionTwo={() => saveHandler()}
